@@ -20,6 +20,7 @@ import com.hydertechno.swishcustomer.ServerApi.ApiUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,20 +40,15 @@ public class CouponActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
-
-
         init();
-
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkCoupon();
             }
         });
-
         showValidCoupon();
     }
-
     private void showValidCoupon() {
         Call<List<CouponShow>> call = ApiUtils.getUserService().getValidCoupon(userId);
         call.enqueue(new Callback<List<CouponShow>>() {
@@ -67,22 +63,15 @@ public class CouponActivity extends AppCompatActivity {
                         couponDiscount.setText(showList.get(0).getAmount()+"%");
                         date.setText(showList.get(0).getEndDate());
                     }
-                    else{
-                        couponLayout.setVisibility(View.GONE);
-
-                    }
                 }
             }
-
             @Override
             public void onFailure(Call<List<CouponShow>> call, Throwable t) {
-
             }
         });
     }
 
     private void checkCoupon() {
-
         Call<List<CouponModel>> call = ApiUtils.getUserService().checkCoupon(userId,coupon_Et.getText().toString());
         call.enqueue(new Callback<List<CouponModel>>() {
             @Override
@@ -90,16 +79,14 @@ public class CouponActivity extends AppCompatActivity {
                 list=response.body();
                 if (list.get(0).getMsg().equals("true")){
                     amount = list.get(0).getAmount();
-                    Toast.makeText(CouponActivity.this, ""+amount, Toast.LENGTH_SHORT).show();
                     showValidCoupon();
                 }else{
-                    Toast.makeText(CouponActivity.this, "Not Valid", Toast.LENGTH_SHORT).show();
+                    Toasty.error(CouponActivity.this,"Invalid Coupon",Toasty.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<CouponModel>> call, Throwable t) {
-                Toast.makeText(CouponActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
