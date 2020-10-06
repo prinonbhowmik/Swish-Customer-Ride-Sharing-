@@ -18,11 +18,7 @@
         android:layout_marginTop="50dp"
         android:contentDescription="@string/app_name"
         />
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2da096dd0ce290c52b829fed056e3f5c940de609
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="match_parent"
@@ -44,22 +40,7 @@
         android:textSize="18sp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
-<<<<<<< HEAD
         android:layout_below="@+id/textTitle"
         />
 
-=======
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_below="@+id/textTitle"
-        />
-
-
-
-
-
-
-
-
->>>>>>> 2da096dd0ce290c52b829fed056e3f5c940de609
 </RelativeLayout>
