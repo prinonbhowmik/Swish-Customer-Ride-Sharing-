@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/ic_person_24"
+            android:title="Profile" />
+        <item
+            android:id="@+id/rides"
+            android:icon="@drawable/ic_baseline_directions_car_24"
+            android:title="Rides" />
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/ic_history"
+            android:title="History" />
+        <item
+            android:id="@+id/referral"
+            android:icon="@drawable/ic_referral"
+            android:title="Referral" />
+        <item
+            android:id="@+id/coupon"
+            android:icon="@drawable/ic_coupon"
+            android:title="Coupon" />
+
+    </group>
+
+    <group
+        android:id="@+id/bottom"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:title="Settings" />
+        <item
+            android:id="@+id/emergency"
+            android:icon="@drawable/ic_emergency"
+            android:title="Emergency" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_logout"
+            android:title="logout" />
+    </group>
+
+</menu>

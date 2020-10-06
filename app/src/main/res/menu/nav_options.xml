@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 2da096dd0ce290c52b829fed056e3f5c940de609
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/ic_person_24"
+            android:title="Profile" />
+        <item
+<<<<<<< HEAD
+            android:id="@+id/rides"
+            android:icon="@drawable/ic_baseline_directions_car_24"
+            android:title="Rides" />
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/ic_history"
+            android:title="History" />
+        <item
+            android:id="@+id/referral"
+            android:icon="@drawable/ic_referral"
+            android:title="Referral" />
+        <item
+            android:id="@+id/coupon"
+            android:icon="@drawable/ic_coupon"
+            android:title="Coupon" />
+
+    </group>
+
+    <group
+        android:id="@+id/bottom"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:title="Settings" />
+=======
+            android:id="@+id/advance_book"
+            android:icon="@drawable/ic_booking_24"
+            android:title="Advance Booking" />
+        <item
+            android:id="@+id/registration"
+            android:title="Registration"
+            android:icon="@drawable/ic_website"/>
+        <item
+            android:id="@+id/earnings"
+            android:title="Earnings"
+            android:icon="@drawable/ic_coin_stack"/>
+
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/ic_history2"
+            android:title="History" />
+
+
+
+
+    </group>
+    <group
+        android:id="@+id/bottom"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/settings"
+            android:title="Settings"
+            android:icon="@drawable/ic_baseline_settings_24"/>
+>>>>>>> 2da096dd0ce290c52b829fed056e3f5c940de609
+        <item
+            android:id="@+id/emergency"
+            android:icon="@drawable/ic_emergency"
+            android:title="Emergency" />
+        <item
+            android:id="@+id/logout"
+<<<<<<< HEAD
+            android:icon="@drawable/ic_logout"
+            android:title="logout" />
+=======
+            android:title="logout"
+            android:icon="@drawable/ic_logout"/>
+
+>>>>>>> 2da096dd0ce290c52b829fed056e3f5c940de609
+    </group>
+
+</menu>

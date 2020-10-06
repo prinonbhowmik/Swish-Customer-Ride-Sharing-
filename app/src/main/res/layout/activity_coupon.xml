@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.CouponActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/themColor"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/referralBackBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:onClick="couponBack"
+                    android:src="@drawable/ic_baseline_arrow_back_24" />
+
+                <TextView
+                    android:id="@+id/titleName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="50dp"
+                    android:text="Coupon"
+                    android:textColor="@android:color/white"
+                    android:textSize="21sp" />
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ImageView
+        android:id="@+id/referralIV"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/appBarLayout"
+        android:src="@drawable/coupon" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/referralIV"
+        android:layout_centerHorizontal="true"
+        android:text="User Your Coupon Code"
+        android:textSize="18sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/coupon_IL"
+        style="@style/Edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_toStartOf="@+id/submitBtn"
+        android:hint="Coupon Code"
+        android:textColorHint="#000"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/coupon_Et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="#000"
+            android:textSize="21sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <Button
+        android:id="@+id/submitBtn"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/title"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/btn_background"/>
+
+    <RelativeLayout
+        android:id="@+id/couponLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_below="@+id/coupon_IL">
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/themColor"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"/>
+    <TextView
+        android:id="@+id/activeTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Activated Coupon"
+        android:layout_below="@+id/view1"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/couponCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Code"
+            android:layout_below="@+id/activeTxt"
+            android:textSize="24sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/quantum_googgreenA700"
+            android:layout_marginStart="40dp"/>
+        <TextView
+            android:id="@+id/couponDiscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20%"
+            android:layout_below="@+id/activeTxt"
+            android:textSize="24sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/quantum_googgreenA700"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="50dp"/>
+        <TextView
+            android:id="@+id/dateTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Validity till :"
+            android:layout_below="@+id/couponDiscount"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="40dp"
+            android:textColor="@color/quantum_bluegrey400"/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20/10/2020"
+            android:layout_below="@+id/couponDiscount"
+            android:textSize="15sp"
+            android:layout_toEndOf="@+id/dateTxt"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/quantum_bluegrey400"/>
+    </RelativeLayout>
+
+</RelativeLayout>

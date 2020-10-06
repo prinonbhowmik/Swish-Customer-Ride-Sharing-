@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sedan"
+        android:title="Sedan" />
+    <item
+        android:id="@+id/sedanpremiere"
+        android:title="Sedan Premiere"/>
+    <item
+        android:id="@+id/sedanbusiness"
+        android:title="Sedan Business"/>
+    <item
+        android:id="@+id/hiace"
+        android:title="Hiace"/>
+    <item
+        android:id="@+id/microbus"
+        android:title="MicroBus"/>
+
+
+
+</menu>

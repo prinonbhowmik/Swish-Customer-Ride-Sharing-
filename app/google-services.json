@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "397499017790",
+    "firebase_url": "https://swish-d5321.firebaseio.com",
+    "project_id": "swish-d5321",
+    "storage_bucket": "swish-d5321.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397499017790:android:d3a7024f8d9867a2bebf6f",
+        "android_client_info": {
+          "package_name": "com.hydertechno.swishcustomer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397499017790-lm82d5os8ot5sse973ss7fjtcuckrp9h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA9HIV7xePvHOU1rPc0Hw6jiYACVni8MA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397499017790-lm82d5os8ot5sse973ss7fjtcuckrp9h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397499017790:android:868a7f375041212ebebf6f",
+        "android_client_info": {
+          "package_name": "com.hydertechno.swishdriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397499017790-lm82d5os8ot5sse973ss7fjtcuckrp9h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA9HIV7xePvHOU1rPc0Hw6jiYACVni8MA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397499017790-lm82d5os8ot5sse973ss7fjtcuckrp9h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

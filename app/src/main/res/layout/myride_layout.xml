@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff">
+
+    <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+        android:id="@+id/card_view1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layerType="software"
+        app:neomorph_background_color="@color/neomorph_background_color"
+        app:neomorph_corner_radius="10dp"
+        app:neomorph_elevation="8dp"
+        app:neomorph_highlight_color="@color/neomorph_highlight_color"
+        app:neomorph_shadow_color="@color/neomorph_shadow_color"
+        app:neomorph_shadow_type="outer"
+        app:neomorph_view_type="rectangular">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/relative1"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/my_ride_status_blue"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/from_LT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relative1"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="13dp"
+                android:src="@drawable/ic_map"
+                android:textColor="#676262" />
+
+            <TextView
+                android:id="@+id/startLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relative1"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toEndOf="@id/from_LT"
+                android:text="Abc EfGh"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/name_LT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/startLocation"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="13dp"
+                android:src="@drawable/ic_flags"
+                android:textColor="#676262" />
+
+            <TextView
+                android:id="@+id/endLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/startLocation"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toEndOf="@id/name_LT"
+                android:text="Abc EfGh"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+
+            <ImageView
+                android:id="@+id/calendarIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/endLocation"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="13dp"
+                android:src="@drawable/ic_calendar_color" />
+
+            <TextView
+                android:id="@+id/rideDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/endLocation"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="150dp"
+                android:layout_toEndOf="@id/calendarIv"
+                android:text="10/10/2020"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/clockIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/endLocation"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="13dp"
+                android:src="@drawable/ic_clock_color"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:id="@+id/rideTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/endLocation"
+                android:layout_marginTop="10dp"
+                android:text="10:00:00 AM"
+                android:layout_toStartOf="@id/clockIv"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/typeIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rideDate"
+                android:layout_marginTop="13dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_car" />
+
+
+            <TextView
+                android:id="@+id/rideType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rideDate"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toEndOf="@+id/typeIV"
+                android:gravity="center"
+                android:text="Sedan"
+                android:textSize="18sp"
+                android:textColor="#000" />
+
+            <ImageView
+                android:id="@+id/takaIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rideTime"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_money" />
+
+            <TextView
+                android:id="@+id/ridePrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rideDate"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="500 tk"
+                android:layout_toStartOf="@id/takaIV"
+                android:textSize="18sp"
+                android:textColor="#CF0E0E" />
+
+        </RelativeLayout>
+    </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+</RelativeLayout>
