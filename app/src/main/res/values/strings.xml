@@ -1,10 +1,7 @@
 <resources>
-<<<<<<< HEAD
-    <string name="app_name">Swish</string>
 
-=======
     <string name="app_name">Swish Driver</string>
->>>>>>> 2da096dd0ce290c52b829fed056e3f5c940de609
+
     <string name="terms_and_conditions"><u>terms and conditions</u></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -14,10 +11,8 @@
         The call center is open 24 hours a day, 7 days a week. 999 is a toll free number.
         The caller does not have to spend any money to call this number. Their trained call center agents
         are always ready for your emergency call, Bangladesh Police. Stay well, stay safe.</string>
-<<<<<<< HEAD
+
     <string name="referral_title_text">Send this referral code to your 3 friends or relative and ask
         them to use it on their first sign up. Both your friends will get amazing discount while you and your
         friends complete 3 rides.</string>
-=======
->>>>>>> 2da096dd0ce290c52b829fed056e3f5c940de609
 </resources>
