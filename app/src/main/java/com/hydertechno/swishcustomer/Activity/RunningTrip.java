@@ -285,7 +285,6 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                         intent.putExtra("tripId", tripId);
                         intent.putExtra("carType", carType);
                         intent.putExtra("check", 3);
-                        Toast.makeText(RunningTrip.this, "" + carType, Toast.LENGTH_SHORT).show();
 
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);

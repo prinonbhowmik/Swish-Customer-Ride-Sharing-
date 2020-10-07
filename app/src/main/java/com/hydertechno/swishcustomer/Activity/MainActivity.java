@@ -52,6 +52,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String phone;
     private String image;
     private int walletFromNavigation;
+    private NeomorphFrameLayout backNFL;
     private Animation btnanim;
     private String apiKey = "AIzaSyCCqD0ogQ8adzJp_z2Y2W2ybSFItXYwFfI", pickUpPlace, destinationPlace;
     private ImageView nav_icon;
@@ -349,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
                     } else {
-                        Toasty.error(MainActivity.this, "Place Not Found!");
+                        Toasty.error(MainActivity.this, "Place Not Found!",Toasty.LENGTH_SHORT).show();
                     }
 
                 } catch (IOException e) {
@@ -1389,6 +1391,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void showDirections() {
         map.clear();
         searchLayout.setVisibility(View.GONE);
+        backNFL.setVisibility(View.VISIBLE);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
 
         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
         place1 = new MarkerOptions().icon(markerIcon)
@@ -1451,7 +1456,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     sedanPremierePrice(kmdistance, travelduration);
                     sedanBusinessPrice(kmdistance, travelduration);
                     hiace7Price(kmdistance, travelduration);
-                    // hiace11Price(kmdistance, travelduration);
+                    hiace11Price(kmdistance, travelduration);
 
                 }
             }
@@ -1487,6 +1492,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     estprice = kmPrice + minPrice + minimumRate;
                     micro7price.setText("" + estprice);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RidingRate>> call, Throwable t) {
+
+            }
+        });
+    }
+    private void hiace11Price(int kmdistance, int travelduration) {
+        Call<List<RidingRate>> call = apiInterface.getPrice("Micro11");
+        call.enqueue(new Callback<List<RidingRate>>() {
+            @Override
+            public void onResponse(Call<List<RidingRate>> call, Response<List<RidingRate>> response) {
+                if (response.isSuccessful()) {
+                    List<RidingRate> rate = new ArrayList<>();
+                    rate = response.body();
+
+                    int kmRate = rate.get(0).getKm_charge();
+                    int minRate = rate.get(0).getMin_charge();
+                    int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
+
+                    int kmPrice = kmRate * kmdistance;
+                    int minPrice = minRate * travelduration;
+
+                    Log.d("kmPrice", kmPrice + "," + minPrice);
+                    Log.d("minf", String.valueOf(minimumRate));
+
+                    Log.d("checkCity", pickUpCity + "," + destinationCity);
+
+                    estprice = kmPrice + minPrice + minimumRate;
+                    micro11price.setText("" + estprice);
                 }
             }
 
@@ -1678,8 +1715,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             destinationLon = location.getLongitude();
                             destinationCity = latlonaddress.get(0).getLocality();
 
-                            Toast.makeText(MainActivity.this, "" + destinationCity, Toast.LENGTH_SHORT).show();
-
                             map.clear();
                             BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                             pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon))
@@ -1718,12 +1753,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     }
                                 }
                             });
-                        } else {
-                            Toasty.error(MainActivity.this, "Place not found!");
+                        }
+                        else {
+                            Toasty.error(MainActivity.this, "Place not found!",Toasty.LENGTH_SHORT).show();
                         }
                     } catch (IOException e) {
-                        Toast.makeText(MainActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        ;
+
                     }
                 }
             }
@@ -1778,10 +1813,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 pickUpLat = marker.getPosition().latitude;
                                 pickUpLon = marker.getPosition().longitude;
 
-                                Log.d("pickUp", String.valueOf(pickUpLat));
-                                Log.d("pickUplon", String.valueOf(pickUpLon));
-
-                                //Geocoder geocoder = new Geocoder(MainActivity.this,locale);
                                 try {
                                     List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
                                     pickUpPlace = addresses.get(0).getAddressLine(0);
@@ -1795,7 +1826,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
                     } else {
-                        Toasty.error(MainActivity.this, "Place Not Found!");
+                        Toasty.error(MainActivity.this, "Place Not Found!",Toasty.LENGTH_SHORT).show();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1804,7 +1835,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onError(@NonNull Status status) {
-                Toast.makeText(getApplicationContext(), String.valueOf(status), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -1856,6 +1886,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         apiInterface = ApiUtils.getUserService();
         reference = FirebaseDatabase.getInstance().getReference("profile");
         nav_icon = findViewById(R.id.nav_icon);
+        backNFL = findViewById(R.id.backNFL);
         drawerLayout = findViewById(R.id.drawer_layout);
         searchLayout = findViewById(R.id.searchLayout);
         navigationView = findViewById(R.id.navigationView);
@@ -2249,5 +2280,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
+    public void backPressUp(View view) {
+        finish();
+        startActivity(getIntent());
+    }
 }

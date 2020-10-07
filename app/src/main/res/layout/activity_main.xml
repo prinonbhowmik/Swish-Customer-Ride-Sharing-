@@ -562,7 +562,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:text="$000.00"
+                                        android:text="---"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="12sp" />
 
@@ -627,7 +627,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:text="$000.00"
+                                        android:text="---"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="12sp" />
                                 </LinearLayout>
@@ -691,7 +691,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:text="$000.00"
+                                        android:text="---"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="12sp" />
                                 </LinearLayout>
@@ -754,7 +754,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:text="$000.00"
+                                        android:text="---"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="12sp" />
                                 </LinearLayout>
@@ -814,7 +814,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:text="$000.00"
+                                        android:text="---"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="12sp" />
                                 </LinearLayout>
@@ -885,6 +885,32 @@
             </RelativeLayout>
 
         </RelativeLayout>
+
+        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+            android:id="@+id/backNFL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:neomorph_view_type="circular"
+            app:neomorph_shadow_type="outer"
+            app:neomorph_elevation="5dp"
+            android:visibility="gone"
+            app:neomorph_corner_radius="10dp"
+            android:layout_marginStart="10dp"
+            android:layerType="software"
+            app:neomorph_background_color="@color/neomorph_background_color"
+            app:neomorph_shadow_color="@color/neomorph_shadow_color"
+            app:neomorph_highlight_color="@color/neomorph_highlight_color"
+            android:layout_marginBottom="5dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:onClick="backPressUp"
+                android:padding="7dp"
+                android:background="@drawable/round_stroke2"
+                android:src="@drawable/ic_arrow_gray"/>
+        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
 
     </FrameLayout>
 
