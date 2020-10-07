@@ -1169,6 +1169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rideInfo.put("payment", paymentType);
         rideInfo.put("discount", "");
         rideInfo.put("finalPrice", "");
+        rideInfo.put("cashReceived", "no");
 
         rideLaterRef.child(bookingId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -1274,6 +1275,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rideInfo.put("payment", paymentType);
         rideInfo.put("discount", "");
         rideInfo.put("finalPrice", "");
+        rideInfo.put("cashReceived", "no");
 
         hourlyLaterRef.child(hourlyTripId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
