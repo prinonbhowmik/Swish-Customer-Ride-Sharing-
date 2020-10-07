@@ -125,6 +125,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             destinationLon = Double.parseDouble(intent.getStringExtra("dLon"));
             carType = intent.getStringExtra("carType");
         }
+
+        //hourly ride edit
         if (check == 4) {
             tripId = intent.getStringExtra("tripId");
             carType = intent.getStringExtra("type");
@@ -282,6 +284,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                         Intent intent = new Intent(RunningTrip.this, ShowCash.class);
                         intent.putExtra("tripId", tripId);
                         intent.putExtra("carType", carType);
+                        intent.putExtra("check", 3);
                         Toast.makeText(RunningTrip.this, "" + carType, Toast.LENGTH_SHORT).show();
 
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -18,12 +18,14 @@ public class HourlyRideModel {
     private String ratingStatus;
     private String payment;
     private String discount;
-    private String updatedPrice;
+    private String finalPrice;
+    private String totalTime;
+
 
     public HourlyRideModel() {
     }
 
-    public HourlyRideModel(String bookingId, String bookingStatus, String carType, String pickUpLat, String pickUpLon, String endTime, String customerId, String driverId, String pickUpPlace, String pickUpDate, String pickUpTime, String price, String rideStatus, String ratingStatus, String payment, String discount, String updatedPrice) {
+    public HourlyRideModel(String bookingId, String bookingStatus, String carType, String pickUpLat, String pickUpLon, String endTime, String customerId, String driverId, String pickUpPlace, String pickUpDate, String pickUpTime, String price, String rideStatus, String ratingStatus, String payment, String discount, String finalPrice, String totalTime) {
         this.bookingId = bookingId;
         this.bookingStatus = bookingStatus;
         this.carType = carType;
@@ -40,7 +42,8 @@ public class HourlyRideModel {
         this.ratingStatus = ratingStatus;
         this.payment = payment;
         this.discount = discount;
-        this.updatedPrice = updatedPrice;
+        this.finalPrice = finalPrice;
+        this.totalTime = totalTime;
     }
 
     public String getBookingId() {
@@ -107,7 +110,11 @@ public class HourlyRideModel {
         return discount;
     }
 
-    public String getUpdatedPrice() {
-        return updatedPrice;
+    public String getFinalPrice() {
+        return finalPrice;
+    }
+
+    public String getTotalTime() {
+        return totalTime;
     }
 }

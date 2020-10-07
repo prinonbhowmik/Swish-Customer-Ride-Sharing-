@@ -1,5 +1,6 @@
 package com.hydertechno.swishcustomer.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,18 +25,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.R;
 import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
-import com.hydertechno.swishcustomer.ServerApi.ApiUtils;
 
 public class ShowCash extends AppCompatActivity {
     Button payCasshBtn;
     private TextView pickupPlaceTV, destinationPlaceTV, cashTxt, distanceTv, durationTv, final_Txt, discountTv, hourTv;
     private int price, check, realPrice, discount, addWalletBalance;
     private Integer setCoupon;
-    private double distance, duration;
     private float hourPrice;
     private RelativeLayout hourLayout, kmLayout;
     private NeomorphFrameLayout cashNFL;
-    private String pickUpPlace, destinationPlace, userId,driverId, carType, payment, tripId,status,finalPrice,discountPrice;
+    private String pickUpPlace, destinationPlace, userId,driverId, carType, payment, tripId
+            ,status,finalPrice,discountPrice,distance,duration;
     private ImageView info;
     private SharedPreferences sharedPreferences;
     private LottieAnimationView progrssbar;
@@ -57,6 +57,7 @@ public class ShowCash extends AppCompatActivity {
         Intent intent = getIntent();
         tripId = intent.getStringExtra("tripId");
         carType = intent.getStringExtra("carType");
+        check = intent.getIntExtra("check",0);
         userId = sharedPreferences.getString("id","");
 
         new Handler().postDelayed(new Runnable() {
@@ -68,32 +69,70 @@ public class ShowCash extends AppCompatActivity {
         },3000);
 
 
-        DatabaseReference cashRef = FirebaseDatabase.getInstance().getReference("CustomerRides")
-                .child(userId).child(tripId);
-        cashRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                RideModel model = snapshot.getValue(RideModel.class);
-                String price = model.getPrice();
-                pickUpPlace = model.getPickUpPlace();
-                destinationPlace = model.getDestinationPlace();
-                driverId = model.getDriverId();
-                finalPrice = model.getUpdatedPrice();
-                discountPrice = model.getDiscount();
 
-                cashTxt.setText("৳ " + price);
-                pickupPlaceTV.setText(pickUpPlace);
-                destinationPlaceTV.setText(destinationPlace);
-                discountTv.setText(discountPrice);
-                final_Txt.setText(finalPrice);
+        if (check==3){
+            DatabaseReference cashRef = FirebaseDatabase.getInstance().getReference("CustomerRides")
+                    .child(userId).child(tripId);
+            cashRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    RideModel model = snapshot.getValue(RideModel.class);
+                    String price = model.getPrice();
+                    pickUpPlace = model.getPickUpPlace();
+                    destinationPlace = model.getDestinationPlace();
+                    driverId = model.getDriverId();
+                    finalPrice = model.getFinalPrice();
+                    discountPrice = model.getDiscount();
+                    distance = model.getTotalDistance();
+                    duration = model.getTotalTime();
 
-            }
+                    cashTxt.setText("৳ " + price);
+                    pickupPlaceTV.setText(pickUpPlace);
+                    destinationPlaceTV.setText(destinationPlace);
+                    discountTv.setText(discountPrice);
+                    final_Txt.setText(finalPrice);
+                    kmLayout.setVisibility(View.VISIBLE);
+                    distanceTv.setText("Distance : "+distance+" km");
+                    durationTv.setText("Duration : "+duration+" km");
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                }
 
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
+
+        if (check==4){
+            DatabaseReference cashRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides")
+                    .child(userId).child(tripId);
+            cashRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    RideModel model = snapshot.getValue(RideModel.class);
+                    String price = model.getPrice();
+                    pickUpPlace = model.getPickUpPlace();
+                    driverId = model.getDriverId();
+                    finalPrice = model.getFinalPrice();
+                    discountPrice = model.getDiscount();
+
+                    cashTxt.setText("৳ " + price);
+                    pickupPlaceTV.setText(pickUpPlace);
+                    destinationPlaceTV.setText(destinationPlace);
+                    discountTv.setText(discountPrice);
+                    final_Txt.setText(finalPrice);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
 
         payCasshBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +172,7 @@ public class ShowCash extends AppCompatActivity {
         hourLayout = findViewById(R.id.hourLayout);
         cashTxt = findViewById(R.id.cashTxt);
         info = findViewById(R.id.infoIV);
+        sharedPreferences = getSharedPreferences("MyRef", Context.MODE_PRIVATE);
     }
 
     @Override
