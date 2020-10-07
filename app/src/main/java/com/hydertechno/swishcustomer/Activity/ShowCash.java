@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,19 +28,24 @@ import com.hydertechno.swishcustomer.ServerApi.ApiUtils;
 
 public class ShowCash extends AppCompatActivity {
     Button payCasshBtn;
-    TextView pickupPlaceTV,destinationPlaceTV,cashTxt;
-    int price;
-    String pickUpPlace,destinationPlace,tripId,userId,carType,driverId;
+    private TextView pickupPlaceTV, destinationPlaceTV, cashTxt, distanceTv, durationTv, final_Txt, discountTv, hourTv;
+    private int price, check, realPrice, discount, addWalletBalance;
+    private Integer setCoupon;
+    private double distance, duration;
+    private float hourPrice;
+    private RelativeLayout hourLayout, kmLayout;
     private NeomorphFrameLayout cashNFL;
+    private String pickUpPlace, destinationPlace, userId,driverId, carType, payment, tripId,status,finalPrice,discountPrice;
     private ImageView info;
-    private float rating1 = 0,rating;
-    private static int SPLASH_TIME_OUT=1000;
-    private int count1 =0,count;
-    private boolean ratingUsed =false;
     private SharedPreferences sharedPreferences;
-    private ApiInterface apiInterface;
-    private String driver_id;
-    private LottieAnimationView progressBar;
+    private LottieAnimationView progrssbar;
+    private ApiInterface api;
+    private boolean couponActive = false, walletLow = false, walletHigh = false;
+    private int wallet;
+    private int halfPrice;
+    private int actualPrice;
+    private int walletBalance;
+    private int updatewallet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +63,9 @@ public class ShowCash extends AppCompatActivity {
             @Override
             public void run() {
                 cashNFL.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
+                progrssbar.setVisibility(View.GONE);
             }
-        },SPLASH_TIME_OUT);
+        },3000);
 
 
         DatabaseReference cashRef = FirebaseDatabase.getInstance().getReference("CustomerRides")
@@ -72,9 +78,14 @@ public class ShowCash extends AppCompatActivity {
                 pickUpPlace = model.getPickUpPlace();
                 destinationPlace = model.getDestinationPlace();
                 driverId = model.getDriverId();
+                finalPrice = model.getUpdatedPrice();
+                discountPrice = model.getDiscount();
+
                 cashTxt.setText("৳ " + price);
                 pickupPlaceTV.setText(pickUpPlace);
                 destinationPlaceTV.setText(destinationPlace);
+                discountTv.setText(discountPrice);
+                final_Txt.setText(finalPrice);
 
             }
 
@@ -108,15 +119,20 @@ public class ShowCash extends AppCompatActivity {
 
 
     private void init() {
-        cashNFL=findViewById(R.id.cashNFL);
-        payCasshBtn = findViewById(R.id.collectBtn);
+        payCasshBtn = findViewById(R.id.payCashBtn);
+        final_Txt = findViewById(R.id.final_Txt);
+        distanceTv = findViewById(R.id.distance);
+        durationTv = findViewById(R.id.duration);
+        progrssbar = findViewById(R.id.progrssbar);
+        discountTv = findViewById(R.id.discount_Txt);
         pickupPlaceTV = findViewById(R.id.pickupPlaceTV);
         destinationPlaceTV = findViewById(R.id.destinationPlaceTV);
+        kmLayout = findViewById(R.id.kmLayout);
+        hourTv = findViewById(R.id.hourTxt);
+        cashNFL = findViewById(R.id.cashNFL);
+        hourLayout = findViewById(R.id.hourLayout);
         cashTxt = findViewById(R.id.cashTxt);
         info = findViewById(R.id.infoIV);
-        sharedPreferences = getSharedPreferences("MyRef",MODE_PRIVATE);
-        apiInterface = ApiUtils.getUserService();
-        progressBar = findViewById(R.id.progrssbar);
     }
 
     @Override

@@ -738,7 +738,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (DataSnapshot data : snapshot.getChildren()) {
                         String rideStatus = data.child("rideStatus").getValue().toString();
                         String ratingStatus = data.child("ratingStatus").getValue().toString();
-                        if (rideStatus.equals("End") && ratingStatus.equals("false")) {
+                        String cashReceived = data.child("cashReceived").getValue().toString();
+                        if (rideStatus.equals("End") && ratingStatus.equals("false") && cashReceived.equals("yes")) {
                             RideModel model = data.getValue(RideModel.class);
                             String driver_id = model.getDriverId();
                             String tripId = model.getBookingId();
@@ -977,7 +978,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (DataSnapshot data : snapshot.getChildren()) {
                         String rideStatus = data.child("rideStatus").getValue().toString();
                         String ratingStatus = data.child("ratingStatus").getValue().toString();
-                        if (rideStatus.equals("End") && ratingStatus.equals("false")) {
+                        String cashReceived = data.child("cashReceived").getValue().toString();
+                        if (rideStatus.equals("End") && ratingStatus.equals("false") && cashReceived.equals("yes")) {
                             RideModel model = data.getValue(RideModel.class);
                             String driver_id = model.getDriverId();
                             String tripId = model.getBookingId();
@@ -1170,6 +1172,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rideInfo.put("discount", "");
         rideInfo.put("finalPrice", "");
         rideInfo.put("cashReceived", "no");
+        rideInfo.put("totalDistance", "");
+        rideInfo.put("totalTime", "");
 
         rideLaterRef.child(bookingId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -1193,13 +1197,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             bottomsheet.setVisibility(View.GONE);
-
                         }
                     });
                     builder.create().show();
                 }
             }
         });
+
         if (notify) {
             sendNotification(bookingId, userId, "Booking Create!", "Tap to see booking details", "my_ride_details");
            // sendNotificationDriver(bookingId, type,"Booking Create!", "New Booking Request Upload!", "my_ride_details");
@@ -1276,6 +1280,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rideInfo.put("discount", "");
         rideInfo.put("finalPrice", "");
         rideInfo.put("cashReceived", "no");
+        rideInfo.put("hourTime", "");
 
         hourlyLaterRef.child(hourlyTripId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
