@@ -283,7 +283,6 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                     if (rideStatus.equals("End")) {
                         Intent intent = new Intent(RunningTrip.this, ShowCash.class);
                         intent.putExtra("tripId", tripId);
-                        intent.putExtra("carType", carType);
                         intent.putExtra("check", 3);
 
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

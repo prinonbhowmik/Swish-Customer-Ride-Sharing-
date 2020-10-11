@@ -31,6 +31,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.hydertechno.swishcustomer.Activity.HourlyRideDetails;
 import com.hydertechno.swishcustomer.Activity.MainActivity;
 import com.hydertechno.swishcustomer.Activity.MyRidesDetails;
+import com.hydertechno.swishcustomer.Activity.ShowCash;
 import com.hydertechno.swishcustomer.R;
 
 import java.io.IOException;
@@ -136,7 +137,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 break;
             }
             case "running_trip":
-            case "show_cash":
             case "main_activity":{
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -154,6 +154,44 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 oreoNotification.getManager().notify(i, builder.build());
 
 
+                break;
+            }
+            case "show_cash":{
+                Intent intent = new Intent(getApplicationContext(), ShowCash.class);
+                intent.putExtra("tripId", bookingId);
+                intent.putExtra("check", 3);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+                OreoNotification oreoNotification = new OreoNotification(this);
+                Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                        defaultSound, icon);
+                int i = 0;
+                if (j > 0) {
+                    i = j;
+
+                }
+                oreoNotification.getManager().notify(i, builder.build());
+                break;
+            }
+            case "show_cash2":{
+                Intent intent = new Intent(getApplicationContext(), ShowCash.class);
+                intent.putExtra("tripId", bookingId);
+                intent.putExtra("check", 4);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+                OreoNotification oreoNotification = new OreoNotification(this);
+                Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                        defaultSound, icon);
+                int i = 0;
+                if (j > 0) {
+                    i = j;
+
+                }
+                oreoNotification.getManager().notify(i, builder.build());
                 break;
             }
         }
@@ -262,9 +300,60 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 break;
             }
             case "running_trip":
-            case "show_cash":
             case "main_activity": {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_noti_foreground)
+                        .setContentTitle(title)
+                        .setLargeIcon(anImage)
+                        .setContentText(body)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)
+                        .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
+                        .setContentIntent(pendingIntent);
+                NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                int i = 0;
+                if (j > 0) {
+                    i = j;
+                }
+
+                noti.notify(i, builder.build());
+
+                break;
+            }
+            case "show_cash": {
+                Intent intent = new Intent(getApplicationContext(), ShowCash.class);
+                intent.putExtra("tripId", bookingId);
+                intent.putExtra("check", 3);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_noti_foreground)
+                        .setContentTitle(title)
+                        .setLargeIcon(anImage)
+                        .setContentText(body)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)
+                        .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
+                        .setContentIntent(pendingIntent);
+                NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                int i = 0;
+                if (j > 0) {
+                    i = j;
+                }
+
+                noti.notify(i, builder.build());
+
+                break;
+            }
+            case "show_cash2": {
+                Intent intent = new Intent(getApplicationContext(), ShowCash.class);
+                intent.putExtra("tripId", bookingId);
+                intent.putExtra("check", 4);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
