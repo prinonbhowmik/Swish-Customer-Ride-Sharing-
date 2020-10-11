@@ -94,7 +94,7 @@ public class ShowCash extends AppCompatActivity {
                         final_Txt.setText(finalPrice);
                         kmLayout.setVisibility(View.VISIBLE);
                         distanceTv.setText("Distance : " + distance + " km");
-                        durationTv.setText("Duration : " + duration + " km");
+                        durationTv.setText("Duration : " + duration + " min");
                     }else {
 
                     }

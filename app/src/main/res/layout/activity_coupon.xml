@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/referralIV"
         android:layout_centerHorizontal="true"
-        android:text="User Your Coupon Code"
+        android:text="Use Your Coupon Code"
         android:textSize="18sp" />
 
     <com.google.android.material.textfield.TextInputLayout
