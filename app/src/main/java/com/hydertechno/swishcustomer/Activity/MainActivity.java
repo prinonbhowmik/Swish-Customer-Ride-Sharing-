@@ -223,7 +223,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hideKeyBoard(getApplicationContext());
 
         checkRunningRides();
-        checkHourlyRunningRides();
+
+        /*checkHourlyRunningRides();*/
 
         checkRatingCall();
 
@@ -732,7 +733,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void checkHourlyRunningRides() {
+    /*private void checkHourlyRunningRides() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -764,7 +765,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-    }
+    }*/
 
     private void checkHourlyRatingCall() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
