@@ -115,7 +115,7 @@ public class ShowCash extends AppCompatActivity {
                         distanceTv.setText("Distance : " + distance + " km");
                         durationTv.setText("Duration : " + duration + " min");
                     }else {
-
+                        startActivity(new Intent(ShowCash.this,History.class));
                     }
 
                 }
@@ -126,9 +126,7 @@ public class ShowCash extends AppCompatActivity {
                 }
             });
 
-        }
-
-        if (check==4){
+        } else if (check==4){
             DatabaseReference cashRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides")
                     .child(userId).child(tripId);
             cashRef.addValueEventListener(new ValueEventListener() {
@@ -189,19 +187,15 @@ public class ShowCash extends AppCompatActivity {
 
     }
 
-    private void checkRatingCall()
-    {
-        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
+    private void checkRatingCall() {
+        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId).child(tripId);
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for (DataSnapshot data : snapshot.getChildren()) {
-                        String rideStatus = data.child("rideStatus").getValue().toString();
-                        String ratingStatus = data.child("ratingStatus").getValue().toString();
-                        String cashReceived = data.child("cashReceived").getValue().toString();
-                        if (rideStatus.equals("End") && ratingStatus.equals("false") && cashReceived.equals("yes")) {
-                            RideModel model = data.getValue(RideModel.class);
+                        String cashReceived = snapshot.child("cashReceived").getValue().toString();
+                        if (cashReceived.equals("yes")) {
+                            RideModel model = snapshot.getValue(RideModel.class);
                             String driver_id = model.getDriverId();
                             String tripId = model.getBookingId();
                             String carType = model.getCarType();
@@ -217,14 +211,11 @@ public class ShowCash extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
                                     List<DriverProfile> list = response.body();
-
                                     if (!list.get(0).getImage().equals("")) {
-                                        Picasso.get().load(Config.DRIVER_IMAGE_LINE + list.get(0).getImage()).into(driverImage
-                                                , new com.squareup.picasso.Callback() {
+                                        Picasso.get().load(Config.DRIVER_IMAGE_LINE + list.get(0).getImage()).into(driverImage, new com.squareup.picasso.Callback() {
                                                     @Override
                                                     public void onSuccess() {
                                                     }
-
                                                     @Override
                                                     public void onError(Exception e) {
                                                         Log.d("kiKahini", e.getMessage());
@@ -246,18 +237,16 @@ public class ShowCash extends AppCompatActivity {
                                 @Override
                                 public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                                     rating1 = ratingBar.getRating();
-
                                     totalRating = rating1 + driverRating;
                                     totalCount = driverRatingCount + 1;
                                     ratingGiven = true;
-
                                 }
                             });
 
                             submitBTN.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if (ratingGiven == true) {
+                                    if (ratingGiven) {
                                         Call<List<DriverProfile>> call1 = ApiUtils.getUserService().updateRating(driver_id, totalRating, totalCount);
                                         call1.enqueue(new Callback<List<DriverProfile>>() {
                                             @Override
@@ -276,26 +265,23 @@ public class ShowCash extends AppCompatActivity {
 
                                         DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
                                         del1Ref.child(tripId).removeValue();
-                                        startActivity(new Intent(ShowCash.this,MainActivity.class));
-                                        finish();
                                     } else {
                                         DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
                                         delRef.child(tripId).removeValue();
 
                                         DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
                                         del1Ref.child(tripId).removeValue();
-                                        startActivity(new Intent(ShowCash.this,MainActivity.class));
-                                        finish();
                                     }
+                                    startActivity(new Intent(ShowCash.this,MainActivity.class));
+                                    finish();
                                     dialog.dismiss();
                                 }
                             });
                             dialog.setCancelable(false);
-
                             dialog.show();
                         }
 
-                    }
+
                 }
             }
 

@@ -994,7 +994,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             CircleImageView driverImage = dialog.findViewById(R.id.profileIV);
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
-
+                            dialog.setCancelable(false);
+                            dialog.show();
                             Call<List<DriverProfile>> call = apiInterface.getDriverData(driver_id);
                             call.enqueue(new Callback<List<DriverProfile>>() {
                                 @Override
@@ -1069,9 +1070,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     dialog.dismiss();
                                 }
                             });
-                            dialog.setCancelable(false);
 
-                            dialog.show();
                         }
 
                     }

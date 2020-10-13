@@ -102,6 +102,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         check = intent.getIntExtra("check", 0);
 
         if (check == 1) {
+            //pick up edit
             tripId = intent.getStringExtra("tripId");
             carType = intent.getStringExtra("type");
             pickUpLat = Double.parseDouble(intent.getStringExtra("lat"));
@@ -109,7 +110,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             pickUpPlace = intent.getStringExtra("place");
             edit = intent.getIntExtra("edit", 0);
         }
-        if (check == 2) {
+        else if (check == 2) {
+            //destination edit
             tripId = intent.getStringExtra("tripId");
             carType = intent.getStringExtra("type");
             destinationLat = Double.parseDouble(intent.getStringExtra("lat"));
@@ -117,7 +119,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             destinationPlace = intent.getStringExtra("place");
             edit = intent.getIntExtra("edit", 0);
         }
-        if (check == 3) {
+        else if (check == 3) {
+            //book for latter on going
             tripId = intent.getStringExtra("tripId");
             pickUpLat = Double.parseDouble(intent.getStringExtra("pLat"));
             pickUpLon = Double.parseDouble(intent.getStringExtra("pLon"));
@@ -125,9 +128,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             destinationLon = Double.parseDouble(intent.getStringExtra("dLon"));
             carType = intent.getStringExtra("carType");
         }
-
-        //hourly ride edit
-        if (check == 4) {
+        else if (check == 4) {
+            //hourly ride pick up edit
             tripId = intent.getStringExtra("tripId");
             carType = intent.getStringExtra("type");
             pickUpLat = Double.parseDouble(intent.getStringExtra("lat"));
@@ -137,7 +139,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         }
         Log.d("checkData", pickUpLat + "," + pickUpLon);
 
-        checkTripStatus();
+
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,7 +252,6 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                         String pickup = model.getPickUpPlace();
                         String destination = model.getDestinationPlace();
 
-                        Toast.makeText(RunningTrip.this, "" + driverId, Toast.LENGTH_SHORT).show();
 
                         Bundle args = new Bundle();
                         args.putString("driverId", driverId);
@@ -271,6 +272,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                 });
             }
         });
+
+        checkTripStatus();
     }
 
     private void checkTripStatus() {
