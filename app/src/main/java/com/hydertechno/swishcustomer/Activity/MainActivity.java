@@ -733,40 +733,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    /*private void checkHourlyRunningRides() {
-        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
-        tripRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot data : snapshot.getChildren()) {
-                        rideStatus = data.child("rideStatus").getValue().toString();
-                       String cashReceived = data.child("cashReceived").getValue().toString();
-                        if (rideStatus.equals("End") && cashReceived.equals("no")) {
-                            RideModel model = data.getValue(RideModel.class);
-                            String bookingId = model.getBookingId();
-                            String carType = model.getCarType();
-
-                            Intent intent = new Intent(MainActivity.this, ShowCash.class);
-                            intent.putExtra("check", 4);
-                            intent.putExtra("tripId", bookingId);
-                            intent.putExtra("carType", carType);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
-
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }*/
-
     private void checkHourlyRatingCall() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
         tripRef.addValueEventListener(new ValueEventListener() {
