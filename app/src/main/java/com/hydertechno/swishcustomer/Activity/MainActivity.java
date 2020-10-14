@@ -261,9 +261,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             stringBuilder.append("\n\n");
                             Toast.makeText(getApplicationContext(), stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                         }
-                        if (!isContinue && mFusedLocationClient != null) {
+                       /* if (!isContinue && mFusedLocationClient != null) {
                             mFusedLocationClient.removeLocationUpdates(locationCallback);
-                        }
+                        }*/
                     }
                 }
             }
