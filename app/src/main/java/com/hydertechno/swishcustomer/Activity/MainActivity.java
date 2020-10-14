@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int totalCount;
     private APIService apiService;
     private double radius = 2;
+    private String tripId,picklat,pickLon,deslat,deslon,carType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,14 +222,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navHeaderData();
         hideKeyBoard(getApplicationContext());
-
-        checkRunningRides();
-
-        /*checkHourlyRunningRides();*/
-
-        checkRatingCall();
-
-        checkHourlyRatingCall();
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
@@ -731,6 +724,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+
+        checkRunningRides();
+
+        checkRatingCall();
+
+        checkHourlyRatingCall();
     }
 
     private void checkHourlyRatingCall() {
@@ -1084,9 +1083,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void checkRunningRides() {
+    protected void checkRunningRides() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
-        tripRef.addValueEventListener(new ValueEventListener() {
+        tripRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -1094,12 +1093,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         rideStatus = data.child("rideStatus").getValue().toString();
                         if (rideStatus.equals("Start")) {
                             RideModel model = data.getValue(RideModel.class);
-                            String picklat = model.getPickUpLat();
-                            String pickLon = model.getPickUpLon();
-                            String deslat = model.getDestinationLat();
-                            String deslon = model.getDestinationLon();
-                            String bookingId = model.getBookingId();
-                            String carType = model.getCarType();
+                            picklat = model.getPickUpLat();
+                            pickLon = model.getPickUpLon();
+                            deslat = model.getDestinationLat();
+                            deslon = model.getDestinationLon();
+                            tripId = model.getBookingId();
+                            carType = model.getCarType();
 
                             Intent intent = new Intent(MainActivity.this, RunningTrip.class);
                             intent.putExtra("check", 3);
@@ -1107,14 +1106,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             intent.putExtra("pLon", pickLon);
                             intent.putExtra("dLat", deslat);
                             intent.putExtra("dLon", deslon);
-                            intent.putExtra("tripId", bookingId);
+                            intent.putExtra("tripId", tripId);
                             intent.putExtra("carType", carType);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
-
                         }
+
                     }
+
                 }
             }
 

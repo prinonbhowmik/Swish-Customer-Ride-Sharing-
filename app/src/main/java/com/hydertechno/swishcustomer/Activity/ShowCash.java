@@ -86,7 +86,7 @@ public class ShowCash extends AppCompatActivity {
                 cashNFL.setVisibility(View.VISIBLE);
                 progrssbar.setVisibility(View.GONE);
             }
-        },3000);
+        },2000);
 
         if (check==3){
             DatabaseReference cashRef = FirebaseDatabase.getInstance().getReference("CustomerRides")

@@ -14,6 +14,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -101,45 +102,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         check = intent.getIntExtra("check", 0);
 
-        if (check == 1) {
-            //pick up edit
-            tripId = intent.getStringExtra("tripId");
-            carType = intent.getStringExtra("type");
-            pickUpLat = Double.parseDouble(intent.getStringExtra("lat"));
-            pickUpLon = Double.parseDouble(intent.getStringExtra("lon"));
-            pickUpPlace = intent.getStringExtra("place");
-            edit = intent.getIntExtra("edit", 0);
-        }
-        else if (check == 2) {
-            //destination edit
-            tripId = intent.getStringExtra("tripId");
-            carType = intent.getStringExtra("type");
-            destinationLat = Double.parseDouble(intent.getStringExtra("lat"));
-            destinationLon = Double.parseDouble(intent.getStringExtra("lon"));
-            destinationPlace = intent.getStringExtra("place");
-            edit = intent.getIntExtra("edit", 0);
-        }
-        else if (check == 3) {
-            //book for latter on going
-            tripId = intent.getStringExtra("tripId");
-            pickUpLat = Double.parseDouble(intent.getStringExtra("pLat"));
-            pickUpLon = Double.parseDouble(intent.getStringExtra("pLon"));
-            destinationLat = Double.parseDouble(intent.getStringExtra("dLat"));
-            destinationLon = Double.parseDouble(intent.getStringExtra("dLon"));
-            carType = intent.getStringExtra("carType");
-        }
-        else if (check == 4) {
-            //hourly ride pick up edit
-            tripId = intent.getStringExtra("tripId");
-            carType = intent.getStringExtra("type");
-            pickUpLat = Double.parseDouble(intent.getStringExtra("lat"));
-            pickUpLon = Double.parseDouble(intent.getStringExtra("lon"));
-            pickUpPlace = intent.getStringExtra("place");
-            edit = intent.getIntExtra("edit", 0);
-        }
-        Log.d("checkData", pickUpLat + "," + pickUpLon);
-
-
+        getData(check);
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,21 +239,67 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         checkTripStatus();
     }
 
+    private void getData(int check) {
+        Intent intent = getIntent();
+        if (check == 1) {
+            //pick up edit
+            tripId = intent.getStringExtra("tripId");
+            carType = intent.getStringExtra("type");
+            pickUpLat = Double.parseDouble(intent.getStringExtra("lat"));
+            pickUpLon = Double.parseDouble(intent.getStringExtra("lon"));
+            pickUpPlace = intent.getStringExtra("place");
+            edit = intent.getIntExtra("edit", 0);
+        }
+        else if (check == 2) {
+            //destination edit
+            tripId = intent.getStringExtra("tripId");
+            carType = intent.getStringExtra("type");
+            destinationLat = Double.parseDouble(intent.getStringExtra("lat"));
+            destinationLon = Double.parseDouble(intent.getStringExtra("lon"));
+            destinationPlace = intent.getStringExtra("place");
+            edit = intent.getIntExtra("edit", 0);
+        }
+        else if (check == 3) {
+            //book for latter on going
+            tripId = intent.getStringExtra("tripId");
+            pickUpLat = Double.parseDouble(intent.getStringExtra("pLat"));
+            pickUpLon = Double.parseDouble(intent.getStringExtra("pLon"));
+            destinationLat = Double.parseDouble(intent.getStringExtra("dLat"));
+            destinationLon = Double.parseDouble(intent.getStringExtra("dLon"));
+            carType = intent.getStringExtra("carType");
+        }
+        else if (check == 4) {
+            //hourly ride pick up edit
+            tripId = intent.getStringExtra("tripId");
+            carType = intent.getStringExtra("type");
+            pickUpLat = Double.parseDouble(intent.getStringExtra("lat"));
+            pickUpLon = Double.parseDouble(intent.getStringExtra("lon"));
+            pickUpPlace = intent.getStringExtra("place");
+            edit = intent.getIntExtra("edit", 0);
+        }
+    }
+
     private void checkTripStatus() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides").child(userId).child(tripId);
-        tripRef.addValueEventListener(new ValueEventListener() {
+        tripRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     rideStatus = snapshot.child("rideStatus").getValue().toString();
                     if (rideStatus.equals("End")) {
-                        Intent intent = new Intent(RunningTrip.this, ShowCash.class);
-                        intent.putExtra("tripId", tripId);
-                        intent.putExtra("check", 3);
 
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(RunningTrip.this, ShowCash.class);
+                                intent.putExtra("tripId", tripId);
+                                intent.putExtra("check", 3);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        },2000);
                     }
                 }
             }
