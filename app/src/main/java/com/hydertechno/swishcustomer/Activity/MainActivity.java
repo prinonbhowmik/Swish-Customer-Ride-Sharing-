@@ -249,11 +249,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         wayLatitude = location.getLatitude();
                         wayLongitude = location.getLongitude();
                         if (!isContinue) {
-                            if (firstTime == true) {
-                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
+                            if (firstTime) {
+                                getLastLocation();
+                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
                                 firstTime = false;
                             }
-                            getLastLocation();
                         } else {
                             stringBuilder.append(wayLatitude);
                             stringBuilder.append("-");
@@ -847,101 +847,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void requestInstantDriver(String userId) {
-        DatabaseReference instantRef = FirebaseDatabase.getInstance().getReference().child("HourlyInstantRequest");
-        GeoFire geoFire = new GeoFire(instantRef);
-        geoFire.setLocation(userId, new GeoLocation(pickUpLat, pickUpLon));
-
-       // findDrivers();
-    }
-
-    private void findDrivers() {
-        Set<String> driverIdList = new HashSet<String>();
-        DatabaseReference driverRef = FirebaseDatabase.getInstance().getReference("OnLineDrivers").child(type);
-        GeoFire gfDriver = new GeoFire(driverRef);
-
-        GeoQuery geoQuery = gfDriver.queryAtLocation(new GeoLocation(pickUpLat, pickUpLon), radius);
-        geoQuery.removeAllListeners();
-
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                if (!driverFound) {
-
-                    driverId = key;
-                    driverFound = true;
-
-
-                    DatabaseReference driverConfirmRef = FirebaseDatabase.getInstance().getReference("InstantHourlyRide").child(type);
-                    bookingId = driverConfirmRef.push().getKey();
-
-                    HashMap<String, Object> rideInfo = new HashMap<>();
-                    rideInfo.put("driverFoundId", "");
-                    rideInfo.put("driverId", driverId);
-                    rideInfo.put("bookingId", bookingId);
-                    rideInfo.put("customerId", userId);
-                    rideInfo.put("carType", type);
-                    rideInfo.put("pickUpLat", pickUpLat);
-                    rideInfo.put("pickUpLon", pickUpLon);
-                    rideInfo.put("price", "");
-                    rideInfo.put("pickPlace", pickUpPlace);
-                    rideInfo.put("status", "pending");
-
-                    driverConfirmRef.child(bookingId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-                if (!driverFound) {
-                    radius++;
-                    findDrivers();
-
-                    /*    DatabaseReference checkStatusRef = FirebaseDatabase.getInstance().getReference("InstantHourlyRide").child(type);
-                    checkStatusRef.child(bookingId).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()){
-                                if (snapshot.child("driverId").getValue().toString().equals("")){
-                                    driverFound=false;
-                                    driverId = "";
-                                    findDrivers();
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });*/
-                }
-                if (radius == 6.0) {
-                    Toast.makeText(MainActivity.this, "No Drivers Available!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-
-            }
-        });
-    }
-
     private void hourlyMicroPriceShow() {
         DatabaseReference hourRef = FirebaseDatabase.getInstance().getReference("HourlyRate").child("Micro7");
         hourRef.addValueEventListener(new ValueEventListener() {
@@ -1364,7 +1269,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         backNFL.setVisibility(View.VISIBLE);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-
         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
         place1 = new MarkerOptions().icon(markerIcon)
                 .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace);
@@ -1471,6 +1375,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
     private void hiace11Price(int kmdistance, int travelduration) {
         Call<List<RidingRate>> call = apiInterface.getPrice("Micro11");
         call.enqueue(new Callback<List<RidingRate>>() {
@@ -1848,7 +1753,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void init() {
         intentFilter = new IntentFilter();
-
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         connectivityReceiver = new ConnectivityReceiver();
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
@@ -2072,8 +1976,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //update in 5 seconds
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000); // 10 seconds
-        locationRequest.setFastestInterval(2000); // 5 seconds
+        locationRequest.setInterval(10000); // 10 seconds
+        locationRequest.setFastestInterval(5000); // 5 seconds
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;

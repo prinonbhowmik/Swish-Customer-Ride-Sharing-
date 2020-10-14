@@ -1,6 +1,7 @@
 package com.hydertechno.swishcustomer.Activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -89,6 +90,9 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     private String rideStatus;
     private ApiInterface apiInterface;
     private SharedPreferences sharedPreferences;
+    private int end=0;
+    private ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         check = intent.getIntExtra("check", 0);
 
         getData(check);
+
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,7 +241,26 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        checkTripStatus();
+        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides").child(userId).child(tripId);
+        tripRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    rideStatus = snapshot.child("rideStatus").getValue().toString();
+                    if (rideStatus.equals("End")) {
+                        if (!isFinishing()){
+                            gotoShowCash();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+
 
     }
 
@@ -278,36 +302,29 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             pickUpPlace = intent.getStringExtra("place");
             edit = intent.getIntExtra("edit", 0);
         }
+
     }
 
-    private void checkTripStatus() {
-        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides").child(userId).child(tripId);
-        tripRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    rideStatus = snapshot.child("rideStatus").getValue().toString();
-                    if (rideStatus.equals("End")) {
+    private void gotoShowCash() {
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent intent = new Intent(RunningTrip.this, ShowCash.class);
-                                intent.putExtra("tripId", tripId);
-                                intent.putExtra("check", 3);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
-                            }
-                        },2000);
-                    }
-                }
-            }
+        progressDialog=new ProgressDialog(RunningTrip.this);
+        progressDialog.setMessage("Calculating Fare!!");
+        if (!isFinishing()) {
+            progressDialog.show();
 
+        }
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void run() {
+                Intent intent = new Intent(RunningTrip.this, ShowCash.class);
+                intent.putExtra("tripId", tripId);
+                intent.putExtra("check", 3);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
-        });
+        },5000);
+
     }
 
     private void init() {

@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.hydertechno.swishcustomer.Model.DriverInfo;
 import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.R;
 import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
@@ -55,38 +56,21 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
             }
         });
 
-
-       /* DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversProfile").child(driverId);
-        ref.addValueEventListener(new ValueEventListener() {
+        Call<List<DriverInfo>> call1 = api.getCarNumber(driverId);
+        call1.enqueue(new Callback<List<DriverInfo>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                drivername = snapshot.child("name").getValue().toString();
-                driverNameTV.setText(drivername);
-                DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference().child("RegisteredDrivers").child(driverId);
-                ref2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String model,plate;
+            public void onResponse(Call<List<DriverInfo>> call, Response<List<DriverInfo>> response) {
 
-                        model=snapshot.child("carModel").getValue().toString();
-                        plate=snapshot.child("plateNumber").getValue().toString();
-                        plateTV.setText(model+" "+plate);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                String platenum = response.body().get(0).getPlate_number();
 
-                    }
-                });
+                plateTV.setText(platenum);
 
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onFailure(Call<List<DriverInfo>> call, Throwable t) {
 
             }
         });
-*/
-
-
 
         // plateTV.setText(pickTime);
         pickupPlaceTV.setText(pickup);

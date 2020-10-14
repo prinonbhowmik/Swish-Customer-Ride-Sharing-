@@ -183,32 +183,7 @@ public class ShowCash extends AppCompatActivity {
             }
         });
 
-        checkRatingCall();
-
     }
-
-    private void checkRatingCall() {
-        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId).child(tripId);
-        tripRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                        String cashReceived = snapshot.child("cashReceived").getValue().toString();
-                        if (cashReceived.equals("yes")) {
-
-                        }
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
 
     private void init() {
         payCasshBtn = findViewById(R.id.payCashBtn);
