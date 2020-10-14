@@ -237,6 +237,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         });
 
         checkTripStatus();
+
     }
 
     private void getData(int check) {
@@ -281,13 +282,12 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
 
     private void checkTripStatus() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides").child(userId).child(tripId);
-        tripRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        tripRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     rideStatus = snapshot.child("rideStatus").getValue().toString();
                     if (rideStatus.equals("End")) {
-
 
                         new Handler().postDelayed(new Runnable() {
                             @Override

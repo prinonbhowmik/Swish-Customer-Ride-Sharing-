@@ -21,6 +21,7 @@ import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
 import com.hydertechno.swishcustomer.ServerApi.ApiUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -85,7 +86,7 @@ public class InsideDhakaHistory extends Fragment {
                         rideRecycler.setVisibility(View.GONE);
                     }
                 }
-
+                Collections.reverse(rideModels);
                 adapter.notifyDataSetChanged();
             }
 

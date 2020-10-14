@@ -22,6 +22,7 @@ import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
 import com.hydertechno.swishcustomer.ServerApi.ApiUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -86,6 +87,7 @@ public class OutsideDhakaHistory extends Fragment {
                         nohistorytxt.setVisibility(View.VISIBLE);
                         rideRecycler.setVisibility(View.GONE);
                     }
+                    Collections.reverse(rideModels);
                     adapter.notifyDataSetChanged();
                 }
 

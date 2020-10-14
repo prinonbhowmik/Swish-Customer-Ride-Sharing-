@@ -732,7 +732,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkHourlyRatingCall();
     }
 
-    private void checkHourlyRatingCall() {
+    protected void checkHourlyRatingCall() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -831,7 +831,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             });
                             dialog.setCancelable(false);
 
-                            dialog.show();
+                            if (!isFinishing()){
+                                dialog.show();
+                            }
                         }
 
                     }
@@ -972,7 +974,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void checkRatingCall() {
+    protected void checkRatingCall() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -994,7 +996,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
                             dialog.setCancelable(false);
-                            dialog.show();
+                            if (!isFinishing()){
+                                dialog.show();
+                            }
                             Call<List<DriverProfile>> call = apiInterface.getDriverData(driver_id);
                             call.enqueue(new Callback<List<DriverProfile>>() {
                                 @Override
@@ -1083,9 +1087,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    protected void checkRunningRides() {
+    private void checkRunningRides() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
-        tripRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        tripRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
