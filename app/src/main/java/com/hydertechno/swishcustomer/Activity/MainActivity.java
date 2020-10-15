@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -179,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView sedanprice, premiereprice, micro7price, micro11price, sedanType, premiereType, hiaceType,
             microbusType, sedanbusinessprice, selectedPrice, rideDate, hourlysedanPrice, hourlysedanPremeirePrice,
             hourlysedanBusinessPrice, hourlyMicroPrice, hourlyMicro11Price;
-    private CardView sedan, sedanpremiere, sedanbusiness, hiace, micro, hourlyMicro, hourly11Micro,hourlySedan, hourlySedanPremiere, hourlySedanBusiness;
+    private CardView sedan, sedanpremiere, sedanbusiness, hiace, micro, hourlyMicro, hourly11Micro, hourlySedan, hourlySedanPremiere, hourlySedanBusiness;
     private TextView dateTv, timeTv, rideTypeTv, hourrideTime, hourrideDate, hourlyrideTypeTv;
     private String kilometer, km, min, minfare, duration, premierekm, premieremin, premiereminfare, businesskm,
             businessmin, businessminfare, pickUpCity, destinationCity;
@@ -213,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         init();
+
+        checkVersion();
 
         sharedPreferences = getSharedPreferences("MyRef", Context.MODE_PRIVATE);
         dark = sharedPreferences.getBoolean("dark", false);
@@ -563,11 +567,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (hourBottom == 0) {
                     timeselectLayout.setVisibility(View.VISIBLE);
                     hourBottom = 4;
-                    type = "Micro";
+                    type = "Micro7";
                     hourlyrideTypeTv.setText("Micro");
                 } else {
                     hourBottom = 4;
-                    type = "Micro";
+                    type = "Micro7";
                     hourlyrideTypeTv.setText("Micro");
                     hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
                 }
@@ -579,7 +583,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (hourBottom == 0) {
                     timeselectLayout.setVisibility(View.VISIBLE);
                     hourBottom = 5;
-                    type = "Micro 7";
+                    type = "Micro 11";
                     hourlyrideTypeTv.setText("Micro");
                 } else {
                     hourBottom = 5;
@@ -602,7 +606,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         wantnowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //  requestInstantDriver(userId);
+                androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle("Alert!");
+                dialog.setIcon(R.drawable.logo_circle);
+                dialog.setMessage("Instant ride is not available right now!!");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                androidx.appcompat.app.AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
             }
         });
 
@@ -782,6 +798,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkRatingCall();
 
         checkHourlyRatingCall();
+    }
+
+    private void checkVersion() {
+        PackageInfo pinfo = null;
+        try {
+            pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        String versionName = pinfo.versionName;
+        DatabaseReference versionRef = FirebaseDatabase.getInstance().getReference("Version").child("CustomerApp");
+        versionRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String getVersionName = snapshot.child("versionName").getValue().toString();
+                    if (!versionName.equals(getVersionName)) {
+
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                        dialog.setTitle("New Version!");
+                        dialog.setIcon(R.drawable.logo_circle);
+                        dialog.setMessage("New Version is available. Please update for latest features!");
+                        dialog.setCancelable(false);
+                        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startActivity(new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse("https://play.google.com/store/apps/details?id=com.hydertechno.swishcustomer")));
+                                dialogInterface.dismiss();
+                                System.exit(0);
+                            }
+                        });
+                        dialog.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                System.exit(0);
+                            }
+                        });
+                        AlertDialog alertDialog = dialog.create();
+                        alertDialog.show();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
