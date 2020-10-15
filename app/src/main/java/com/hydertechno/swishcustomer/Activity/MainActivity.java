@@ -1020,6 +1020,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
+
                         }
 
                     }

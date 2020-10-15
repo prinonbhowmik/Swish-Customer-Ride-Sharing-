@@ -53,20 +53,7 @@ public class ShowCash extends AppCompatActivity {
     private ImageView info;
     private SharedPreferences sharedPreferences;
     private LottieAnimationView progrssbar;
-    private Dialog dialog;
-    private ApiInterface api;
-    private boolean couponActive = false, walletLow = false, walletHigh = false;
-    private int wallet;
-    private int halfPrice;
-    private int actualPrice;
-    private int walletBalance;
-    private int updatewallet;
-    private float driverRating;
-    private int driverRatingCount;
-    private float rating1;
-    private float totalRating;
-    private int totalCount;
-    private boolean ratingGiven;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

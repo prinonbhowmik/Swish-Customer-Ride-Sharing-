@@ -32,7 +32,8 @@
         <activity android:name=".Activity.WebViewActivity" />
         <activity
             android:name=".Activity.ShowCash"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:taskAffinity=""/>
         <activity
             android:name=".Activity.RunningTrip"
             android:screenOrientation="portrait" />

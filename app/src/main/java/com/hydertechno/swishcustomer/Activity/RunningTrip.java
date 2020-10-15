@@ -84,7 +84,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     private int edit, check;
     private double destinationLat, destinationLon, currentLat, currentLon, pickUpLat, pickUpLon;
     private String userId, pickUpPlace, destinationPlace, tripId, carType;
-    private Button doneBtn, detailsBtn;
+    private Button doneBtn, detailsBtn,showFareBtn;
     private Locale locale;
     private String apiKey = "AIzaSyCCqD0ogQ8adzJp_z2Y2W2ybSFItXYwFfI";
     private String rideStatus;
@@ -241,27 +241,35 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        showFareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoShowCash();
+            }
+        });
+
+        checkTripStatus();
+
+    }
+
+    private void checkTripStatus() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides").child(userId).child(tripId);
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    rideStatus = snapshot.child("rideStatus").getValue().toString();
-                    if (rideStatus.equals("End")) {
-                        if (!isFinishing()){
-                            gotoShowCash();
-                        }
-                    }
-                }
+               if (snapshot.exists()){
+                   rideStatus = snapshot.child("rideStatus").getValue().toString();
+                   if (rideStatus.equals("End")) {
+                       detailsBtn.setVisibility(View.GONE);
+                       showFareBtn.setVisibility(View.VISIBLE);
+                   }
+               }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-
-
-
     }
 
     private void getData(int check) {
@@ -336,6 +344,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         placeNameTV = findViewById(R.id.placeNameTV);
         doneBtn = findViewById(R.id.doneBtn);
         detailsBtn = findViewById(R.id.detailsBtn);
+        showFareBtn = findViewById(R.id.showFareBtn);
         sharedPreferences = getSharedPreferences("MyRef", MODE_PRIVATE);
         apiInterface = ApiUtils.getUserService();
         new GpsUtils(this).turnGPSOn(new GpsUtils.onGpsListener() {
