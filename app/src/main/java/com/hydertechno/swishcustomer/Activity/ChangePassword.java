@@ -129,14 +129,11 @@ public class ChangePassword extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-        //startActivity(new Intent(ChangePassword.this, EditProfile.class));
         finish();
     }
 
     public void backPressPassword(View view) {
 
-        //startActivity(new Intent(ChangePassword.this, EditProfile.class));
         finish();
     }
 }

@@ -208,6 +208,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private APIService apiService;
     private double radius = 2;
     private String tripId, picklat, pickLon, deslat, deslon, carType;
+    private long doublePressToExit;
+    private Toast backToasty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -755,9 +757,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     dialog.setContentView(R.layout.payment_type_select);
                     Button doneBtn = dialog.findViewById(R.id.doneBtn);
                     RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
-                    RadioButton cash = dialog.findViewById(R.id.cash);
-                    RadioButton wallet = dialog.findViewById(R.id.wallet);
-
 
                     radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                         @Override
@@ -1287,7 +1286,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (notify) {
             sendNotification(bookingId, userId, "Booking Create!", "Tap to see booking details", "my_ride_details");
-            // sendNotificationDriver(bookingId, type,"Booking Create!", "New Booking Request Upload!", "my_ride_details");
         }
         notify = false;
         DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides");
@@ -1538,11 +1536,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
 
-                    Log.d("kmPrice", kmPrice + "," + minPrice);
-                    Log.d("minf", String.valueOf(minimumRate));
-
-                    Log.d("checkCity", pickUpCity + "," + destinationCity);
-
                     estprice = kmPrice + minPrice + minimumRate;
                     micro7price.setText("" + estprice);
                 }
@@ -1570,11 +1563,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
-
-                    Log.d("kmPrice", kmPrice + "," + minPrice);
-                    Log.d("minf", String.valueOf(minimumRate));
-
-                    Log.d("checkCity", pickUpCity + "," + destinationCity);
 
                     estprice = kmPrice + minPrice + minimumRate;
                     micro11price.setText("" + estprice);
@@ -1604,11 +1592,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
 
-                    Log.d("kmPrice", kmPrice + "," + minPrice);
-                    Log.d("minf", String.valueOf(minimumRate));
-
-                    Log.d("checkCity", pickUpCity + "," + destinationCity);
-
                     estprice = kmPrice + minPrice + minimumRate;
                     sedanbusinessprice.setText("" + estprice);
                 }
@@ -1637,11 +1620,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
 
-                    Log.d("kmPrice", kmPrice + "," + minPrice);
-                    Log.d("minf", String.valueOf(minimumRate));
-
-                    Log.d("checkCity", pickUpCity + "," + destinationCity);
-
                     estprice = kmPrice + minPrice + minimumRate;
                     premiereprice.setText("" + estprice);
                 }
@@ -1669,11 +1647,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
-
-                    Log.d("kmPrice", kmPrice + "," + minPrice);
-                    Log.d("minf", String.valueOf(minimumRate));
-
-                    Log.d("checkCity", pickUpCity + "," + destinationCity);
 
                     estprice = kmPrice + minPrice + minimumRate;
                     sedanprice.setText("" + estprice);
@@ -2058,8 +2031,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     userPhone.setText("+88" + list.get(0).getPhone());
                     wallet_fromNavigation.setText("৳ " + String.valueOf(list.get(0).getWallet()));
 
-                    Log.d("checkid", list.get(0).getName());
-
                 }
             }
 
@@ -2181,7 +2152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        // DrawableCompat.setTint(vectorDrawable);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
@@ -2336,12 +2306,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
     }
-
 
     public void backPressUp(View view) {
         finish();
         startActivity(getIntent());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if (doublePressToExit + 2000 > System.currentTimeMillis()) {
+                backToasty.cancel();
+                super.onBackPressed();
+                return;
+            } else {
+                backToasty = Toasty.normal(getApplicationContext(), "Press again to exit", Toasty.LENGTH_LONG);
+                backToasty.show();
+            }
+        }
+        doublePressToExit = System.currentTimeMillis();
     }
 }

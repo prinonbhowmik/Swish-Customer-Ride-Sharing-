@@ -232,13 +232,7 @@ public class SignUp extends AppCompatActivity {
                 if (resultUri!=null) {
                     imageUri = resultUri;
                     userImage.setImageURI(imageUri);
-                   /* try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),resultUri);
-                        driverImage.setImageBitmap(bitmap);
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
                 }
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
