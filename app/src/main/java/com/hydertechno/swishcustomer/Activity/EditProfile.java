@@ -58,7 +58,7 @@ public class EditProfile extends AppCompatActivity {
     private static int SPLASH_TIME_OUT=1000;
     private List<Profile> list;
     private FrameLayout frameLayout;
-    private String userId, name, email, phone, gender, image, password;
+    private String userId, name, email, phone, gender, image, password,g;
     private String name1, email1, gender1, phone1, password1;
     private DatabaseReference reference;
     private Uri imageUri;
@@ -148,8 +148,8 @@ public class EditProfile extends AppCompatActivity {
                     emailEt.setError("Enter valid email");
                     emailEt.requestFocus();
                 } else {
-
-                    updateInformation(name, email, gender);
+                    g= genderEt.getText().toString();
+                    updateInformation(name, email, g);
                 }
 
 
@@ -205,7 +205,12 @@ public class EditProfile extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
                     if (response.isSuccessful()){
-
+                        if (response.body().get(0).getDone().equals("1")){
+                            Toasty.success(EditProfile.this,"Update Success", Toasty.LENGTH_SHORT).show();
+                            startActivity(new Intent(EditProfile.this,UserProfile.class));
+                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                            finish();
+                        }
                     }
                 }
                 @Override
@@ -214,15 +219,6 @@ public class EditProfile extends AppCompatActivity {
                 }
             });
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Toasty.success(EditProfile.this,"Update Success", Toasty.LENGTH_SHORT).show();
-                    startActivity(new Intent(EditProfile.this,UserProfile.class));
-                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-                    finish();
-                }
-            },SPLASH_TIME_OUT2);
 
         }
         else if (imageUri==null){
@@ -230,7 +226,6 @@ public class EditProfile extends AppCompatActivity {
             RequestBody  idbody = RequestBody .create(MediaType.parse("text/plain"), userId);
             RequestBody  emailBody = RequestBody .create(MediaType.parse("text/plain"), email);
             RequestBody  genderbody = RequestBody .create(MediaType.parse("text/plain"), gender);
-
 
             Call<List<Profile>> call = apiInterface.updateDatawithoutimage(idbody,fullName,emailBody,genderbody);
             call.enqueue(new Callback<List<Profile>>() {

@@ -145,10 +145,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth auth;
     private DatabaseReference reference;
     private String userId;
-    private String name;
-    private String phone;
-    private String image;
-    private int walletFromNavigation;
     private NeomorphFrameLayout backNFL;
     private Animation btnanim;
     private String apiKey = "AIzaSyCCqD0ogQ8adzJp_z2Y2W2ybSFItXYwFfI", pickUpPlace, destinationPlace;
@@ -178,11 +174,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView circularImageView;
     private TextView UserName, userPhone, wallet_fromNavigation;
     private int kmdistance, travelduration;
-    private String bookingId, driverId, hourlyTripId,paymentType;
-    private RelativeLayout bottomsheet,searchLayout;
+    private String bookingId, driverId, hourlyTripId, paymentType;
+    private RelativeLayout bottomsheet, searchLayout;
     private TextView sedanprice, premiereprice, micro7price, micro11price, sedanType, premiereType, hiaceType,
-            microbusType, sedanbusinessprice, selectedPrice, rideDate, hourlysedanPrice, hourlyMicroPrice;
-    private CardView sedan, sedanpremiere, sedanbusiness, hiace, micro, hourlyMicro, hourlySedan;
+            microbusType, sedanbusinessprice, selectedPrice, rideDate, hourlysedanPrice, hourlysedanPremeirePrice,
+            hourlysedanBusinessPrice, hourlyMicroPrice, hourlyMicro11Price;
+    private CardView sedan, sedanpremiere, sedanbusiness, hiace, micro, hourlyMicro, hourly11Micro,hourlySedan, hourlySedanPremiere, hourlySedanBusiness;
     private TextView dateTv, timeTv, rideTypeTv, hourrideTime, hourrideDate, hourlyrideTypeTv;
     private String kilometer, km, min, minfare, duration, premierekm, premieremin, premiereminfare, businesskm,
             businessmin, businessminfare, pickUpCity, destinationCity;
@@ -208,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int totalCount;
     private APIService apiService;
     private double radius = 2;
-    private String tripId,picklat,pickLon,deslat,deslon,carType;
+    private String tripId, picklat, pickLon, deslat, deslon, carType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,6 +276,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 hideKeyBoard(getApplicationContext());
             }
         });
+
         circularImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -345,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
                     } else {
-                        Toasty.error(MainActivity.this, "Place Not Found!",Toasty.LENGTH_SHORT).show();
+                        Toasty.error(MainActivity.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
                     }
 
                 } catch (IOException e) {
@@ -404,30 +402,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     dialog = new Dialog(MainActivity.this);
                     dialog.setContentView(R.layout.payment_type_select);
                     Button doneBtn = dialog.findViewById(R.id.doneBtn);
-                    RadioGroup radioGroup=dialog.findViewById(R.id.radioGroup);
-                    RadioButton cash =  dialog.findViewById(R.id.cash);
-                    RadioButton wallet =  dialog.findViewById(R.id.wallet);
+                    RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
+                    RadioButton cash = dialog.findViewById(R.id.cash);
+                    RadioButton wallet = dialog.findViewById(R.id.wallet);
 
 
                     radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                           switch (i){
-                               case R.id.cash:
-                                   paymentType="cash";
-                                   break;
-                               case R.id.wallet:
-                                   paymentType="wallet";
-                                   break;
-                           }
+                            switch (i) {
+                                case R.id.cash:
+                                    paymentType = "cash";
+                                    break;
+                                case R.id.wallet:
+                                    paymentType = "wallet";
+                                    break;
+                            }
                         }
                     });
                     doneBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (paymentType!=null) {
+                            if (paymentType != null) {
                                 rideCheck();
-                            }else{
+                            } else {
                                 Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -510,34 +508,82 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hourlySedan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* hourtimeDateLayout.setVisibility(View.VISIBLE);
-                hourlyconfirmRideBtn.setVisibility(View.VISIBLE);*/
-               if (hourBottom==0){
-                   timeselectLayout.setVisibility(View.VISIBLE);
-                   hourBottom = 1;
-                   type = "Sedan";
-                   hourlyrideTypeTv.setText("Sedan");
-               }else{
-                   hourBottom = 1;
-                   type = "Sedan";
-                   hourlyrideTypeTv.setText("Sedan");
-                   hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
-               }
+
+                if (hourBottom == 0) {
+                    timeselectLayout.setVisibility(View.VISIBLE);
+                    hourBottom = 1;
+                    type = "Sedan";
+                    hourlyrideTypeTv.setText("Sedan");
+                } else {
+                    hourBottom = 1;
+                    type = "Sedan";
+                    hourlyrideTypeTv.setText("Sedan");
+                    hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        hourlySedanPremiere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (hourBottom == 0) {
+                    timeselectLayout.setVisibility(View.VISIBLE);
+                    hourBottom = 2;
+                    type = "SedanPremiere";
+                    hourlyrideTypeTv.setText("Sedan Premiere");
+                } else {
+                    hourBottom = 2;
+                    type = "SedanPremiere";
+                    hourlyrideTypeTv.setText("Sedan Premiere");
+                    hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        hourlySedanBusiness.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (hourBottom == 0) {
+                    timeselectLayout.setVisibility(View.VISIBLE);
+                    hourBottom = 3;
+                    type = "SedanBusiness";
+                    hourlyrideTypeTv.setText("Sedan Business");
+                } else {
+                    hourBottom = 3;
+                    type = "SedanBusiness";
+                    hourlyrideTypeTv.setText("Sedan Business");
+                    hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
+                }
             }
         });
 
         hourlyMicro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*hourtimeDateLayout.setVisibility(View.VISIBLE);*/
-                if (hourBottom==0) {
+                if (hourBottom == 0) {
                     timeselectLayout.setVisibility(View.VISIBLE);
-                    hourBottom = 2;
+                    hourBottom = 4;
                     type = "Micro";
                     hourlyrideTypeTv.setText("Micro");
-                }else{
-                    hourBottom = 2;
+                } else {
+                    hourBottom = 4;
                     type = "Micro";
+                    hourlyrideTypeTv.setText("Micro");
+                    hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        hourly11Micro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (hourBottom == 0) {
+                    timeselectLayout.setVisibility(View.VISIBLE);
+                    hourBottom = 5;
+                    type = "Micro 7";
+                    hourlyrideTypeTv.setText("Micro");
+                } else {
+                    hourBottom = 5;
+                    type = "Micro 11";
                     hourlyrideTypeTv.setText("Micro");
                     hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
                 }
@@ -556,7 +602,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         wantnowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  requestInstantDriver(userId);
+                //  requestInstantDriver(userId);
             }
         });
 
@@ -607,7 +653,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 hourlyLayout.setVisibility(View.VISIBLE);
                 hourlysedanPriceShow();
+                hourlysedanPremierePriceShow();
+                hourlysedanBusinessPriceShow();
                 hourlyMicroPriceShow();
+                hourlyMicro11PriceShow();
+
 
                 BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                 pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
@@ -688,20 +738,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     dialog = new Dialog(MainActivity.this);
                     dialog.setContentView(R.layout.payment_type_select);
                     Button doneBtn = dialog.findViewById(R.id.doneBtn);
-                    RadioGroup radioGroup=dialog.findViewById(R.id.radioGroup);
-                    RadioButton cash =  dialog.findViewById(R.id.cash);
-                    RadioButton wallet =  dialog.findViewById(R.id.wallet);
+                    RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
+                    RadioButton cash = dialog.findViewById(R.id.cash);
+                    RadioButton wallet = dialog.findViewById(R.id.wallet);
 
 
                     radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                            switch (i){
+                            switch (i) {
                                 case R.id.cash:
-                                    paymentType="cash";
+                                    paymentType = "cash";
                                     break;
                                 case R.id.wallet:
-                                    paymentType="wallet";
+                                    paymentType = "wallet";
                                     break;
                             }
                         }
@@ -709,16 +759,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     doneBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if (paymentType!=null) {
+                            if (paymentType != null) {
                                 hourlyRideCheck();
-                            }else{
+                            } else {
                                 Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
                     dialog.setCancelable(false);
 
-                    dialog.show();
+                    if (!isFinishing()) {
+                        dialog.show();
+                    }
 
 
                 }
@@ -731,6 +783,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkHourlyRatingCall();
     }
+
 
     protected void checkHourlyRatingCall() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
@@ -831,7 +884,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             });
                             dialog.setCancelable(false);
 
-                            if (!isFinishing()){
+                            if (!isFinishing()) {
                                 dialog.show();
                             }
                         }
@@ -863,6 +916,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    private void hourlyMicro11PriceShow() {
+        DatabaseReference hourRef = FirebaseDatabase.getInstance().getReference("HourlyRate").child("Micro11");
+        hourRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String price = snapshot.getValue().toString();
+                hourlyMicro11Price.setText(price + " Tk/Phr");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void hourlysedanPriceShow() {
         DatabaseReference hourRef = FirebaseDatabase.getInstance().getReference("HourlyRate").child("Sedan");
         hourRef.addValueEventListener(new ValueEventListener() {
@@ -870,6 +939,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
                 hourlysedanPrice.setText(price + " Tk/Phr");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void hourlysedanPremierePriceShow() {
+        DatabaseReference hourRef = FirebaseDatabase.getInstance().getReference("HourlyRate").child("SedanPremiere");
+        hourRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String price = snapshot.getValue().toString();
+                hourlysedanPremeirePrice.setText(price + " Tk/Phr");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void hourlysedanBusinessPriceShow() {
+        DatabaseReference hourRef = FirebaseDatabase.getInstance().getReference("HourlyRate").child("SedanBusiness");
+        hourRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String price = snapshot.getValue().toString();
+                hourlysedanBusinessPrice.setText(price + " Tk/Phr");
             }
 
             @Override
@@ -901,7 +1002,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
                             dialog.setCancelable(false);
-                            if (!isFinishing()){
+                            if (!isFinishing()) {
                                 dialog.show();
                             }
                             Call<List<DriverProfile>> call = apiInterface.getDriverData(driver_id);
@@ -1120,7 +1221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (notify) {
             sendNotification(bookingId, userId, "Booking Create!", "Tap to see booking details", "my_ride_details");
-           // sendNotificationDriver(bookingId, type,"Booking Create!", "New Booking Request Upload!", "my_ride_details");
+            // sendNotificationDriver(bookingId, type,"Booking Create!", "New Booking Request Upload!", "my_ride_details");
         }
         notify = false;
         DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides");
@@ -1137,7 +1238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Call<List<RideModel>> call = apiInterface.saveTripRequest(bookingId, "Pending", type, userId, String.valueOf(destinationLat),
                 String.valueOf(destinationLon), destinationPlace, "", "", dateTv.getText().toString(), String.valueOf(pickUpLat),
-                String.valueOf(pickUpLon), pickUpPlace, timeTv.getText().toString(), price, "Pending",paymentType);
+                String.valueOf(pickUpLon), pickUpPlace, timeTv.getText().toString(), price, "Pending", paymentType);
         call.enqueue(new Callback<List<RideModel>>() {
             @Override
             public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
@@ -1162,13 +1263,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             price = hourlysedanPrice.getText().toString();
         } else if (hourBottom == 2) {
             type = "SedanPremiere";
+            price = hourlysedanPremeirePrice.getText().toString();
+        } else if (hourBottom == 3) {
+            type = "SedanBusiness";
+            price = hourlysedanBusinessPrice.getText().toString();
+        } else if (hourBottom == 4) {
+            type = "Micro7";
             price = hourlyMicroPrice.getText().toString();
+        } else if (hourBottom == 5) {
+            type = "Micro11";
+            price = hourlyMicro11Price.getText().toString();
         }
+
+
         uploadHourly();
     }
 
     private void uploadHourly() {
-        notify=true;
+        notify = true;
 
         DatabaseReference hourlyLaterRef = FirebaseDatabase.getInstance().getReference()
                 .child("BookHourly").child(type);
@@ -1182,13 +1294,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rideInfo.put("customerId", userId);
         rideInfo.put("rideStatus", "Pending");
         rideInfo.put("pickUpLat", String.valueOf(pickUpLat));
-        rideInfo.put("pickUpLon", String.valueOf( pickUpLon));
+        rideInfo.put("pickUpLon", String.valueOf(pickUpLon));
         rideInfo.put("pickUpPlace", pickUpPlace);
         rideInfo.put("driverId", "");
         rideInfo.put("pickUpDate", hourrideDate.getText().toString());
         rideInfo.put("pickUpTime", hourrideTime.getText().toString());
         rideInfo.put("endTime", "");
-        rideInfo.put("price", ""+price);
+        rideInfo.put("price", "" + price);
         rideInfo.put("ratingStatus", "false");
         rideInfo.put("payment", paymentType);
         rideInfo.put("discount", "");
@@ -1230,7 +1342,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         if (notify) {
-            sendNotification(hourlyTripId, userId,"Hourly Ride", "New Request Upload!", "my_hourly_ride_details");
+            sendNotification(hourlyTripId, userId, "Hourly Ride", "New Request Upload!", "my_hourly_ride_details");
         }
         notify = false;
         DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerHourRides");
@@ -1246,7 +1358,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Call<List<HourlyRideModel>> call = apiInterface.saveHourlyTripRequest(hourlyTripId, "Pending",
                 type, userId, "", "", hourrideDate.getText().toString(), String.valueOf(pickUpLat),
-                String.valueOf(pickUpLon), pickUpPlace, hourrideTime.getText().toString(), "0", "Pending",paymentType);
+                String.valueOf(pickUpLon), pickUpPlace, hourrideTime.getText().toString(), "0", "Pending", paymentType);
         call.enqueue(new Callback<List<HourlyRideModel>>() {
             @Override
             public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
@@ -1322,7 +1434,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     kmdistance = distance / 1000;
                     travelduration = trduration / 60;
 
-                    Log.d("kmDist", kmdistance+","+travelduration);
+                    Log.d("kmDist", kmdistance + "," + travelduration);
                     Log.d("trduration", String.valueOf(trduration));
 
                     bottomsheet.setVisibility(View.VISIBLE);
@@ -1629,9 +1741,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     }
                                 }
                             });
-                        }
-                        else {
-                            Toasty.error(MainActivity.this, "Place not found!",Toasty.LENGTH_SHORT).show();
+                        } else {
+                            Toasty.error(MainActivity.this, "Place not found!", Toasty.LENGTH_SHORT).show();
                         }
                     } catch (IOException e) {
 
@@ -1702,7 +1813,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
                     } else {
-                        Toasty.error(MainActivity.this, "Place Not Found!",Toasty.LENGTH_SHORT).show();
+                        Toasty.error(MainActivity.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1837,6 +1948,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hourrideDate = findViewById(R.id.hourrideDate);
         hourlyMicro = findViewById(R.id.hourlyMicro);
         hourlySedan = findViewById(R.id.hourlySedan);
+        hourlySedanPremiere = findViewById(R.id.hourlySedanpremiere);
+        hourlySedanBusiness = findViewById(R.id.hourlySedanbusiness);
+        hourlySedan = findViewById(R.id.hourlySedan);
+        hourlyMicroPrice = findViewById(R.id.hourlyMicroPrice);
+        hourlyMicro11Price = findViewById(R.id.hourlyMicro11Price);
+        hourly11Micro = findViewById(R.id.hourlyMicro11);
+        hourlysedanPremeirePrice = findViewById(R.id.hourlysedanpremierePrice);
+        hourlysedanBusinessPrice = findViewById(R.id.hourlysedanbusinessPrice);
         hourlyMicroPrice = findViewById(R.id.hourlyMicroPrice);
         hourlysedanPrice = findViewById(R.id.hourlysedanPrice);
         hourlyrideTypes = findViewById(R.id.hourlyrideTypes);
@@ -2051,10 +2170,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void sendNotification(final String id, final String receiverId,  final String title, final String message, final String toActivity) {
+    private void sendNotification(final String id, final String receiverId, final String title, final String message, final String toActivity) {
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference().child("CustomersToken");
         Query query = tokens.orderByKey().equalTo(receiverId);
-        String receiverId1=receiverId;
+        String receiverId1 = receiverId;
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -2091,57 +2210,57 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void sendNotificationDriver(final String id,final String type,final String title, final String message, final String toActivity) {
+    private void sendNotificationDriver(final String id, final String type, final String title, final String message, final String toActivity) {
         DatabaseReference tokens1 = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
         tokens1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
+                if (snapshot.exists()) {
                     ArrayList<String> driverNotificationList = new ArrayList<>();
                     for (DataSnapshot childSnapShot : snapshot.getChildren()) {
 
                         driverNotificationList.add(childSnapShot.child("id").getValue().toString());
 
                     }
-                        if(driverNotificationList!=null){
-                            for (int i = 0; i < driverNotificationList.size(); i++) {
-                                DatabaseReference tokens = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
-                                Query query = tokens.orderByKey().equalTo(driverNotificationList.get(i));
-                                int finalI = i;
-                                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if(dataSnapshot.exists()) {
-                                            Token token = dataSnapshot.getValue(Token.class);
-                                            Data data = new Data(id, R.drawable.ic_car, message, title, (String) driverNotificationList.get(finalI) , toActivity);
-                                            Sender sender = new Sender(data, token.getToken());
+                    if (driverNotificationList != null) {
+                        for (int i = 0; i < driverNotificationList.size(); i++) {
+                            DatabaseReference tokens = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
+                            Query query = tokens.orderByKey().equalTo(driverNotificationList.get(i));
+                            int finalI = i;
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        Token token = dataSnapshot.getValue(Token.class);
+                                        Data data = new Data(id, R.drawable.ic_car, message, title, (String) driverNotificationList.get(finalI), toActivity);
+                                        Sender sender = new Sender(data, token.getToken());
 
-                                            apiService.sendNotification(sender)
-                                                    .enqueue(new Callback<MyResponse>() {
-                                                        @Override
-                                                        public void onResponse(Call<MyResponse> call, Response<MyResponse> my_response) {
-                                                            if (my_response.code() == 200) {
-                                                                if (my_response.body().success != 1) {
-                                                                    Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
-                                                                }
+                                        apiService.sendNotification(sender)
+                                                .enqueue(new Callback<MyResponse>() {
+                                                    @Override
+                                                    public void onResponse(Call<MyResponse> call, Response<MyResponse> my_response) {
+                                                        if (my_response.code() == 200) {
+                                                            if (my_response.body().success != 1) {
+                                                                Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
                                                             }
                                                         }
+                                                    }
 
-                                                        @Override
-                                                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                                                    @Override
+                                                    public void onFailure(Call<MyResponse> call, Throwable t) {
 
-                                                        }
-                                                    });
-                                        }
+                                                    }
+                                                });
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                    }
-                                });
-                            }
+                                }
+                            });
                         }
+                    }
                 }
             }
 

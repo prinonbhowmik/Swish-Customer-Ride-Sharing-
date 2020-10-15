@@ -62,6 +62,8 @@ public class CouponActivity extends AppCompatActivity {
                         couponCode.setText(showList.get(0).getCouponsCode());
                         couponDiscount.setText(showList.get(0).getAmount()+"%");
                         date.setText(showList.get(0).getEndDate());
+                    }else {
+                        return;
                     }
                 }
             }

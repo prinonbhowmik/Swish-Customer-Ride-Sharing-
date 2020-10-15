@@ -152,143 +152,345 @@
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textSize="25sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <HorizontalScrollView
+                    android:layout_below="@+id/rideTypeTv"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-                    <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-                        android:layout_weight="1"
+                    android:background="#fff">
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="-5dp"
-                        android:layerType="software"
-                        app:neomorph_background_color="@color/neomorph_background_color"
-                        app:neomorph_corner_radius="10dp"
-                        app:neomorph_elevation="8dp"
-                        app:neomorph_view_type="rectangular">
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/hourlySedan"
+                        android:orientation="horizontal">
+                        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                            android:layout_weight="1"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:background="#fff"
-                            android:clickable="true"
-                            android:elevation="10dp"
-                            app:cardCornerRadius="5dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:layerType="software"
+                            app:neomorph_background_color="@color/neomorph_background_color"
+                            app:neomorph_corner_radius="10dp"
+                            app:neomorph_elevation="8dp"
+                            app:neomorph_view_type="rectangular">
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/hourlySedan"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:background="#fff"
-                                android:orientation="vertical"
-                                android:padding="10dp">
+                                android:clickable="true"
+                                android:elevation="10dp"
+                                app:cardCornerRadius="5dp">
 
-                                <com.airbnb.lottie.LottieAnimationView
-                                    android:layout_width="100dp"
-                                    android:layout_height="100dp"
-                                    android:layout_centerInParent="true"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_gravity="center"
-                                    app:lottie_autoPlay="true"
-                                    app:lottie_fileName="sedanpremiere.json"
-                                    app:lottie_loop="true" />
-
-                                <TextView
-                                    android:id="@+id/hourlySedanType"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text="Sedan"
-                                    android:textColor="#000"
-                                    android:textSize="15sp"
-                                    android:textStyle="bold" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="Hourly Rent"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="12sp" />
-                                <TextView
-                                    android:id="@+id/hourlysedanPrice"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-                    </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+                                    android:background="#fff"
+                                    android:orientation="vertical"
+                                    android:padding="10dp">
 
-                    <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="-5dp"
-                        android:layerType="software"
-                        app:neomorph_background_color="@color/neomorph_background_color"
-                        app:neomorph_corner_radius="10dp"
-                        app:neomorph_elevation="8dp"
-                        app:neomorph_view_type="rectangular">
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/hourlyMicro"
+                                    <com.airbnb.lottie.LottieAnimationView
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:layout_centerInParent="true"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_gravity="center"
+                                        app:lottie_autoPlay="true"
+                                        app:lottie_fileName="14716-coupe-car-loop.json"
+                                        app:lottie_loop="true" />
+
+                                    <TextView
+                                        android:id="@+id/hourlySedanType"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Sedan"
+                                        android:textColor="#000"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Hourly Rent"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+                                    <TextView
+                                        android:id="@+id/hourlysedanPrice"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+                        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+                        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                            android:layout_weight="1"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="5dp"
-                            android:background="#fff"
-                            android:clickable="true"
-                            android:elevation="10dp"
-                            app:cardCornerRadius="5dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:layerType="software"
+                            app:neomorph_background_color="@color/neomorph_background_color"
+                            app:neomorph_corner_radius="10dp"
+                            app:neomorph_elevation="8dp"
+                            app:neomorph_view_type="rectangular">
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/hourlySedanpremiere"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
                                 android:background="#fff"
-                                android:orientation="vertical"
-                                android:padding="10dp">
+                                android:clickable="true"
+                                android:elevation="10dp"
+                                app:cardCornerRadius="5dp">
 
-                                <com.airbnb.lottie.LottieAnimationView
-                                    android:layout_width="100dp"
-                                    android:layout_height="100dp"
-                                    android:layout_centerInParent="true"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_gravity="center"
-                                    app:lottie_autoPlay="true"
-                                    app:lottie_fileName="hiace.json"
-                                    app:lottie_loop="true" />
-
-                                <TextView
-                                    android:id="@+id/hourlyMicroType"
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text="Micro"
-                                    android:textColor="#000"
-                                    android:textSize="15sp"
-                                    android:textStyle="bold" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="Hourly Rent"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="12sp" />
+                                    android:background="#fff"
+                                    android:orientation="vertical"
+                                    android:padding="10dp">
 
-                                <TextView
-                                    android:id="@+id/hourlyMicroPrice"
+                                    <com.airbnb.lottie.LottieAnimationView
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:layout_centerInParent="true"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_gravity="center"
+                                        app:lottie_autoPlay="true"
+                                        app:lottie_fileName="sedanpremiere.json"
+                                        app:lottie_loop="true" />
+
+                                    <TextView
+                                        android:id="@+id/hourlySedanpremiereType"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Sedan Premiere"
+                                        android:textColor="#000"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Hourly Rent"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+                                    <TextView
+                                        android:id="@+id/hourlysedanpremierePrice"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+                        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+                        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:layerType="software"
+                            app:neomorph_background_color="@color/neomorph_background_color"
+                            app:neomorph_corner_radius="10dp"
+                            app:neomorph_elevation="8dp"
+                            app:neomorph_view_type="rectangular">
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/hourlySedanbusiness"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:background="#fff"
+                                android:clickable="true"
+                                android:elevation="10dp"
+                                app:cardCornerRadius="5dp">
+
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-                        </androidx.cardview.widget.CardView>
-                    </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
-                </LinearLayout>
+                                    android:background="#fff"
+                                    android:orientation="vertical"
+                                    android:padding="10dp">
+
+                                    <com.airbnb.lottie.LottieAnimationView
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:layout_centerInParent="true"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_gravity="center"
+                                        app:lottie_autoPlay="true"
+                                        app:lottie_fileName="sedanpremiere.json"
+                                        app:lottie_loop="true" />
+
+                                    <TextView
+                                        android:id="@+id/hourlySedanbusinessType"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Sedan Business"
+                                        android:textColor="#000"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Hourly Rent"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+                                    <TextView
+                                        android:id="@+id/hourlysedanbusinessPrice"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+                        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+                        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:layerType="software"
+                            app:neomorph_background_color="@color/neomorph_background_color"
+                            app:neomorph_corner_radius="10dp"
+                            app:neomorph_elevation="8dp"
+                            app:neomorph_view_type="rectangular">
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/hourlyMicro"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:background="#fff"
+                                android:clickable="true"
+                                android:elevation="10dp"
+                                app:cardCornerRadius="5dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:background="#fff"
+                                    android:orientation="vertical"
+                                    android:padding="10dp">
+
+                                    <com.airbnb.lottie.LottieAnimationView
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:layout_centerInParent="true"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_gravity="center"
+                                        app:lottie_autoPlay="true"
+                                        app:lottie_fileName="hiace.json"
+                                        app:lottie_loop="true" />
+
+                                    <TextView
+                                        android:id="@+id/hourlyMicroType"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Micro 7"
+                                        android:textColor="#000"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Hourly Rent"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/hourlyMicroPrice"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+                        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+                        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:layerType="software"
+                            app:neomorph_background_color="@color/neomorph_background_color"
+                            app:neomorph_corner_radius="10dp"
+                            app:neomorph_elevation="8dp"
+                            app:neomorph_view_type="rectangular">
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/hourlyMicro11"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:background="#fff"
+                                android:clickable="true"
+                                android:elevation="10dp"
+                                app:cardCornerRadius="5dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:background="#fff"
+                                    android:orientation="vertical"
+                                    android:padding="10dp">
+
+                                    <com.airbnb.lottie.LottieAnimationView
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:layout_centerInParent="true"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_gravity="center"
+                                        app:lottie_autoPlay="true"
+                                        app:lottie_fileName="hiace.json"
+                                        app:lottie_loop="true" />
+
+                                    <TextView
+                                        android:id="@+id/hourlyMicro11Type"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Micro 11"
+                                        android:textColor="#000"
+                                        android:textSize="15sp"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Hourly Rent"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+
+                                    <TextView
+                                        android:id="@+id/hourlyMicro11Price"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+                        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+
 
                 <LinearLayout
                     android:id="@+id/timeselectLayout"

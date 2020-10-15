@@ -98,6 +98,7 @@ public class UserProfile extends AppCompatActivity {
                 intent.putExtra("email",emailtv.getText());
                 intent.putExtra("gender",genderTv.getText());
                 startActivity(intent);
+
             }
         });
     }
