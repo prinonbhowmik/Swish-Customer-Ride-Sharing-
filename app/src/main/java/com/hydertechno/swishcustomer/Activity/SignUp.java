@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.File;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -41,17 +43,19 @@ import retrofit2.Response;
 
 public class SignUp extends AppCompatActivity {
 
-    private EditText nameEt,emailEt,passEt,phoneEt;
+    private EditText nameEt,emailEt,passEt,phoneEt,referralEt;
     private RadioGroup genderGroup;
-    private String name,email;
-    private ImageView userImage;
+    private FrameLayout frameLayout;
+    private String name,email,referral="";
+    private CircleImageView userImage;
     private Button loginBtn;
     private Uri imageUri;
     private String phone,gender="Male",password;
     private LottieAnimationView progressbar;
     private CheckBox terms;
-    private TextView conditions;
+    private TextView conditions,policy;
     private ApiInterface api;
+    private RequestBody  referralBody;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +85,7 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
-        userImage.setOnClickListener(new View.OnClickListener() {
+        frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CropImage.activity()
@@ -99,10 +103,12 @@ public class SignUp extends AppCompatActivity {
                 if(terms.isChecked()){
                     terms.setTextColor(getResources().getColor(R.color.blue));
                     conditions.setTextColor(Color.BLUE);
+                    policy.setTextColor(Color.BLUE);
 
                 }else
                     terms.setTextColor(getResources().getColor(R.color.black));
                 conditions.setTextColor(Color.BLACK);
+                policy.setTextColor(Color.BLACK);
 
             }
         });
@@ -116,12 +122,23 @@ public class SignUp extends AppCompatActivity {
 
             }
         });
+        policy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(SignUp.this,WebViewActivity.class);
+                intent.putExtra("link","https://swish.com.bd/privacy-policy");
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+            }
+        });
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 name = nameEt.getText().toString();
                 email = emailEt.getText().toString();
                 password = passEt.getText().toString();
+                referral=referralEt.getText().toString();
 
                 if (TextUtils.isEmpty(name)){
                     nameEt.setError("Enter name");
@@ -149,14 +166,14 @@ public class SignUp extends AppCompatActivity {
                     hideKeyboardFrom(getApplicationContext());
                     progressbar.setAnimation("car_moving.json");
                     progressbar.playAnimation();
-                    signup(name,email,password,phone,gender);
+                    signup(name,email,password,phone,gender,referral);
                 }
 
             }
         });
     }
 
-    private void signup(final String name, final String email, final String password, final String phone,final String gender) {
+    private void signup(final String name, final String email, final String password, final String phone,final String gender,String referral) {
 
         loginBtn.setEnabled(false);
 
@@ -174,8 +191,12 @@ public class SignUp extends AppCompatActivity {
         RequestBody  passBody = RequestBody .create(MediaType.parse("text/plain"), password);
         RequestBody  rem_tokenBody = RequestBody .create(MediaType.parse("text/plain"), "");
         RequestBody  tokenBody = RequestBody .create(MediaType.parse("text/plain"), "");
-        RequestBody  referralBody = RequestBody .create(MediaType.parse("text/plain"), "");
+        if (referral.equals("")) {
+            referralBody = RequestBody.create(MediaType.parse("text/plain"), "");
+        }else{
+            referralBody = RequestBody.create(MediaType.parse("text/plain"), referral);
 
+        }
         Call<List<Profile>> call = api.register(emailBody,body,fullName,passBody,phoneBody,genderbody,
                 rem_tokenBody,tokenBody,100,referralBody);
        call.enqueue(new Callback<List<Profile>>() {
@@ -212,6 +233,9 @@ public class SignUp extends AppCompatActivity {
         progressbar=findViewById(R.id.progrssbar);
         terms=findViewById(R.id.termsCheckBox);
         conditions=findViewById(R.id.conditions);
+        frameLayout=findViewById(R.id.frame_layout11);
+        referralEt=findViewById(R.id.referral_Et);
+        policy = findViewById(R.id.policy);
 
     }
 
