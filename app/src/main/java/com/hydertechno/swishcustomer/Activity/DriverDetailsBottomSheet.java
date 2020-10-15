@@ -104,16 +104,6 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
                 if (response.isSuccessful()) {
                     list = response.body();
 
-                   if (!list.get(0).getImage().equals("")){
-                       Picasso.get().load(Config.DRIVER_IMAGE_LINE+list.get(0).getImage()).into(userImage, new com.squareup.picasso.Callback() {
-                           @Override
-                           public void onSuccess() {}
-                           @Override
-                           public void onError(Exception e) {
-                               Log.d("kiKahini", e.getMessage());
-                           }
-                       });
-                   }
                     driverNameTV.setText(list.get(0).getFull_name());
                     driverPhoneTV.setText(list.get(0).getPhone());
 
@@ -144,6 +134,21 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
                 String carname = response.body().get(0).getCar_name();
                 String carmodel = response.body().get(0).getCar_model();
                 String platenum = response.body().get(0).getPlate_number();
+
+                if (response.body().get(0).getSelfie()!=null){
+                    userImage.setVisibility(View.VISIBLE);
+                    Picasso.get().load(Config.REG_LINE + response.body().get(0).getSelfie()).into(userImage, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.d("kiKahini", e.getMessage());
+                        }
+                    });
+                }
 
                 carTV.setText(carname+" "+carmodel);
                 plateTV.setText(platenum);
