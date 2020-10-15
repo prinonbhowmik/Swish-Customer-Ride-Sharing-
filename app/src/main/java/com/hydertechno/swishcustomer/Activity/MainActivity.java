@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Address location = addresses.get(0);
                         pickUpPlace = location.getAddressLine(0);
                         pickUpCity = addresses.get(0).getAddressLine(1);
-                        map.addMarker(pickUpMarker.title("Drag for situable position")).showInfoWindow();
+                        map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
 
                         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -687,7 +687,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Address location = addresses.get(0);
                         pickUpPlace = location.getAddressLine(0);
                         pickUpCity = addresses.get(0).getAddressLine(1);
-                        map.addMarker(pickUpMarker.title("Drag for situable position")).showInfoWindow();
+                        map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
 
                         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -1748,7 +1748,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     .icon(markerIcon);
 
                             BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
-                            map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for situable position")).showInfoWindow();
+                            map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for suitable position")).showInfoWindow();
                             map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
 
                             map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -1820,7 +1820,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                         pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon))
                                 .icon(markerIcon).draggable(true);
-                        map.addMarker(pickUpMarker.title("Drag for situable position")).showInfoWindow();
+                        map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 16));
 
                         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {

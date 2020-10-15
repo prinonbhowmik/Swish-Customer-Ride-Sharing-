@@ -499,7 +499,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     private void editDestinationPlace() {
         placeNameTV.setText(destinationPlace);
         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.ic_destination);
-        map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon).draggable(true).title("Drag for situable position")).showInfoWindow();
+        map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon).draggable(true).title("Drag for suitable position")).showInfoWindow();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -542,7 +542,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     private void editablePickUpPoint() {
         placeNameTV.setText(pickUpPlace);
         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-        map.addMarker(new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true).title("Drag for situable position")).showInfoWindow();
+        map.addMarker(new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true).title("Drag for suitable position")).showInfoWindow();
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 16));
 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
