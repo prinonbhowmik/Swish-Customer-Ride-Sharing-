@@ -23,11 +23,12 @@ public class RideModel {
     private String finalPrice;
     private String totalDistance;
     private String totalTime;
+    private float rating;
 
     public RideModel() {
     }
 
-    public RideModel(String bookingId, String pickUpLat, String pickUpLon, String destinationLat, String destinationLon, String pickUpPlace, String destinationPlace, String pickUpDate, String pickUpTime, String customerId, String price, String carType, String bookingStatus, String driverId, String rideStatus, String ratingStatus, String paymentType, String discount, String finalPrice, String totalDistance, String totalTime) {
+    public RideModel(String bookingId, String pickUpLat, String pickUpLon, String destinationLat, String destinationLon, String pickUpPlace, String destinationPlace, String pickUpDate, String pickUpTime, String customerId, String price, String carType, String bookingStatus, String driverId, String rideStatus, String ratingStatus, String paymentType, String discount, String finalPrice, String totalDistance, String totalTime, float rating) {
         this.bookingId = bookingId;
         this.pickUpLat = pickUpLat;
         this.pickUpLon = pickUpLon;
@@ -49,6 +50,7 @@ public class RideModel {
         this.finalPrice = finalPrice;
         this.totalDistance = totalDistance;
         this.totalTime = totalTime;
+        this.rating = rating;
     }
 
     public String getBookingId() {
@@ -133,5 +135,9 @@ public class RideModel {
 
     public String getTotalTime() {
         return totalTime;
+    }
+
+    public float getRating() {
+        return rating;
     }
 }

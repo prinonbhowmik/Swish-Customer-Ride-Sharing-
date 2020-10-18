@@ -155,6 +155,16 @@ public interface ApiInterface {
                                            @Field("rating") float rating,
                                            @Field("ratingCount") int ratingCount);
 
+    @FormUrlEncoded
+    @PUT("bookingrating/{bookingId}")
+    Call<List<RideModel>> addRating(@Path("bookingId") String bookingId,
+                                    @Field("rating") float ratingCount);
+
+    @FormUrlEncoded
+    @PUT("hourlyrating/{bookingId}")
+    Call<List<HourlyRideModel>> addHourRating(@Path("bookingId") String bookingId,
+                                              @Field("rating") float ratingCount);
+
     @POST("couponset")
     @FormUrlEncoded
     Call<List<CouponModel>> checkCoupon(@Field("customer_id") String customer_id,

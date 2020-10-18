@@ -101,6 +101,7 @@ import com.hydertechno.swishcustomer.ForApi.RestUtil;
 import com.hydertechno.swishcustomer.ForMap.FetchURL;
 import com.hydertechno.swishcustomer.ForMap.TaskLoadedCallback;
 import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
+import com.hydertechno.swishcustomer.Model.DriverInfo;
 import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.Model.HourlyRideModel;
 import com.hydertechno.swishcustomer.Model.Profile;
@@ -872,6 +873,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
 
+                            Call<List<DriverInfo>> call2 = apiInterface.getCarNumber(driver_id);
+                            call2.enqueue(new Callback<List<DriverInfo>>() {
+                                @Override
+                                public void onResponse(Call<List<DriverInfo>> call, Response<List<DriverInfo>> response) {
+
+                                    if (response.body().get(0).getSelfie()!=null){
+                                        driverImage.setVisibility(View.VISIBLE);
+                                        Picasso.get().load(Config.REG_LINE + response.body().get(0).getSelfie()).into(driverImage, new com.squareup.picasso.Callback() {
+                                            @Override
+                                            public void onSuccess() {
+
+                                            }
+
+                                            @Override
+                                            public void onError(Exception e) {
+                                                Log.d("kiKahini", e.getMessage());
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<DriverInfo>> call, Throwable t) {
+
+                                }
+                            });
 
                             Call<List<DriverProfile>> call = apiInterface.getDriverData(driver_id);
                             call.enqueue(new Callback<List<DriverProfile>>() {
@@ -879,19 +906,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
                                     List<DriverProfile> list = response.body();
 
-                                    if (!list.get(0).getImage().equals("")) {
-                                        Picasso.get().load(Config.DRIVER_IMAGE_LINE + list.get(0).getImage()).into(driverImage
-                                                , new com.squareup.picasso.Callback() {
-                                                    @Override
-                                                    public void onSuccess() {
-                                                    }
-
-                                                    @Override
-                                                    public void onError(Exception e) {
-                                                        Log.d("kiKahini", e.getMessage());
-                                                    }
-                                                });
-                                    }
                                     driveName.setText(list.get(0).getFull_name());
                                     driverRating = list.get(0).getRating();
                                     driverRatingCount = list.get(0).getRatingCount();
@@ -928,6 +942,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                             @Override
                                             public void onFailure(Call<List<DriverProfile>> call, Throwable t) {
+
+                                            }
+                                        });
+                                        Call<List<HourlyRideModel>> ratingCall = apiInterface.addHourRating(tripId,rating1);
+                                        ratingCall.enqueue(new Callback<List<HourlyRideModel>>() {
+                                            @Override
+                                            public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<HourlyRideModel>> call, Throwable t) {
 
                                             }
                                         });
@@ -1070,25 +1096,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (!isFinishing()) {
                                 dialog.show();
                             }
+
+                            Call<List<DriverInfo>> call2 = apiInterface.getCarNumber(driver_id);
+                            call2.enqueue(new Callback<List<DriverInfo>>() {
+                                @Override
+                                public void onResponse(Call<List<DriverInfo>> call, Response<List<DriverInfo>> response) {
+
+                                    if (response.body().get(0).getSelfie()!=null){
+                                        driverImage.setVisibility(View.VISIBLE);
+                                        Picasso.get().load(Config.REG_LINE + response.body().get(0).getSelfie()).into(driverImage, new com.squareup.picasso.Callback() {
+                                            @Override
+                                            public void onSuccess() {
+
+                                            }
+
+                                            @Override
+                                            public void onError(Exception e) {
+                                                Log.d("kiKahini", e.getMessage());
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<DriverInfo>> call, Throwable t) {
+
+                                }
+                            });
+
+
                             Call<List<DriverProfile>> call = apiInterface.getDriverData(driver_id);
                             call.enqueue(new Callback<List<DriverProfile>>() {
                                 @Override
                                 public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
                                     List<DriverProfile> list = response.body();
 
-                                    if (!list.get(0).getImage().equals("")) {
-                                        Picasso.get().load(Config.DRIVER_IMAGE_LINE + list.get(0).getImage()).into(driverImage
-                                                , new com.squareup.picasso.Callback() {
-                                                    @Override
-                                                    public void onSuccess() {
-                                                    }
-
-                                                    @Override
-                                                    public void onError(Exception e) {
-                                                        Log.d("kiKahini", e.getMessage());
-                                                    }
-                                                });
-                                    }
                                     driveName.setText(list.get(0).getFull_name());
                                     driverRating = list.get(0).getRating();
                                     driverRatingCount = list.get(0).getRatingCount();
@@ -1112,6 +1154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             });
 
+
                             submitBTN.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -1129,12 +1172,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             }
                                         });
 
+                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId,rating1);
+                                        ratingCall.enqueue(new Callback<List<RideModel>>() {
+                                            @Override
+                                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                                            }
+                                        });
+
                                         DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
                                         delRef.child(tripId).removeValue();
 
                                         DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
                                         del1Ref.child(tripId).removeValue();
                                     } else {
+
+                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId,0);
+                                        ratingCall.enqueue(new Callback<List<RideModel>>() {
+                                            @Override
+                                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                                            }
+                                        });
                                         DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
                                         delRef.child(tripId).removeValue();
 
