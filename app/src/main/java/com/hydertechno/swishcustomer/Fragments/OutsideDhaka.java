@@ -23,6 +23,7 @@ import com.hydertechno.swishcustomer.Adapter.MyRideAdapter;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,13 +40,14 @@ public class OutsideDhaka extends Fragment {
     private List<RideModel> rideModels;
     private MyRideAdapter adapter;
     private RecyclerView rideRecycler;
-    private String userId;
+    private String userId,carType;
     private FirebaseAuth auth;
     private DatabaseReference reference;
     private String rideStatus;
     Date eDate = null;
     Date currentDate=null;
     private SharedPreferences sharedPreferences;
+    private Date d1,d2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,8 +75,24 @@ public class OutsideDhaka extends Fragment {
                         rideStatus=data.child("rideStatus").getValue().toString();
                         String date1 = data.child("pickUpDate").getValue().toString();
                         String time1 = data.child("pickUpTime").getValue().toString();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss aa");
-                        String currentTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss aa").format(Calendar.getInstance().getTimeInMillis());
+                        String tripId = data.child("bookingId").getValue().toString();
+                        carType = data.child("carType").getValue().toString();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+
+                        try {
+                             d1 = dateFormat.parse(date1);
+                             d2 = dateFormat.parse(currentDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (d2.compareTo(d1) > 0){
+                            DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
+                            delRef.child(tripId).removeValue();
+                            DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
+                            del1Ref.child(tripId).removeValue();
+                        }
 
                         if (!rideStatus.equals("End")) {
                             RideModel ride = data.getValue(RideModel.class);
