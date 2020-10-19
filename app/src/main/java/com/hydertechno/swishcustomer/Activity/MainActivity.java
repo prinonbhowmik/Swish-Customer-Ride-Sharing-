@@ -2099,7 +2099,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     UserName.setText(list.get(0).getName());
                     userPhone.setText("+88" + list.get(0).getPhone());
                     wallet_fromNavigation.setText("৳ " + String.valueOf(list.get(0).getWallet()));
-
                 }
             }
 
