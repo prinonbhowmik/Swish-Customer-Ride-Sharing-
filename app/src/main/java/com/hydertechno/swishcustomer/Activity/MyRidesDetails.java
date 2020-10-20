@@ -421,6 +421,9 @@ public class MyRidesDetails extends AppCompatActivity {
            editNFL.setVisibility(View.GONE);
            editBtn.setVisibility(View.GONE);
            deleteBtn.setVisibility(View.GONE);
+           if (driverId==null){
+               driverInfoBtn.setVisibility(View.GONE);
+           }
 
        }
        if (check==3){
