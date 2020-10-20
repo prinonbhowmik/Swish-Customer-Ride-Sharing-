@@ -23,6 +23,7 @@ import com.hydertechno.swishcustomer.Adapter.HourlyRideAdapter;
 import com.hydertechno.swishcustomer.Model.HourlyRideModel;
 import com.hydertechno.swishcustomer.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +48,7 @@ public class InsideDhaka extends Fragment {
     Date eDate = null;
     Date currentDate=null;
     private SharedPreferences sharedPreferences;
+    private Date d1,d2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,10 +74,24 @@ public class InsideDhaka extends Fragment {
                     for (DataSnapshot data : snapshot.getChildren()) {
                         rideStatus=data.child("rideStatus").getValue().toString();
                         String date1 = data.child("pickUpDate").getValue().toString();
-                        String time1 = data.child("pickUpTime").getValue().toString();
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss aa");
-                        String currentTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss aa").format(Calendar.getInstance().getTimeInMillis());
+                        String tripId = data.child("bookingId").getValue().toString();
+                        String carType = data.child("carType").getValue().toString();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                        String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
 
+                        try {
+                            d1 = dateFormat.parse(date1);
+                            d2 = dateFormat.parse(currentDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (d2.compareTo(d1) > 0){
+                            DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
+                            delRef.child(tripId).removeValue();
+                            DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookHourly").child(carType);
+                            del1Ref.child(tripId).removeValue();
+                        }
                         if (!rideStatus.equals("End")) {
                             HourlyRideModel ride = data.getValue(HourlyRideModel.class);
                             rideModels.add(ride);
