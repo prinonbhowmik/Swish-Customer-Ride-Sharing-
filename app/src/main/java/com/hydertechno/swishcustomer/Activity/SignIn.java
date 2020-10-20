@@ -115,13 +115,13 @@ public class SignIn extends AppCompatActivity implements ConnectivityReceiver.Co
                     status = models.get(0).getStatus();
                     if (status.equals("1")){
                         startActivity(new Intent(SignIn.this,Password.class)
-                                .putExtra("id",models.get(0).getCustomer_id()));
+                                .putExtra("id",models.get(0).getCustomer_id()).putExtra("phone",phone));
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         progressbar.setVisibility(View.GONE);
                     }
                     else if(status.equals("0")){
                         startActivity(new Intent(SignIn.this,VerificationOTP.class).putExtra("phone",phone)
-                                .putExtra("otp",models.get(0).getOtp()));
+                                .putExtra("otp",models.get(0).getOtp()).putExtra("check",1));
                         progressbar.setVisibility(View.GONE);
                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }

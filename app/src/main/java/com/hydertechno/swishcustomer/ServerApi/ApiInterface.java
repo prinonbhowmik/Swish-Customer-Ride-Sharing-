@@ -33,6 +33,15 @@ public interface ApiInterface {
     @FormUrlEncoded
     Call<List<CheckModel>> checkNo(@Field("phone_no") String phone_no);
 
+    @POST("dforgotpassword")
+    @FormUrlEncoded
+    Call<List<CheckModel>> forgotPassword(@Field("phone_no") String phone_no);
+
+    @PUT("cpasswordupdate/{customer_id}")
+    @FormUrlEncoded
+    Call<List<Profile>> resetPassword(@Path("customer_id") String customer_id,
+                                          @Field("password") String password);
+
     @POST("customersave")
     @Multipart
     Call<List<Profile>> register(@Part("email") RequestBody email,

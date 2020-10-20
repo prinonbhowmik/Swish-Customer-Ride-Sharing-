@@ -21,8 +21,9 @@ public class VerificationOTP extends AppCompatActivity {
     private TextInputEditText verifyEt;
     private TextInputLayout otp_LT;
     private Button verifyBtn;
-    private String otpCode,userOtp,phone;
+    private String otpCode,userOtp,phone,id;
     private LottieAnimationView progressbar;
+    private int check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +33,15 @@ public class VerificationOTP extends AppCompatActivity {
         init();
 
         Intent i = getIntent();
-        otpCode = i.getStringExtra("otp");
-        phone = i.getStringExtra("phone");
+        check = i.getIntExtra("check",0);
 
+        if (check==1){
+            otpCode = i.getStringExtra("otp");
+            phone = i.getStringExtra("phone");
+        }else if (check==2){
+            otpCode = i.getStringExtra("otp");
+            id = i.getStringExtra("id");
+        }
 
         verifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,20 +54,28 @@ public class VerificationOTP extends AppCompatActivity {
                     otp_LT.setError("Please Enter OTP");
                     verifyEt.requestFocus();
                 } else {
-                    if (userOtp.matches(otpCode)) {
-                        progressbar.setVisibility(View.VISIBLE);
-                        progressbar.setAnimation("car_moving.json");
-                        progressbar.playAnimation();
-                        otp_LT.setErrorEnabled(false);
-                        hideKeyboardFrom(getApplicationContext());
-                        startActivity(new Intent(VerificationOTP.this, SignUp.class).putExtra("phone", phone));
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                        finish();
-                    } else {
-                        otp_LT.setErrorEnabled(true);
-                        otp_LT.setError("Otp doesn't match!");
-                        verifyEt.requestFocus();
-                    }
+                       if (userOtp.matches(otpCode)) {
+                           progressbar.setVisibility(View.VISIBLE);
+                           progressbar.setAnimation("car_moving.json");
+                           progressbar.playAnimation();
+                           otp_LT.setErrorEnabled(false);
+                           hideKeyboardFrom(getApplicationContext());
+                          if (check==1){
+                              startActivity(new Intent(VerificationOTP.this, SignUp.class).putExtra("phone", phone));
+                              overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                              finish();
+                          }
+                          else{
+                              startActivity(new Intent(VerificationOTP.this, ResetPassword.class).putExtra("id",id));
+                              overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                              finish();
+                          }
+                       } else {
+                           otp_LT.setErrorEnabled(true);
+                           otp_LT.setError("Otp doesn't match!");
+                           verifyEt.requestFocus();
+                       }
+
                 }
                 verifyBtn.setEnabled(true);
             }

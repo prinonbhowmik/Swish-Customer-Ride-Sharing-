@@ -20,12 +20,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activity.ResetPassword"></activity>
         <activity android:name=".Activity.HourlyRideDetails" />
         <activity android:name=".Activity.CouponActivity" />
         <activity android:name=".Activity.ChangePassword" />
         <activity android:name=".Activity.Password" />
         <activity android:name=".Activity.FareDetails" />
-
         <activity android:name=".Activity.History" />
         <activity android:name=".Activity.Referral" />
         <activity android:name=".Activity.Emergency" />
@@ -33,7 +33,7 @@
         <activity
             android:name=".Activity.ShowCash"
             android:screenOrientation="portrait"
-            android:taskAffinity=""/>
+            android:taskAffinity="" />
         <activity
             android:name=".Activity.RunningTrip"
             android:screenOrientation="portrait" />

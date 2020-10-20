@@ -9,12 +9,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.hydertechno.swishcustomer.Model.CheckModel;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.R;
 import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
@@ -30,9 +32,10 @@ import retrofit2.Response;
 public class Password extends AppCompatActivity {
 
     private TextInputEditText passEt;
+    private TextView forgotPassTv;
     private TextInputLayout password_LT;
     private Button loginBtn;
-    private String id, password, matchpassword;
+    private String id, password, matchpassword,phone;
     List<Profile> list;
     private ApiInterface api;
     private LottieAnimationView progressbar;
@@ -46,6 +49,34 @@ public class Password extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
+        phone = intent.getStringExtra("phone");
+
+        forgotPassTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<List<CheckModel>> call = api.forgotPassword(phone);
+                call.enqueue(new Callback<List<CheckModel>>() {
+                    @Override
+                    public void onResponse(Call<List<CheckModel>> call, Response<List<CheckModel>> response) {
+                        String otp = response.body().get(0).getOtp();
+                        Intent intent1 = new Intent(Password.this, VerificationOTP.class);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent1.putExtra("check",2);
+                        intent1.putExtra("id",id);
+                        intent1.putExtra("otp",otp);
+                        startActivity(intent1);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<CheckModel>> call, Throwable t) {
+
+                    }
+                });
+
+
+            }
+        });
 
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +136,7 @@ public class Password extends AppCompatActivity {
 
     private void init() {
         passEt = findViewById(R.id.passEt);
+        forgotPassTv = findViewById(R.id.forgotPassTv);
         password_LT = findViewById(R.id.password_LT);
         loginBtn = findViewById(R.id.loginBtn);
         list = new ArrayList<>();
