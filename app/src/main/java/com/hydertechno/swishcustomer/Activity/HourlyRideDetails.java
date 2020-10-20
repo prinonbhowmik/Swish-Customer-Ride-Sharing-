@@ -372,6 +372,9 @@ public class HourlyRideDetails extends AppCompatActivity {
             editBtn.setVisibility(View.GONE);
             deleteBtn.setVisibility(View.GONE);
 
+            if (driverId==null){
+                driverInfoBtn.setVisibility(View.GONE);
+            }
         }
     }
 
