@@ -1,8 +1,10 @@
 package com.hydertechno.swishcustomer.Activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,11 +12,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hydertechno.swishcustomer.R;
+import com.hydertechno.swishcustomer.Utils.OTPReceiver;
 
 public class VerificationOTP extends AppCompatActivity {
 
@@ -32,6 +37,9 @@ public class VerificationOTP extends AppCompatActivity {
 
         init();
 
+
+
+
         Intent i = getIntent();
         check = i.getIntExtra("check",0);
 
@@ -42,6 +50,10 @@ public class VerificationOTP extends AppCompatActivity {
             otpCode = i.getStringExtra("otp");
             id = i.getStringExtra("id");
         }
+
+        requestPermissions();
+
+        new OTPReceiver().setEditText_otp(verifyEt);
 
         verifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,14 +74,14 @@ public class VerificationOTP extends AppCompatActivity {
                            hideKeyboardFrom(getApplicationContext());
                           if (check==1){
                               startActivity(new Intent(VerificationOTP.this, SignUp.class).putExtra("phone", phone));
-                              overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                               finish();
                           }
                           else{
                               startActivity(new Intent(VerificationOTP.this, ResetPassword.class).putExtra("id",id));
-                              overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                               finish();
                           }
+                           overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                           finish();
                        } else {
                            otp_LT.setErrorEnabled(true);
                            otp_LT.setError("Otp doesn't match!");
@@ -97,4 +109,21 @@ public class VerificationOTP extends AppCompatActivity {
         imm.hideSoftInputFromWindow(this.getWindow().getDecorView().getRootView().getWindowToken(), 0);
     }
 
+    private void requestPermissions() {
+        if (ContextCompat.checkSelfPermission(VerificationOTP.this, Manifest.permission.RECEIVE_SMS)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(VerificationOTP.this,new String[]{
+                    Manifest.permission.RECEIVE_SMS
+            },100);
+        }
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(VerificationOTP.this,SignIn.class));
+        finish();
+    }
 }

@@ -61,6 +61,7 @@ public class Password extends AppCompatActivity {
                         String otp = response.body().get(0).getOtp();
                         Intent intent1 = new Intent(Password.this, VerificationOTP.class);
                         intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent1.putExtra("check",2);
                         intent1.putExtra("id",id);
                         intent1.putExtra("otp",otp);
@@ -109,9 +110,10 @@ public class Password extends AppCompatActivity {
                                     editor.putString("id", id);
                                     editor.putBoolean("loggedIn", true);
                                     editor.commit();
-                                    Intent intent1 = new Intent(Password.this, MainActivity.class);
-                                    intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent1);
+
+                                    Intent intent2 = new Intent(Password.this, MainActivity.class);
+                                    intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent2);
                                     finish();
                                 } else {
                                     password_LT.setErrorEnabled(true);
@@ -146,6 +148,7 @@ public class Password extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        startActivity(new Intent(Password.this,SignIn.class));
         finish();
     }
 

@@ -60,6 +60,7 @@ public class ResetPassword extends AppCompatActivity {
                         public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
                             done = response.body().get(0).getDone();
                             if (done.equals("1")){
+
                                 Intent intent1 = new Intent(ResetPassword.this,SignIn.class);
                                 intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent1);

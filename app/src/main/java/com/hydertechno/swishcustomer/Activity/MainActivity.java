@@ -23,6 +23,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
@@ -211,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String tripId, picklat, pickLon, deslat, deslon, carType;
     private long doublePressToExit;
     private Toast backToasty;
+    boolean singleBack = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -2383,18 +2385,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            if (doublePressToExit + 2000 > System.currentTimeMillis()) {
-                backToasty.cancel();
-                super.onBackPressed();
-                return;
-            } else {
-                backToasty = Toasty.normal(getApplicationContext(), "Press again to exit", Toasty.LENGTH_LONG);
-                backToasty.show();
-            }
+        if (singleBack) {
+            super.onBackPressed();
+            return;
         }
-        doublePressToExit = System.currentTimeMillis();
+
+        this.singleBack = true;
+        Toast.makeText(this, "Double Back to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                singleBack=false;
+            }
+        }, 2000);
     }
 }
