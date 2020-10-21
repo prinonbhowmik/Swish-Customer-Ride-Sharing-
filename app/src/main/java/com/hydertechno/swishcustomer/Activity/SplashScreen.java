@@ -24,6 +24,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+
         logo = findViewById(R.id.logo);
         progressbar=findViewById(R.id.progrssbar);
 

@@ -161,7 +161,12 @@ public class SignUp extends AppCompatActivity {
                     passEt.requestFocus();
                }else if(!terms.isChecked()){
                     Toasty.info(SignUp.this,"Agree terms and conditions.",Toasty.LENGTH_SHORT).show();
-                }else{
+                }
+                else if (imageUri==null){
+                    Toasty.info(SignUp.this,"Please provide profile image!",Toasty.LENGTH_SHORT).show();
+
+                }
+                else{
                     progressbar.setVisibility(View.VISIBLE);
                     hideKeyboardFrom(getApplicationContext());
                     progressbar.setAnimation("car_moving.json");

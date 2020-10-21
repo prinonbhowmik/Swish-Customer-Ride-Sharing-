@@ -66,6 +66,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -256,8 +257,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         wayLongitude = location.getLongitude();
                         if (!isContinue) {
                             if (firstTime) {
-                                getLastLocation();
                                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
+                                getLastLocation();
                                 firstTime = false;
                             }
                         } else {
@@ -880,7 +881,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 @Override
                                 public void onResponse(Call<List<DriverInfo>> call, Response<List<DriverInfo>> response) {
 
-                                    if (response.body().get(0).getSelfie()!=null){
+                                    if (response.body().get(0).getSelfie() != null) {
                                         driverImage.setVisibility(View.VISIBLE);
                                         Picasso.get().load(Config.REG_LINE + response.body().get(0).getSelfie()).into(driverImage, new com.squareup.picasso.Callback() {
                                             @Override
@@ -947,7 +948,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                             }
                                         });
-                                        Call<List<HourlyRideModel>> ratingCall = apiInterface.addHourRating(tripId,rating1);
+                                        Call<List<HourlyRideModel>> ratingCall = apiInterface.addHourRating(tripId, rating1);
                                         ratingCall.enqueue(new Callback<List<HourlyRideModel>>() {
                                             @Override
                                             public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
@@ -1104,7 +1105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 @Override
                                 public void onResponse(Call<List<DriverInfo>> call, Response<List<DriverInfo>> response) {
 
-                                    if (response.body().get(0).getSelfie()!=null){
+                                    if (response.body().get(0).getSelfie() != null) {
                                         driverImage.setVisibility(View.VISIBLE);
                                         Picasso.get().load(Config.REG_LINE + response.body().get(0).getSelfie()).into(driverImage, new com.squareup.picasso.Callback() {
                                             @Override
@@ -1174,7 +1175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             }
                                         });
 
-                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId,rating1);
+                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, rating1);
                                         ratingCall.enqueue(new Callback<List<RideModel>>() {
                                             @Override
                                             public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
@@ -1194,7 +1195,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         del1Ref.child(tripId).removeValue();
                                     } else {
 
-                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId,0);
+                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, 0);
                                         ratingCall.enqueue(new Callback<List<RideModel>>() {
                                             @Override
                                             public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
@@ -1938,6 +1939,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void getLastLocation() {
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -2114,7 +2116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void locationButton(View view) {
         getLastLocation();
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
     }
 
     @Override
@@ -2173,6 +2175,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(MainActivity.this, History.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 drawerLayout.closeDrawers();
+                finish();
                 break;
         }
         return false;
@@ -2187,6 +2190,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+
+        CameraUpdate point = CameraUpdateFactory.newLatLngZoom(new LatLng(23.9978113, 90.4651143),7);
+        map.moveCamera(point);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -2397,7 +2403,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void run() {
-                singleBack=false;
+                singleBack = false;
             }
         }, 2000);
     }
