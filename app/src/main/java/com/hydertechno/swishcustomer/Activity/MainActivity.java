@@ -1357,7 +1357,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         if (notify) {
-            sendNotification(bookingId, userId, "Booking Create!", "Tap to see booking details", "my_ride_details");
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        sendNotificationDriver(bookingId, postSnapshot.getKey(), type, "New Request!","Tap to see full details." , "booking_details");
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+            sendNotification(bookingId, userId, "Booking Create!", "Tap to see booking details.", "my_ride_details");
         }
         notify = false;
         DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides");
@@ -1478,7 +1492,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         if (notify) {
-            sendNotification(hourlyTripId, userId, "Hourly Ride", "New Request Upload!", "my_hourly_ride_details");
+
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        sendNotificationDriver(bookingId, postSnapshot.getKey(), type, "New Request!","Tap to see full details." , "hourly_details");
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+            sendNotification(hourlyTripId, userId, "Hourly Ride", "Tap to see booking details.", "my_hourly_ride_details");
         }
         notify = false;
         DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerHourRides");
@@ -2322,7 +2350,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void sendNotificationDriver(final String id, final String type, final String title, final String message, final String toActivity) {
+    private void sendNotificationDriver(final String bookingId, final String receiverId, final String car, final String title, final String message, final String toActivity) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(car);
+        Query query = tokens.orderByKey().equalTo(receiverId);
+        final String receiverId1 = receiverId;
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(bookingId, R.mipmap.ic_noti_foreground, message, title, receiverId1, toActivity);
+
+                    Sender sender = new Sender(data, token.getToken());
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> my_response) {
+                                    if (my_response.code() == 200) {
+                                        if (my_response.body().success != 1) {
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                                    Toast.makeText(MainActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    private void sendNotificationDriverw(final String id, final String type, final String title, final String message, final String toActivity) {
         DatabaseReference tokens1 = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
         tokens1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

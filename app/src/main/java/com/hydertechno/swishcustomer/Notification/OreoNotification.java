@@ -14,6 +14,8 @@ import android.media.AudioAttributes;
 import android.net.Uri;
 import android.os.Build;
 
+import androidx.core.app.NotificationCompat;
+
 import com.hydertechno.swishcustomer.R;
 
 
@@ -64,13 +66,15 @@ public class OreoNotification extends ContextWrapper {
     Drawable myDrawable = getResources().getDrawable(R.drawable.logo_circle);
     Bitmap anImage      = ((BitmapDrawable) myDrawable).getBitmap();
     @TargetApi(Build.VERSION_CODES.O)
-    public  Notification.Builder getOreoNotification(String title, String body,
-                                                     PendingIntent pendingIntent, Uri soundUri, String icon){
-        return new Notification.Builder(getApplicationContext(), CHANNEL_ID)
+    public  NotificationCompat.Builder getOreoNotification(String title, String body,
+                                                           PendingIntent pendingIntent, Uri soundUri, String icon){
+        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
                 .setLargeIcon(anImage)
                 .setContentText(body)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setShowWhen(true)
                 .setSmallIcon(R.mipmap.ic_noti_foreground)
                 .setAutoCancel(true);
 

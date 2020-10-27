@@ -106,7 +106,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
                         defaultSound, icon);
                 int i = 0;
                 if (j > 0) {
@@ -126,7 +126,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
                         defaultSound, icon);
                 int i = 0;
                 if (j > 0) {
@@ -144,7 +144,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
                         defaultSound, icon);
                 int i = 0;
                 if (j > 0) {
@@ -165,7 +165,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
                         defaultSound, icon);
                 int i = 0;
                 if (j > 0) {
@@ -184,7 +184,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
                         defaultSound, icon);
                 int i = 0;
                 if (j > 0) {

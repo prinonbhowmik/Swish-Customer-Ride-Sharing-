@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="150dp"
         android:orientation="horizontal">
         <LinearLayout
             android:id="@+id/content"
@@ -30,16 +30,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            android:layout_marginLeft="2dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/namefromNavigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Swish Driver"
                 android:textColor="@android:color/white"
-                android:text="Rent Car BD"
                 android:textSize="18sp" />
 
             <TextView
@@ -47,15 +45,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:text="+88012345678911"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="12sp"/>
             <TextView
                 android:id="@+id/wallet_fromNavigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="৳ 100"
+                android:drawableStart="@drawable/ic_wallet"
+                android:drawablePadding="10dp"
                 android:layout_marginBottom="5dp"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="12sp"/>
+                android:textColor="#FFC107"
+                android:textSize="15sp"/>
 
         </LinearLayout>
     </LinearLayout>
