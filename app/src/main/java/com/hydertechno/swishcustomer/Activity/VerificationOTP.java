@@ -19,7 +19,6 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.hydertechno.swishcustomer.R;
-import com.hydertechno.swishcustomer.Utils.OTPReceiver;
 
 public class VerificationOTP extends AppCompatActivity {
 
@@ -37,9 +36,6 @@ public class VerificationOTP extends AppCompatActivity {
 
         init();
 
-
-
-
         Intent i = getIntent();
         check = i.getIntExtra("check",0);
 
@@ -51,9 +47,9 @@ public class VerificationOTP extends AppCompatActivity {
             id = i.getStringExtra("id");
         }
 
-        requestPermissions();
+       // requestPermissions();
 
-        new OTPReceiver().setEditText_otp(verifyEt);
+       // new OTPReceiver().setEditText_otp(verifyEt);
 
         verifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,11 +70,9 @@ public class VerificationOTP extends AppCompatActivity {
                            hideKeyboardFrom(getApplicationContext());
                           if (check==1){
                               startActivity(new Intent(VerificationOTP.this, SignUp.class).putExtra("phone", phone));
-                              finish();
                           }
                           else{
                               startActivity(new Intent(VerificationOTP.this, ResetPassword.class).putExtra("id",id));
-                              finish();
                           }
                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                            finish();

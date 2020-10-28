@@ -1000,7 +1000,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlyMicroPrice.setText(price + " Tk/Phr");
+                hourlyMicroPrice.setText(price + " Tk/Hr");
             }
 
             @Override
@@ -1016,7 +1016,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlyMicro11Price.setText(price + " Tk/Phr");
+                hourlyMicro11Price.setText(price + " Tk/Hr");
             }
 
             @Override
@@ -1032,7 +1032,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlysedanPrice.setText(price + " Tk/Phr");
+                hourlysedanPrice.setText(price + " Tk/Hr");
             }
 
             @Override
@@ -1048,7 +1048,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlysedanPremeirePrice.setText(price + " Tk/Phr");
+                hourlysedanPremeirePrice.setText(price + " Tk/Hr");
             }
 
             @Override
@@ -1064,7 +1064,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlysedanBusinessPrice.setText(price + " Tk/Phr");
+                hourlysedanBusinessPrice.setText(price + " Tk/Hr");
             }
 
             @Override
@@ -1350,8 +1350,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             bottomsheet.setVisibility(View.GONE);
                         }
                     });
-                    builder.create().show();
-                    builder.create().show();
+
+                    if(!isFinishing()){
+                        builder.create().show();
+                    }
                 }
             }
         });

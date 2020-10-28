@@ -523,7 +523,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                     List<Address> addresses = geocoder.getFromLocation(destinationLat, destinationLon, 1);
                     destinationPlace = addresses.get(0).getAddressLine(0);
                     placeNameTV.setText(destinationPlace);
-                    BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                    BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.ic_destination);
                     marker.setIcon(markerIcon);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -560,9 +560,6 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             public void onMarkerDragEnd(Marker marker) {
                 pickUpLat = marker.getPosition().latitude;
                 pickUpLon = marker.getPosition().longitude;
-
-                Log.d("pickUp", String.valueOf(pickUpLat));
-                Log.d("pickUplon", String.valueOf(pickUpLon));
 
                 Geocoder geocoder = new Geocoder(RunningTrip.this, locale);
                 try {
