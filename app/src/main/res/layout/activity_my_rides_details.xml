@@ -269,7 +269,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/card_view5"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:layout_marginTop="-5dp"
             android:layerType="software"
             app:neomorph_background_color="@color/neomorph_background_color"
@@ -312,6 +311,22 @@
 
         </RelativeLayout>
         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+        <TextView
+            android:id="@+id/reportTrip"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_centerHorizontal="true"
+            android:text="Report a problem!"
+            android:drawableLeft="@drawable/ic_bad_review"
+            android:textColor="#000"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:layout_marginBottom="30dp"
+            android:layout_alignParentBottom="true"/>
+
         <RelativeLayout
             android:id="@+id/relative"
             android:layout_width="match_parent"

@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
+import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -64,20 +66,21 @@ import retrofit2.Response;
 
 public class MyRidesDetails extends AppCompatActivity {
 
-    private TextView pickupPlaceTV, destinationTV, pickupDateTV, pickupTimeTV, carTypeTV, takaTV;
-    private String id, car_type, pickupPlace, destinationPlace, pickupDate, pickupTime, carType, taka,type,
-            driverId,userId,bookingStatus, d_name, d_phone,pickUpLat,pickUpLon,destinationLat,
-            destinationLon,apiKey = "AIzaSyDy8NWL5x_v5AyQkcM9-4wqAWBp27pe9Bk",rideStatus;
-    private Button editBtn,deleteBtn,driverInfoBtn,saveBtn;
+    private TextView pickupPlaceTV, destinationTV, pickupDateTV, pickupTimeTV, carTypeTV, takaTV,headerTitle;
+    private String id, pickupPlace, destinationPlace, pickupDate, pickupTime, carType,
+            driverId, userId, bookingStatus, tripId , pickUpLat, pickUpLon, destinationLat,
+            destinationLon, apiKey = "AIzaSyDy8NWL5x_v5AyQkcM9-4wqAWBp27pe9Bk", rideStatus;
+    private Button editBtn, deleteBtn, driverInfoBtn, saveBtn;
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
     private NeomorphFrameLayout editNFL;
-    private Boolean editable=false;
-    private String pickUpCity,destinationCity;
-    private int kmdistance,travelduration,price,check;
+    private Boolean editable = false;
+    private String pickUpCity, destinationCity;
+    private int kmdistance, travelduration, price, check;
     private SharedPreferences sharedPreferences;
     private ApiInterface apiInterface;
     private APIService apiService;
+    private TextView reportTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +91,7 @@ public class MyRidesDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         id = intent.getStringExtra("bookingId");
-        check = intent.getIntExtra("check",0);
+        check = intent.getIntExtra("check", 0);
 
         getData();
 
@@ -99,13 +102,26 @@ public class MyRidesDetails extends AppCompatActivity {
             }
         });
 
+        reportTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(MyRidesDetails.this,TripReportActivity.class);
+                intent1.putExtra("tripId",tripId);
+                intent1.putExtra("driverId",driverId);
+                intent1.putExtra("userId",userId);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent1);
+                finish();
+            }
+        });
+
         driverInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent1 = getIntent();
 
                 Bundle args = new Bundle();
-                args.putString("id",  driverId);
+                args.putString("id", driverId);
                 args.putInt("check", check);
                 DriverDetailsBottomSheet bottom_sheet = new DriverDetailsBottomSheet();
                 bottom_sheet.setArguments(args);
@@ -117,7 +133,7 @@ public class MyRidesDetails extends AppCompatActivity {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editable=true;
+                editable = true;
                 editBtn.setVisibility(View.GONE);
                 saveBtn.setVisibility(View.VISIBLE);
             }
@@ -126,70 +142,68 @@ public class MyRidesDetails extends AppCompatActivity {
         pickupPlaceTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              if (check==1){
-                  if (editable==true){
-                      Intent pickintent = new Intent(MyRidesDetails.this,RunningTrip.class);
-                      pickintent.putExtra("lat",pickUpLat);
-                      pickintent.putExtra("lon",pickUpLon);
-                      pickintent.putExtra("place",pickupPlace);
-                      pickintent.putExtra("tripId",id);
-                      pickintent.putExtra("type",carType);
-                      pickintent.putExtra("edit",1);
-                      pickintent.putExtra("check",1);
-                      pickintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                      startActivity(pickintent);
-                      finish();
-                  }
-                  else if(editable==false){
-                      Intent pikIntent = new Intent(MyRidesDetails.this,RunningTrip.class);
-                      pikIntent.putExtra("lat",pickUpLat);
-                      pikIntent.putExtra("lon",pickUpLon);
-                      pikIntent.putExtra("place",pickupPlace);
-                      pikIntent.putExtra("edit",0);
-                      pikIntent.putExtra("check",1);
-                      pikIntent.putExtra("tripId",id);
-                      startActivity(pikIntent);
+                if (check == 1) {
+                    if (editable == true) {
+                        Intent pickintent = new Intent(MyRidesDetails.this, RunningTrip.class);
+                        pickintent.putExtra("lat", pickUpLat);
+                        pickintent.putExtra("lon", pickUpLon);
+                        pickintent.putExtra("place", pickupPlace);
+                        pickintent.putExtra("tripId", id);
+                        pickintent.putExtra("type", carType);
+                        pickintent.putExtra("edit", 1);
+                        pickintent.putExtra("check", 1);
+                        pickintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(pickintent);
+                        finish();
+                    } else if (editable == false) {
+                        Intent pikIntent = new Intent(MyRidesDetails.this, RunningTrip.class);
+                        pikIntent.putExtra("lat", pickUpLat);
+                        pikIntent.putExtra("lon", pickUpLon);
+                        pikIntent.putExtra("place", pickupPlace);
+                        pikIntent.putExtra("edit", 0);
+                        pikIntent.putExtra("check", 1);
+                        pikIntent.putExtra("tripId", id);
+                        startActivity(pikIntent);
 
-                  }
-              }
+                    }
+                }
             }
         });
 
         destinationTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               if (check==1){
-                   if (editable==true){
-                       Intent pickintent = new Intent(MyRidesDetails.this,RunningTrip.class);
-                       pickintent.putExtra("lat",destinationLat);
-                       pickintent.putExtra("lon",destinationLon);
-                       pickintent.putExtra("place",destinationPlace);
-                       pickintent.putExtra("tripId",id);
-                       pickintent.putExtra("type",carType);
-                       pickintent.putExtra("edit",1);
-                       pickintent.putExtra("check",2);
-                       pickintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                       startActivity(pickintent);
-                       finish();
-                   }
-                   else if(editable==false){
-                       Intent pikIntent = new Intent(MyRidesDetails.this,RunningTrip.class);
-                       pikIntent.putExtra("lat",destinationLat);
-                       pikIntent.putExtra("lon",destinationLon);
-                       pikIntent.putExtra("place",destinationPlace);
-                       pikIntent.putExtra("edit",0);
-                       pikIntent.putExtra("check",2);
-                       pikIntent.putExtra("tripId",id);
-                       startActivity(pikIntent);
-                   }
-               }
+                if (check == 1) {
+                    if (editable == true) {
+                        Intent pickintent = new Intent(MyRidesDetails.this, RunningTrip.class);
+                        pickintent.putExtra("lat", destinationLat);
+                        pickintent.putExtra("lon", destinationLon);
+                        pickintent.putExtra("place", destinationPlace);
+                        pickintent.putExtra("tripId", id);
+                        pickintent.putExtra("type", carType);
+                        pickintent.putExtra("edit", 1);
+                        pickintent.putExtra("check", 2);
+                        pickintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(pickintent);
+                        finish();
+                    } else if (editable == false) {
+                        Intent pikIntent = new Intent(MyRidesDetails.this, RunningTrip.class);
+                        pikIntent.putExtra("lat", destinationLat);
+                        pikIntent.putExtra("lon", destinationLon);
+                        pikIntent.putExtra("place", destinationPlace);
+                        pikIntent.putExtra("edit", 0);
+                        pikIntent.putExtra("check", 2);
+                        pikIntent.putExtra("tripId", id);
+                        startActivity(pikIntent);
+                    }
+                }
             }
         });
 
         pickupDateTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editable==true){
+                if (editable == true) {
                     getDate();
                 }
             }
@@ -198,7 +212,7 @@ public class MyRidesDetails extends AppCompatActivity {
         pickupTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editable==true){
+                if (editable == true) {
                     getTime();
                 }
             }
@@ -217,7 +231,7 @@ public class MyRidesDetails extends AppCompatActivity {
                 updateRef2.child("pickUpDate").setValue(pickupDateTV.getText().toString());
                 updateRef2.child("pickUpTime").setValue(pickupTimeTV.getText().toString());
 
-                Call<List<RideModel>> call = apiInterface.datetimeUpdate(id,pickupDateTV.getText().toString(),
+                Call<List<RideModel>> call = apiInterface.datetimeUpdate(id, pickupDateTV.getText().toString(),
                         pickupTimeTV.getText().toString());
                 call.enqueue(new Callback<List<RideModel>>() {
                     @Override
@@ -232,14 +246,14 @@ public class MyRidesDetails extends AppCompatActivity {
                 });
 
                 saveBtn.setVisibility(View.GONE);
-                editable=false;
+                editable = false;
             }
         });
     }
 
     private void getPrice(String pickUpLat, String pickUpLon, String destinationLat, String destinationLon) {
         Locale locale = new Locale("en");
-        Geocoder geocoder = new Geocoder(MyRidesDetails.this,locale );
+        Geocoder geocoder = new Geocoder(MyRidesDetails.this, locale);
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(Double.parseDouble(pickUpLat), Double.parseDouble(pickUpLon), 1);
@@ -288,11 +302,11 @@ public class MyRidesDetails extends AppCompatActivity {
                     call1.enqueue(new Callback<List<RidingRate>>() {
                         @Override
                         public void onResponse(Call<List<RidingRate>> call, Response<List<RidingRate>> response) {
-                            if (response.isSuccessful()){
+                            if (response.isSuccessful()) {
                                 List<RidingRate> rate = new ArrayList<>();
                                 rate = response.body();
                                 int kmRate = rate.get(0).getKm_charge();
-                                int minRate =rate.get(0).getMin_charge();
+                                int minRate = rate.get(0).getMin_charge();
                                 int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
 
                                 int kmPrice = kmRate * kmdistance;
@@ -305,7 +319,7 @@ public class MyRidesDetails extends AppCompatActivity {
 
                                 price = kmPrice + minPrice + minimumRate;
 
-                                takaTV.setText("৳ "+price);
+                                takaTV.setText("৳ " + price);
                                 DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("CustomerRides")
                                         .child(userId).child(id);
                                 updateRef.child("price").setValue(String.valueOf(price));
@@ -320,6 +334,7 @@ public class MyRidesDetails extends AppCompatActivity {
                                     public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
 
                                     }
+
                                     @Override
                                     public void onFailure(Call<List<RideModel>> call, Throwable t) {
 
@@ -328,6 +343,7 @@ public class MyRidesDetails extends AppCompatActivity {
 
                             }
                         }
+
                         @Override
                         public void onFailure(Call<List<RidingRate>> call, Throwable t) {
 
@@ -336,6 +352,7 @@ public class MyRidesDetails extends AppCompatActivity {
 
                 }
             }
+
             @Override
             public void onFailure(Call<DistanceResponse> call, Throwable t) {
 
@@ -402,37 +419,36 @@ public class MyRidesDetails extends AppCompatActivity {
     }
 
     private void buttonsShow() {
-       if (check==1){
-           if(!bookingStatus.matches("Booked")){
-               editBtn.setVisibility(View.VISIBLE);
-               driverInfoBtn.setVisibility(View.GONE);
-           }
-           else{
-               editNFL.setVisibility(View.GONE);
-               editBtn.setVisibility(View.GONE);
-               driverInfoBtn.setVisibility(View.VISIBLE);
-               if (rideStatus.equals("End")){
-                   deleteBtn.setVisibility(View.GONE);
-               }
-           }
-       }
-       if (check==2){
-           driverInfoBtn.setVisibility(View.VISIBLE);
-           editNFL.setVisibility(View.GONE);
-           editBtn.setVisibility(View.GONE);
-           deleteBtn.setVisibility(View.GONE);
-           if (driverId==null){
-               driverInfoBtn.setVisibility(View.GONE);
-           }
+        if (check == 1) {
+            if (!bookingStatus.matches("Booked")) {
+                editBtn.setVisibility(View.VISIBLE);
+                driverInfoBtn.setVisibility(View.GONE);
+            } else {
+                editNFL.setVisibility(View.GONE);
+                editBtn.setVisibility(View.GONE);
+                driverInfoBtn.setVisibility(View.VISIBLE);
+                if (rideStatus.equals("End")) {
+                    deleteBtn.setVisibility(View.GONE);
+                }
+            }
+        }
+        if (check == 2) {
+            driverInfoBtn.setVisibility(View.VISIBLE);
+            editNFL.setVisibility(View.GONE);
+            editBtn.setVisibility(View.GONE);
+            deleteBtn.setVisibility(View.GONE);
+            if (driverId == null) {
+                driverInfoBtn.setVisibility(View.GONE);
+            }
 
-       }
-       if (check==3){
-           driverInfoBtn.setVisibility(View.VISIBLE);
-           editNFL.setVisibility(View.GONE);
-           editBtn.setVisibility(View.GONE);
-           deleteBtn.setVisibility(View.GONE);
+        }
+        if (check == 3) {
+            driverInfoBtn.setVisibility(View.VISIBLE);
+            editNFL.setVisibility(View.GONE);
+            editBtn.setVisibility(View.GONE);
+            deleteBtn.setVisibility(View.GONE);
 
-       }
+        }
     }
 
     private void deleteAlertDialog() {
@@ -458,8 +474,8 @@ public class MyRidesDetails extends AppCompatActivity {
     }
 
     private void deleteRide() {
-        DatabaseReference deleteRef=databaseReference.child("BookForLater").child(carType).child(id);
-        DatabaseReference deleteRef2=databaseReference.child("CustomerRides").child(userId).child(id);
+        DatabaseReference deleteRef = databaseReference.child("BookForLater").child(carType).child(id);
+        DatabaseReference deleteRef2 = databaseReference.child("CustomerRides").child(userId).child(id);
         deleteRef.removeValue();
         deleteRef2.removeValue();
 
@@ -476,12 +492,12 @@ public class MyRidesDetails extends AppCompatActivity {
             }
         });
 
-        sendNotification(id, driverId,carType, "Booking Delete!", "Customer had deleted his ride.", "booking_details");
+        sendNotification(id, driverId, carType, "Booking Delete!", "Customer had deleted his ride.", "booking_details");
 
-        if(check==1) {
+        if (check == 1) {
             startActivity(new Intent(MyRidesDetails.this, MyRides.class));
         }
-        if(check==2){
+        if (check == 2) {
             startActivity(new Intent(MyRidesDetails.this, History.class));
         }
 
@@ -489,99 +505,100 @@ public class MyRidesDetails extends AppCompatActivity {
     }
 
     private void init() {
-        sharedPreferences = getSharedPreferences("MyRef",MODE_PRIVATE);
-        userId = sharedPreferences.getString("id","");
-        databaseReference= FirebaseDatabase.getInstance().getReference();
-        pickupDateTV=findViewById(R.id.pickupDateTV);
-        pickupPlaceTV=findViewById(R.id.pickupPlaceTV);
-        destinationTV=findViewById(R.id.destinationTV);
-        pickupTimeTV=findViewById(R.id.pickupTimeTV);
-        carTypeTV=findViewById(R.id.carTypeTV);
-        takaTV=findViewById(R.id.takaTV);
-        editBtn=findViewById(R.id.editBtn);
-        deleteBtn=findViewById(R.id.deleteBtn);
-        driverInfoBtn=findViewById(R.id.driverDetailsBtn);
-        saveBtn=findViewById(R.id.saveBtn);
+        headerTitle = findViewById(R.id.headerTitle);
+        sharedPreferences = getSharedPreferences("MyRef", MODE_PRIVATE);
+        userId = sharedPreferences.getString("id", "");
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        pickupDateTV = findViewById(R.id.pickupDateTV);
+        pickupPlaceTV = findViewById(R.id.pickupPlaceTV);
+        destinationTV = findViewById(R.id.destinationTV);
+        pickupTimeTV = findViewById(R.id.pickupTimeTV);
+        carTypeTV = findViewById(R.id.carTypeTV);
+        takaTV = findViewById(R.id.takaTV);
+        editBtn = findViewById(R.id.editBtn);
+        deleteBtn = findViewById(R.id.deleteBtn);
+        driverInfoBtn = findViewById(R.id.driverDetailsBtn);
+        saveBtn = findViewById(R.id.saveBtn);
         editNFL = findViewById(R.id.editNFL);
         apiInterface = ApiUtils.getUserService();
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        reportTrip = findViewById(R.id.reportTrip);
     }
 
     private void getData() {
-       if (check==1){
-           DatabaseReference reference = databaseReference.child("CustomerRides").child(userId).child(id);
-           reference.addValueEventListener(new ValueEventListener() {
-               @Override
-               public void onDataChange(@NonNull DataSnapshot snapshot) {
-                   if(snapshot.exists()){
-                       RideModel model = snapshot.getValue(RideModel.class);
-                       pickupPlace = model.getPickUpPlace();
-                       destinationPlace = model.getDestinationPlace();
-                       pickupDate = model.getPickUpDate();
-                       pickupTime = model.getPickUpTime();
-                       carType = model.getCarType();
-                       driverId=model.getDriverId();
-                       //taka = model.getPrice();
-                       bookingStatus = model.getBookingStatus();
-                       rideStatus = model.getRideStatus();
-                       pickUpLat = model.getPickUpLat();
-                       pickUpLon = model.getPickUpLon();
-                       destinationLat = model.getDestinationLat();
-                       destinationLon = model.getDestinationLon();
+        if (check == 1) {
+            DatabaseReference reference = databaseReference.child("CustomerRides").child(userId).child(id);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        RideModel model = snapshot.getValue(RideModel.class);
+                        pickupPlace = model.getPickUpPlace();
+                        destinationPlace = model.getDestinationPlace();
+                        pickupDate = model.getPickUpDate();
+                        pickupTime = model.getPickUpTime();
+                        carType = model.getCarType();
+                        driverId = model.getDriverId();
+                        //taka = model.getPrice();
+                        bookingStatus = model.getBookingStatus();
+                        rideStatus = model.getRideStatus();
+                        pickUpLat = model.getPickUpLat();
+                        pickUpLon = model.getPickUpLon();
+                        destinationLat = model.getDestinationLat();
+                        destinationLon = model.getDestinationLon();
 
-                       pickupPlaceTV.setText(pickupPlace);
-                       destinationTV.setText(destinationPlace);
-                       pickupDateTV.setText(pickupDate);
-                       pickupTimeTV.setText(pickupTime);
-                       carTypeTV.setText(carType);
+                        pickupPlaceTV.setText(pickupPlace);
+                        destinationTV.setText(destinationPlace);
+                        pickupDateTV.setText(pickupDate);
+                        pickupTimeTV.setText(pickupTime);
+                        carTypeTV.setText(carType);
 
-                       getPrice(pickUpLat,pickUpLon,destinationLat,destinationLon);
-                       buttonsShow();
-                   }
-               }
+                        getPrice(pickUpLat, pickUpLon, destinationLat, destinationLon);
+                        buttonsShow();
+                    }
+                }
 
-               @Override
-               public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-               }
-           });
-       }
-       else if (check==2){
+                }
+            });
+        }
+        else if (check == 2) {
+            headerTitle.setText("Ride History");
+            reportTrip.setVisibility(View.VISIBLE);
+            Intent intent = getIntent();
+            pickupPlaceTV.setText(intent.getStringExtra("pickplace"));
+            destinationTV.setText(intent.getStringExtra("desplace"));
+            pickupDateTV.setText(intent.getStringExtra("pickdate"));
+            pickupTimeTV.setText(intent.getStringExtra("picktime"));
+            carTypeTV.setText(intent.getStringExtra("cartype"));
+            takaTV.setText(intent.getStringExtra("price"));
+            tripId = intent.getStringExtra("tripId");
+            driverId = intent.getStringExtra("custId");
+            buttonsShow();
 
-         Intent intent = getIntent();
-          pickupPlaceTV.setText( intent.getStringExtra("pickplace"));
-          destinationTV.setText( intent.getStringExtra("desplace"));
-          pickupDateTV.setText( intent.getStringExtra("pickdate"));
-          pickupTimeTV.setText( intent.getStringExtra("picktime"));
-          carTypeTV.setText( intent.getStringExtra("cartype"));
-          takaTV.setText( intent.getStringExtra("price"));
-
-          driverId = intent.getStringExtra("custId");
-          buttonsShow();
-
-       }
-
-
+        }
 
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(check==1) {
+        if (check == 1) {
             startActivity(new Intent(MyRidesDetails.this, MyRides.class));
         }
-        if(check==2){
+        if (check == 2) {
             startActivity(new Intent(MyRidesDetails.this, History.class));
         }
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
 
-    private void sendNotification(final String id, final String receiverId,final String carType,  final String title, final String message, final String toActivity) {
+    private void sendNotification(final String id, final String receiverId, final String carType, final String title, final String message, final String toActivity) {
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(carType);
         Query query = tokens.orderByKey().equalTo(receiverId);
-        String receiverId1=receiverId;
+        String receiverId1 = receiverId;
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

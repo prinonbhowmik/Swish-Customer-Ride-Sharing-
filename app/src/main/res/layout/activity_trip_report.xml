@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.TripReportActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/reviewImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:src="@drawable/ic_bad_review" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reviewImage"
+            android:text="Please share your problem!"
+            android:textAlignment="center"
+            android:textColor="#000"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp">
+
+            <RadioButton
+                android:id="@+id/type1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  Involved in an accident"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/type2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  Paid extra cash"
+                android:textSize="20dp" />
+            <RadioButton
+                android:id="@+id/type3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  My fair doesn't match"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/type4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  My stuff was stolen"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/type5"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  Rough driving issue"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/type6"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  Vehicle was not as expected"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/type7"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  Misbehaviour from my driver"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/type8"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  Car information doesn't match"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/type9"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:checked="false"
+                android:text="  Other"
+                android:textSize="20dp" />
+
+        </RadioGroup>
+
+
+        <EditText
+            android:id="@+id/otherEt"
+            android:layout_below="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="If other then share your issue"
+            android:background="@drawable/edittext_design"
+            android:layout_margin="20dp"
+            android:enabled="false"
+            android:padding="15dp"/>
+
+        <Button
+            android:id="@+id/submitBtn"
+            android:layout_below="@+id/otherEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_margin="20dp"
+            android:textAllCaps="false"
+            android:background="@drawable/btn_background"
+            android:textColor="#fff"/>
+    </RelativeLayout>
+
+
+</ScrollView>

@@ -80,6 +80,7 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
                     Intent intent = new Intent(context, MyRidesDetails.class);
                     intent.putExtra("bookingId", rideModel.getBookingId());
                     intent.putExtra("check",2);
+                    intent.putExtra("tripId",rideModel.getBookingId());
                     intent.putExtra("pickplace",rideModel.getPickUpPlace());
                     intent.putExtra("desplace",rideModel.getDestinationPlace());
                     intent.putExtra("pickdate",rideModel.getPickUpDate());
