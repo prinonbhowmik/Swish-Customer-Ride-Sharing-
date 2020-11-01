@@ -124,13 +124,13 @@ public class TripReportActivity extends AppCompatActivity {
                                 builder.setIcon(R.drawable.logo_circle);
                                 builder.setTitle("Report!");
                                 builder.setMessage("Your complain has taken under review. We will take action within 24hrs.");
-
+                                builder.setCancelable(false);
                                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                         Intent intent = new Intent(TripReportActivity.this,MainActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                         finish();
                                     }

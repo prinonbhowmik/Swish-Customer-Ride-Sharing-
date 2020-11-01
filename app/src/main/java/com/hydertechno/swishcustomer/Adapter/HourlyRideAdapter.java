@@ -79,7 +79,7 @@ public class HourlyRideAdapter extends RecyclerView.Adapter<HourlyRideAdapter.Vi
                     Intent intent = new Intent(context, HourlyRideDetails.class);
                     intent.putExtra("bookingId", rideModel.getBookingId());
                     intent.putExtra("check", 1);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
                 } catch (Exception e) {
                 }

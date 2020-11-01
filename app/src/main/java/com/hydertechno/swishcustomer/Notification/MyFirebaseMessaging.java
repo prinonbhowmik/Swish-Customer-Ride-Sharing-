@@ -43,6 +43,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     public static final String TAG = "FirebaseMessaging";
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private SharedPreferences sharedPreferences;
+
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
@@ -69,13 +70,11 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         /*FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && sent.equals(firebaseUser.getUid())) {*/
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                sendOreoNotification(remoteMessage);
-            } else {
-                sendNotification(remoteMessage);
-            }
-
-       // }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            sendOreoNotification(remoteMessage);
+        } else {
+            sendNotification(remoteMessage);
+        }
     }
 
     private void updateToken(String refreshToken) {
@@ -136,7 +135,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 break;
             }
             case "running_trip":
-            case "main_activity":{
+            case "main_activity": {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -155,7 +154,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
                 break;
             }
-            case "show_cash":{
+            case "show_cash": {
                 Intent intent = new Intent(getApplicationContext(), ShowCash.class);
                 intent.putExtra("tripId", bookingId);
                 intent.putExtra("check", 3);
@@ -174,7 +173,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 oreoNotification.getManager().notify(i, builder.build());
                 break;
             }
-            case "show_cash2":{
+            case "show_cash2": {
                 Intent intent = new Intent(getApplicationContext(), ShowCash.class);
                 intent.putExtra("tripId", bookingId);
                 intent.putExtra("check", 4);
@@ -376,7 +375,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 break;
             }
         }
-
 
 
     }
