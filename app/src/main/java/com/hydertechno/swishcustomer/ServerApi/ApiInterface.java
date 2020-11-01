@@ -10,6 +10,7 @@ import com.hydertechno.swishcustomer.Model.HourlyRideModel;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.Model.RidingRate;
+import com.hydertechno.swishcustomer.Model.TripReportModel;
 
 import java.util.List;
 
@@ -184,5 +185,12 @@ public interface ApiInterface {
 
     @GET("driverinfo?")
     Call<List<DriverInfo>> getCarNumber(@Query("id") String driverid);
+
+    @FormUrlEncoded
+    @POST("report-an-issue")
+    Call<List<TripReportModel>> report(@Field("r_id") String trip_id,
+                                       @Field("d_id")String driver_id,
+                                       @Field("c_id") String cust_id,
+                                       @Field("issue") String reportmsg);
 
 }

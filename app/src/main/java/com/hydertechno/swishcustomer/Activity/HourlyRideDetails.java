@@ -52,7 +52,7 @@ import retrofit2.Response;
 
 public class HourlyRideDetails extends AppCompatActivity {
 
-    private TextView pickupPlaceTV, pickupDateTV, pickupTimeTV, carTypeTV, takaTV;
+    private TextView pickupPlaceTV, pickupDateTV, pickupTimeTV, carTypeTV, takaTV,headerTitle,reportTrip;
     private String id, car_type, pickupPlace, destinationPlace, pickupDate, pickupTime, carType, taka,type,
             driverId,userId,bookingStatus, d_name, d_phone,pickUpLat,pickUpLon,destinationLat,
             destinationLon,apiKey = "AIzaSyDy8NWL5x_v5AyQkcM9-4wqAWBp27pe9Bk",rideStatus;
@@ -84,6 +84,19 @@ public class HourlyRideDetails extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 deleteAlertDialog();
+            }
+        });
+
+        reportTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(HourlyRideDetails.this,TripReportActivity.class);
+                intent1.putExtra("tripId",id);
+                intent1.putExtra("driverId",driverId);
+                intent1.putExtra("userId",userId);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent1);
+                finish();
             }
         });
 
@@ -338,6 +351,8 @@ public class HourlyRideDetails extends AppCompatActivity {
             });
         }
         else if (check == 2){
+            headerTitle.setText("Hourly Ride History");
+            reportTrip.setVisibility(View.VISIBLE);
             Intent intent = getIntent();
             driverId = intent.getStringExtra("custId");
             pickupPlaceTV.setText( intent.getStringExtra("pickplace"));
@@ -367,6 +382,7 @@ public class HourlyRideDetails extends AppCompatActivity {
             }
         }
         if (check==2){
+
             driverInfoBtn.setVisibility(View.VISIBLE);
             editNFL.setVisibility(View.GONE);
             editBtn.setVisibility(View.GONE);
@@ -386,6 +402,8 @@ public class HourlyRideDetails extends AppCompatActivity {
         databaseReference= FirebaseDatabase.getInstance().getReference();
         pickupDateTV=findViewById(R.id.pickupDateTV);
         pickupPlaceTV=findViewById(R.id.pickupPlaceTV);
+        headerTitle=findViewById(R.id.headerTitle);
+        reportTrip=findViewById(R.id.reportTrip);
         pickupTimeTV=findViewById(R.id.pickupTimeTV);
         carTypeTV=findViewById(R.id.carTypeTV);
         takaTV=findViewById(R.id.takaTV);

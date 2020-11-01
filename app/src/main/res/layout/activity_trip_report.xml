@@ -8,7 +8,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
         <ImageView
             android:id="@+id/reviewImage"
             android:layout_width="80dp"
@@ -126,8 +127,8 @@
             android:hint="If other then share your issue"
             android:background="@drawable/edittext_design"
             android:layout_margin="20dp"
-            android:enabled="false"
-            android:padding="15dp"/>
+            android:visibility="gone"
+            android:padding="10dp"/>
 
         <Button
             android:id="@+id/submitBtn"

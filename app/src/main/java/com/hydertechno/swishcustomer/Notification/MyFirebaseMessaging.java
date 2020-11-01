@@ -64,7 +64,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         String sent = remoteMessage.getData().get("sent");
 
-
         /*sharedPreferences = getSharedPreferences("MyRef", Context.MODE_PRIVATE);
         String userId=sharedPreferences.getString("id","");*/
         /*FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

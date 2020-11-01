@@ -407,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (dateTv.getText().equals("Select Ride Date")) {
                     Toast.makeText(MainActivity.this, "Please Enter Ride Date!", Toast.LENGTH_SHORT).show();
                 } else if (timeTv.getText().equals("Select Ride Time")) {
-                    Toast.makeText(MainActivity.this, "Please Selecet Ride Time!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please Select Ride Time!", Toast.LENGTH_SHORT).show();
                 } else {
                     dialog = new Dialog(MainActivity.this);
                     dialog.setContentView(R.layout.payment_type_select);
@@ -589,11 +589,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (hourBottom == 0) {
                     timeselectLayout.setVisibility(View.VISIBLE);
                     hourBottom = 5;
-                    type = "Micro 11";
+                    type = "Micro11";
                     hourlyrideTypeTv.setText("Micro");
                 } else {
                     hourBottom = 5;
-                    type = "Micro 11";
+                    type = "Micro11";
                     hourlyrideTypeTv.setText("Micro");
                     hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
                 }
@@ -2188,6 +2188,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(MainActivity.this, Emergency.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 drawerLayout.closeDrawers();
+                finish();
                 break;
             case R.id.referral:
                 startActivity(new Intent(MainActivity.this, Referral.class).putExtra("id", userId));
