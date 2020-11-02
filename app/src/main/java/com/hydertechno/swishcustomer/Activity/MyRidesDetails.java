@@ -38,6 +38,7 @@ import com.hydertechno.swishcustomer.ForApi.Element;
 import com.hydertechno.swishcustomer.ForApi.RestUtil;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.Model.RidingRate;
+import com.hydertechno.swishcustomer.Model.TripReportModel;
 import com.hydertechno.swishcustomer.Notification.APIService;
 import com.hydertechno.swishcustomer.Notification.Client;
 import com.hydertechno.swishcustomer.Notification.Data;
@@ -70,10 +71,10 @@ public class MyRidesDetails extends AppCompatActivity {
     private String id, pickupPlace, destinationPlace, pickupDate, pickupTime, carType,
             driverId, userId, bookingStatus, tripId , pickUpLat, pickUpLon, destinationLat,
             destinationLon, apiKey = "AIzaSyDy8NWL5x_v5AyQkcM9-4wqAWBp27pe9Bk", rideStatus;
-    private Button editBtn, deleteBtn, driverInfoBtn, saveBtn;
+    private Button editBtn, deleteBtn, driverInfoBtn, saveBtn,cancelBtn;
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
-    private NeomorphFrameLayout editNFL;
+    private NeomorphFrameLayout editNFL,cancelNFL;
     private Boolean editable = false;
     private String pickUpCity, destinationCity;
     private int kmdistance, travelduration, price, check;
@@ -105,13 +106,66 @@ public class MyRidesDetails extends AppCompatActivity {
         reportTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(MyRidesDetails.this,TripReportActivity.class);
-                intent1.putExtra("tripId",tripId);
-                intent1.putExtra("driverId",driverId);
-                intent1.putExtra("userId",userId);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent1);
-                finish();
+
+                Call<List<TripReportModel>> call = ApiUtils.getUserService().reportCheck(tripId);
+                call.enqueue(new Callback<List<TripReportModel>>() {
+                    @Override
+                    public void onResponse(Call<List<TripReportModel>> call, Response<List<TripReportModel>> response) {
+                        String nextStep = response.body().get(0).getNext_action();
+                        if (nextStep.equals("false")){
+                            Intent intent1 = new Intent(MyRidesDetails.this,TripReportActivity.class);
+                            intent1.putExtra("tripId",tripId);
+                            intent1.putExtra("driverId",driverId);
+                            intent1.putExtra("userId",userId);
+                            intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent1);
+                            finish();
+                        }
+                        else if (nextStep.equals("true")){
+                          String status = response.body().get(0).getStatus();
+                          if (status.equals("0")){
+                              AlertDialog.Builder builder = new AlertDialog.Builder(MyRidesDetails.this);
+                              builder.setIcon(R.drawable.logo_circle);
+                              builder.setTitle("Complain Under Review!");
+                              builder.setMessage("Your complain is taken under review! \n" +
+                                      "Our Customer service team will contact you very shortly");
+
+                              builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int which) {
+                                      dialog.dismiss();
+                                  }
+                              });
+
+                              if(!isFinishing()){
+                                  builder.create().show();
+                              }
+                          }else{
+                              AlertDialog.Builder builder = new AlertDialog.Builder(MyRidesDetails.this);
+                              builder.setIcon(R.drawable.logo_circle);
+                              builder.setTitle("Complain Review!");
+                              builder.setMessage("We have taken neccesary steps against your driver! \n " +
+                                      "Sorry for your issue and Thanks for staying with SWISH");
+
+                              builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialog, int which) {
+                                      dialog.dismiss();
+                                  }
+                              });
+
+                              if(!isFinishing()){
+                                  builder.create().show();
+                              }                          }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TripReportModel>> call, Throwable t) {
+
+                    }
+                });
+
             }
         });
 
@@ -126,6 +180,62 @@ public class MyRidesDetails extends AppCompatActivity {
                 DriverDetailsBottomSheet bottom_sheet = new DriverDetailsBottomSheet();
                 bottom_sheet.setArguments(args);
                 bottom_sheet.show(getSupportFragmentManager(), "bottomSheet");
+
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MyRidesDetails.this);
+                builder.setIcon(R.drawable.logo_circle);
+                builder.setTitle("Cancel Alert!");
+                builder.setMessage("Do you want to cancel this ride?");
+
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        DatabaseReference cancelRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId).child(tripId);
+                        cancelRef.removeValue();
+
+                        DatabaseReference canRef =  FirebaseDatabase.getInstance().getReference("BookForLater").child(carType).child(tripId);
+                        canRef.removeValue();
+
+                        Call<List<RideModel>> call = apiInterface.cancelTrip(id,"Cancel");
+                        call.enqueue(new Callback<List<RideModel>>() {
+                            @Override
+                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                            }
+                        });
+
+                        sendNotification(userId,driverId,carType,"Trip Cancelled","Your Passenger has cancelled the ride!","history");
+                        dialog.dismiss();
+                        Intent i = new Intent(MyRidesDetails.this,MyRides.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                if(!isFinishing()){
+                    builder.create().show();
+                }
+
+
+
 
             }
         });
@@ -249,6 +359,7 @@ public class MyRidesDetails extends AppCompatActivity {
                 editable = false;
             }
         });
+
     }
 
     private void getPrice(String pickUpLat, String pickUpLon, String destinationLat, String destinationLon) {
@@ -426,10 +537,9 @@ public class MyRidesDetails extends AppCompatActivity {
             } else {
                 editNFL.setVisibility(View.GONE);
                 editBtn.setVisibility(View.GONE);
+                cancelBtn.setVisibility(View.VISIBLE);
                 driverInfoBtn.setVisibility(View.VISIBLE);
-                if (rideStatus.equals("End")) {
-                    deleteBtn.setVisibility(View.GONE);
-                }
+                deleteBtn.setVisibility(View.GONE);
             }
         }
         if (check == 2) {
@@ -517,6 +627,8 @@ public class MyRidesDetails extends AppCompatActivity {
         takaTV = findViewById(R.id.takaTV);
         editBtn = findViewById(R.id.editBtn);
         deleteBtn = findViewById(R.id.deleteBtn);
+        cancelNFL = findViewById(R.id.cancelNFL);
+        cancelBtn = findViewById(R.id.cancelBtn);
         driverInfoBtn = findViewById(R.id.driverDetailsBtn);
         saveBtn = findViewById(R.id.saveBtn);
         editNFL = findViewById(R.id.editNFL);
@@ -538,6 +650,7 @@ public class MyRidesDetails extends AppCompatActivity {
                         pickupDate = model.getPickUpDate();
                         pickupTime = model.getPickUpTime();
                         carType = model.getCarType();
+                        tripId=model.getBookingId();
                         driverId = model.getDriverId();
                         //taka = model.getPrice();
                         bookingStatus = model.getBookingStatus();

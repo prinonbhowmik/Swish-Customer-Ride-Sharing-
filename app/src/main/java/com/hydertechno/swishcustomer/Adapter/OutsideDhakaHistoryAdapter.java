@@ -68,7 +68,12 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
             //holder.relativeLayout1.setBackgroundColor(ContextCompat.getColor(context,R.color.colorTextSecondary));
             holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_gray));
         }
-        if (!rideModel.getRideStatus().equals("End")) {
+        else if(rideModel.getRideStatus().equals("Cancel")){
+            holder.bookingStatus.setText("Ride Cancelled");
+            //holder.relativeLayout1.setBackgroundColor(ContextCompat.getColor(context,R.color.colorTextSecondary));
+            holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_red));
+        }
+        else {
             holder.bookingStatus.setText("Ride Expire");
             //holder.relativeLayout1.setBackgroundColor(ContextCompat.getColor(context,R.color.colorTextSecondary));
             holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_gray));

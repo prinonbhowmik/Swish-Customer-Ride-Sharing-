@@ -29,6 +29,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.hydertechno.swishcustomer.Model.HourlyRideModel;
 import com.hydertechno.swishcustomer.Model.RideModel;
+import com.hydertechno.swishcustomer.Model.TripReportModel;
 import com.hydertechno.swishcustomer.Notification.APIService;
 import com.hydertechno.swishcustomer.Notification.Client;
 import com.hydertechno.swishcustomer.Notification.Data;
@@ -90,13 +91,64 @@ public class HourlyRideDetails extends AppCompatActivity {
         reportTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(HourlyRideDetails.this,TripReportActivity.class);
-                intent1.putExtra("tripId",id);
-                intent1.putExtra("driverId",driverId);
-                intent1.putExtra("userId",userId);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent1);
-                finish();
+                Call<List<TripReportModel>> call = ApiUtils.getUserService().reportCheck(id);
+                call.enqueue(new Callback<List<TripReportModel>>() {
+                    @Override
+                    public void onResponse(Call<List<TripReportModel>> call, Response<List<TripReportModel>> response) {
+                        String nextStep = response.body().get(0).getNext_action();
+                        if (nextStep.equals("false")){
+                            Intent intent1 = new Intent(HourlyRideDetails.this,TripReportActivity.class);
+                            intent1.putExtra("tripId",id);
+                            intent1.putExtra("driverId",driverId);
+                            intent1.putExtra("userId",userId);
+                            intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent1);
+                            finish();
+                        }
+                        else if (nextStep.equals("true")){
+                            String status = response.body().get(0).getStatus();
+                            if (status.equals("0")){
+                                AlertDialog.Builder builder = new AlertDialog.Builder(HourlyRideDetails.this);
+                                builder.setIcon(R.drawable.logo_circle);
+                                builder.setTitle("Complain Under Review!");
+                                builder.setMessage("Your complain is taken under review! \n" +
+                                        "Our Customer service team will contact you very shortly");
+
+                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                if(!isFinishing()){
+                                    builder.create().show();
+                                }
+                            }else{
+                                AlertDialog.Builder builder = new AlertDialog.Builder(HourlyRideDetails.this);
+                                builder.setIcon(R.drawable.logo_circle);
+                                builder.setTitle("Complain Review!");
+                                builder.setMessage("We have taken neccesary steps against your driver! \n " +
+                                        "Sorry for your issue and Thanks for staying with SWISH");
+
+                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                if(!isFinishing()){
+                                    builder.create().show();
+                                }                          }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TripReportModel>> call, Throwable t) {
+
+                    }
+                });
             }
         });
 

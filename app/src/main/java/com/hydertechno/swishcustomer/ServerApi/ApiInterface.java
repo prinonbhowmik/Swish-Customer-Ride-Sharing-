@@ -193,4 +193,12 @@ public interface ApiInterface {
                                        @Field("c_id") String cust_id,
                                        @Field("issue") String reportmsg);
 
+    @GET("report-check?")
+    Call<List<TripReportModel>> reportCheck(@Query("r_id")String tripId);
+
+    @FormUrlEncoded
+    @PUT("bookingtripstart/{bookingId}")
+    Call<List<RideModel>> cancelTrip(@Path("bookingId") String bookingId,
+                                     @Field("rideStatus") String rideStatus);
+
 }

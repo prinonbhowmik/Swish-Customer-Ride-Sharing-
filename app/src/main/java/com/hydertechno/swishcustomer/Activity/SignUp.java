@@ -1,6 +1,7 @@
 package com.hydertechno.swishcustomer.Activity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -56,6 +57,7 @@ public class SignUp extends AppCompatActivity {
     private TextView conditions,policy;
     private ApiInterface api;
     private RequestBody  referralBody;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,15 +217,28 @@ public class SignUp extends AppCompatActivity {
 
            }
        });
+        dialog = new Dialog(SignUp.this);
+        dialog.setContentView(R.layout.wallet_price_layout);
+        Button okBtn = dialog.findViewById(R.id.okBtn);
 
-        Toast.makeText(SignUp.this, "Registration Complete", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(SignUp.this,SignIn.class);
-        intent.putExtra("phone",phone);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        loginBtn.setEnabled(true);
-        progressbar.setVisibility(View.GONE);
-        finish();
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(SignUp.this, "Registration Complete", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SignUp.this,SignIn.class);
+                intent.putExtra("phone",phone);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                loginBtn.setEnabled(true);
+                progressbar.setVisibility(View.GONE);
+                finish();
+            }
+        });
+        dialog.setCancelable(false);
+
+        dialog.show();
+
+
     }
 
     private void init() {

@@ -6,12 +6,15 @@ public class TripReportModel {
     private String c_id;
     private String issue;
     private String status;
+    private String next_action;
 
-    public TripReportModel(String r_id, String d_id, String c_id, String issue) {
+    public TripReportModel(String r_id, String d_id, String c_id, String issue, String status, String next_action) {
         this.r_id = r_id;
         this.d_id = d_id;
         this.c_id = c_id;
         this.issue = issue;
+        this.status = status;
+        this.next_action = next_action;
     }
 
     public TripReportModel() {
@@ -35,5 +38,9 @@ public class TripReportModel {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getNext_action() {
+        return next_action;
     }
 }

@@ -185,7 +185,7 @@ public class SignIn extends AppCompatActivity implements ConnectivityReceiver.Co
         snackbar.setDuration(5000);
         View sbView = snackbar.getView();
         sbView.setBackgroundColor(Color.RED);
-        TextView textView = (TextView) sbView.findViewById(com.google.android.material.R.id.snackbar_text);
+        TextView textView = (TextView) sbView.findViewById(R.id.snackbar_text);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         } else {
