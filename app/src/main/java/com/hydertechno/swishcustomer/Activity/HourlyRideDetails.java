@@ -57,7 +57,7 @@ public class HourlyRideDetails extends AppCompatActivity {
     private String id, car_type, pickupPlace, destinationPlace, pickupDate, pickupTime, carType, taka,type,
             driverId,userId,bookingStatus, d_name, d_phone,pickUpLat,pickUpLon,destinationLat,
             destinationLon,apiKey = "AIzaSyDy8NWL5x_v5AyQkcM9-4wqAWBp27pe9Bk",rideStatus;
-    private Button editBtn,deleteBtn,driverInfoBtn,saveBtn;
+    private Button editBtn,deleteBtn,driverInfoBtn,saveBtn,cancelBtn;
     private DatabaseReference databaseReference;
     private FirebaseAuth auth;
     private NeomorphFrameLayout editNFL;
@@ -428,9 +428,8 @@ public class HourlyRideDetails extends AppCompatActivity {
                 editNFL.setVisibility(View.GONE);
                 editBtn.setVisibility(View.GONE);
                 driverInfoBtn.setVisibility(View.VISIBLE);
-                if (rideStatus.equals("End")){
-                    deleteBtn.setVisibility(View.GONE);
-                }
+                deleteBtn.setVisibility(View.GONE);
+                cancelBtn.setVisibility(View.VISIBLE);
             }
         }
         if (check==2){
@@ -446,8 +445,6 @@ public class HourlyRideDetails extends AppCompatActivity {
         }
     }
 
-
-
     private void init() {
         sharedPreferences = getSharedPreferences("MyRef",MODE_PRIVATE);
         userId = sharedPreferences.getString("id","");
@@ -459,6 +456,7 @@ public class HourlyRideDetails extends AppCompatActivity {
         pickupTimeTV=findViewById(R.id.pickupTimeTV);
         carTypeTV=findViewById(R.id.carTypeTV);
         takaTV=findViewById(R.id.takaTV);
+        cancelBtn=findViewById(R.id.cancelBtn);
         editBtn=findViewById(R.id.editBtn);
         deleteBtn=findViewById(R.id.deleteBtn);
         driverInfoBtn=findViewById(R.id.driverDetailsBtn);
