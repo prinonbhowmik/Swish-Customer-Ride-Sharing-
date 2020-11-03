@@ -159,6 +159,11 @@ public interface ApiInterface {
     @DELETE("bookingdelete/{bookingId}")
     Call<Void> deleteTrip(@Path("bookingId") String bookingId);
 
+     @DELETE("hourlydelete/{bookingId}")
+    Call<Void> hourdeleteTrip(@Path("bookingId") String bookingId);
+
+
+
     @FormUrlEncoded
     @PUT("rating/{driver_id}")
     Call<List<DriverProfile>> updateRating(@Path("driver_id") String driver_id,
@@ -200,5 +205,10 @@ public interface ApiInterface {
     @PUT("bookingtripstart/{bookingId}")
     Call<List<RideModel>> cancelTrip(@Path("bookingId") String bookingId,
                                      @Field("rideStatus") String rideStatus);
+
+    @FormUrlEncoded
+    @PUT("hourlyridestart/{bookingId}")
+    Call<List<HourlyRideModel>> cancelHourTrip(@Path("bookingId") String bookingId,
+                                                  @Field("rideStatus") String rideStatus);
 
 }

@@ -152,6 +152,59 @@ public class HourlyRideDetails extends AppCompatActivity {
             }
         });
 
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(HourlyRideDetails.this);
+                builder.setIcon(R.drawable.logo_circle);
+                builder.setTitle("Cancel Alert!");
+                builder.setMessage("Do you want to cancel this ride?");
+
+                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        DatabaseReference cancelRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId).child(id);
+                        cancelRef.removeValue();
+
+                        DatabaseReference canRef =  FirebaseDatabase.getInstance().getReference("BookHourly").child(carType).child(id);
+                        canRef.removeValue();
+
+                        Call<List<RideModel>> call = apiInterface.cancelTrip(id,"Cancel");
+                        call.enqueue(new Callback<List<RideModel>>() {
+                            @Override
+                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                            }
+                        });
+
+                        sendNotification(userId,driverId,carType,"Trip Cancelled","Your Passenger has cancelled the ride!","history");
+                        dialog.dismiss();
+                        Intent i = new Intent(HourlyRideDetails.this,MyRides.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                        finish();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                if(!isFinishing()){
+                    builder.create().show();
+                }
+
+            }
+        });
+
         driverInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -343,7 +396,7 @@ public class HourlyRideDetails extends AppCompatActivity {
         deleteRef.removeValue();
         deleteRef2.removeValue();
 
-        Call<Void> call = apiInterface.deleteTrip(id);
+        Call<Void> call = apiInterface.hourdeleteTrip(id);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

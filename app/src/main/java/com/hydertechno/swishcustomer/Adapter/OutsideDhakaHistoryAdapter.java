@@ -66,7 +66,7 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
         if (rideModel.getRideStatus().equals("End")) {
             holder.bookingStatus.setText("Ride Finished");
             //holder.relativeLayout1.setBackgroundColor(ContextCompat.getColor(context,R.color.colorTextSecondary));
-            holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_gray));
+            holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_blue));
         }
         else if(rideModel.getRideStatus().equals("Cancel")){
             holder.bookingStatus.setText("Ride Cancelled");
