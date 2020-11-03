@@ -183,7 +183,8 @@ public class HourlyRideDetails extends AppCompatActivity {
                             }
                         });
 
-                        sendNotification(userId,driverId,carType,"Trip Cancelled","Your Passenger has cancelled the ride!","history");
+                        sendNotification(id,driverId,carType,"Trip Cancelled","Your Passenger has cancelled the ride!","history");
+
                         dialog.dismiss();
                         Intent i = new Intent(HourlyRideDetails.this,MyRides.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -408,6 +409,7 @@ public class HourlyRideDetails extends AppCompatActivity {
 
             }
         });
+
         sendNotification(id, driverId,carType, "Booking Delete!", "Customer has deleted his ride.", "hourly_details");
 
         if(check==1) {

@@ -36,7 +36,7 @@
                 android:id="@+id/namefromNavigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Swish Driver"
+                android:text=""
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginEnd="10dp"
-                android:text="+88012345678911"
+                android:text=""
                 android:textColor="@android:color/darker_gray"
                 android:textSize="12sp"/>
             <TextView
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:text="৳ 100"
+                android:text=""
                 android:drawableStart="@drawable/ic_wallet"
                 android:drawablePadding="10dp"
                 android:layout_marginBottom="5dp"
