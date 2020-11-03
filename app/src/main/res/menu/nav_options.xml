@@ -40,5 +40,7 @@
             android:icon="@drawable/ic_logout"
             android:title="logout" />
     </group>
+    <item android:id="@+id/support"
+        android:title="support@swish.com.bd"/>
 
 </menu>

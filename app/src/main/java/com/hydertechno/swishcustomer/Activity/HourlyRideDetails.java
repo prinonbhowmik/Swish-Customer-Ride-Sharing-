@@ -183,7 +183,7 @@ public class HourlyRideDetails extends AppCompatActivity {
                             }
                         });
 
-                        sendNotification(id,driverId,carType,"Trip Cancelled","Your Passenger has cancelled the ride!","history");
+                        sendNotification(id,driverId,carType,"Trip Cancelled","Your Passenger has cancelled the ride!","main_activity");
 
                         dialog.dismiss();
                         Intent i = new Intent(HourlyRideDetails.this,MyRides.class);
@@ -445,7 +445,6 @@ public class HourlyRideDetails extends AppCompatActivity {
                         pickupDateTV.setText(pickupDate);
                         pickupTimeTV.setText(pickupTime);
                         carTypeTV.setText(carType);
-
 
                         buttonsShow();
                     }

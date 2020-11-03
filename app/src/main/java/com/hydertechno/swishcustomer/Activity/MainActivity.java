@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -2208,6 +2209,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawerLayout.closeDrawers();
                 finish();
                 break;
+            case R.id.support:
+                try{
+                    Intent intent1 = new Intent (Intent.ACTION_VIEW , Uri.parse("mailto:" + "support@swish.com.bd"));
+                    intent1.putExtra(Intent.EXTRA_SUBJECT, "your_subject");
+                    intent1.putExtra(Intent.EXTRA_TEXT, "your_text");
+                    startActivity(intent1);
+                }catch(ActivityNotFoundException e){
+                    Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
         }
         return false;
     }

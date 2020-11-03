@@ -76,7 +76,7 @@ public class MyRidesDetails extends AppCompatActivity {
     private FirebaseAuth auth;
     private NeomorphFrameLayout editNFL,cancelNFL;
     private Boolean editable = false;
-    private String pickUpCity, destinationCity;
+    private String pickUpCity, destinationCity,areaName;
     private int kmdistance, travelduration, price, check;
     private SharedPreferences sharedPreferences;
     private ApiInterface apiInterface;
@@ -95,6 +95,7 @@ public class MyRidesDetails extends AppCompatActivity {
         check = intent.getIntExtra("check", 0);
 
         getData();
+
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +216,8 @@ public class MyRidesDetails extends AppCompatActivity {
                             }
                         });
 
-                        sendNotification(userId,driverId,carType,"Trip Cancelled","Your Passenger has cancelled the ride!","history");
+
+                        sendNotification(userId,driverId,carType,"Trip Cancelled","Your trip has cancelled by your passenger","main_activity");
                         dialog.dismiss();
                         Intent i = new Intent(MyRidesDetails.this,MyRides.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -233,9 +235,6 @@ public class MyRidesDetails extends AppCompatActivity {
                 if(!isFinishing()){
                     builder.create().show();
                 }
-
-
-
 
             }
         });
