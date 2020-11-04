@@ -28,7 +28,7 @@ public class SplashScreen extends AppCompatActivity {
         logo = findViewById(R.id.logo);
         progressbar=findViewById(R.id.progrssbar);
 
-        logoanim = AnimationUtils.loadAnimation(this,R.anim.fadein);
+        logoanim = AnimationUtils.loadAnimation(this,R.anim.blink);
 
         logo.setAnimation(logoanim);
 
