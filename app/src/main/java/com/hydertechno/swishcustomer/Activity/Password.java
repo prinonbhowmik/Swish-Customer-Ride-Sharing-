@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.CheckModel;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.R;
@@ -46,6 +48,8 @@ public class Password extends AppCompatActivity {
         setContentView(R.layout.activity_password);
 
         init();
+
+        checkConnection();
 
         Intent intent = getIntent();
         id = intent.getStringExtra("id");
@@ -83,6 +87,7 @@ public class Password extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 password = passEt.getText().toString();
                 loginBtn.setEnabled(false);
                 if (TextUtils.isEmpty(password)) {
@@ -155,5 +160,14 @@ public class Password extends AppCompatActivity {
     private void hideKeyboardFrom(Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(this.getWindow().getDecorView().getRootView().getWindowToken(), 0);
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

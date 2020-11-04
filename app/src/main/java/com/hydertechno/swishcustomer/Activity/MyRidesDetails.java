@@ -36,6 +36,7 @@ import com.hydertechno.swishcustomer.ForApi.DistanceApiClient;
 import com.hydertechno.swishcustomer.ForApi.DistanceResponse;
 import com.hydertechno.swishcustomer.ForApi.Element;
 import com.hydertechno.swishcustomer.ForApi.RestUtil;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.Model.RidingRate;
 import com.hydertechno.swishcustomer.Model.TripReportModel;
@@ -100,6 +101,7 @@ public class MyRidesDetails extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 deleteAlertDialog();
             }
         });
@@ -330,6 +332,7 @@ public class MyRidesDetails extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("CustomerRides")
                         .child(userId).child(id);
                 updateRef.child("pickUpDate").setValue(pickupDateTV.getText().toString());
@@ -705,6 +708,15 @@ public class MyRidesDetails extends AppCompatActivity {
         }
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void sendNotification(final String id, final String receiverId, final String carType, final String title, final String message, final String toActivity) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#131550</color>
+    <color name="colorPrimary">#469fe4</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#000</color>
 
@@ -35,7 +35,7 @@
     <color name="dark">#191a1e</color>
     <color name="black">#000</color>
 
-    <color name="themColor">#131550</color>
+    <color name="themColor">#469fe4</color>
     <color name="themColor2">#0E1F29</color>
 
 

@@ -7,12 +7,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.R;
 import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
@@ -44,9 +46,12 @@ public class ResetPassword extends AppCompatActivity {
         Intent intent = getIntent();
         id=intent.getStringExtra("id");
 
+        checkConnection();
+
         changePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 password = passEt.getText().toString();
                 changePasswordBtn.setEnabled(false);
                 if (TextUtils.isEmpty(password)) {
@@ -88,5 +93,14 @@ public class ResetPassword extends AppCompatActivity {
         list = new ArrayList<>();
         api = ApiUtils.getUserService();
         progressbar = findViewById(R.id.progrssbar);
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.R;
 
 
@@ -25,6 +26,8 @@ public class Referral extends AppCompatActivity {
 
         Intent intent =getIntent();
         userId = intent.getStringExtra("id");
+
+        checkConnection();
 
         referralTV = findViewById(R.id.referralTV);
 
@@ -51,5 +54,14 @@ public class Referral extends AppCompatActivity {
         startActivity(new Intent(Referral.this,MainActivity.class));
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
         finish();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

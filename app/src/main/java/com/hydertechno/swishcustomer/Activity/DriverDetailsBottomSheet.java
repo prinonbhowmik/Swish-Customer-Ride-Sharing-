@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -19,6 +20,7 @@ import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.DriverInfo;
 import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.R;
@@ -60,6 +62,8 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_driver_details_bottom_sheet, container, false);
         init(view);
+        checkConnection();
+
         Bundle mArgs = getArguments();
         driverId = mArgs.getString("id");
         check=mArgs.getInt("check");
@@ -184,5 +188,14 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
         rideTxt=view.findViewById(R.id.rideTxt);
         list = new ArrayList<>();
         api = ApiUtils.getUserService();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(getContext(), "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

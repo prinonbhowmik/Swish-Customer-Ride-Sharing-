@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -18,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.R;
 
 public class VerificationOTP extends AppCompatActivity {
@@ -35,6 +37,8 @@ public class VerificationOTP extends AppCompatActivity {
         setContentView(R.layout.activity_verification_o_t_p);
 
         init();
+
+        checkConnection();
 
         Intent i = getIntent();
         check = i.getIntExtra("check",0);
@@ -54,6 +58,7 @@ public class VerificationOTP extends AppCompatActivity {
         verifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 userOtp = verifyEt.getText().toString();
                 verifyBtn.setEnabled(false);
 
@@ -119,5 +124,14 @@ public class VerificationOTP extends AppCompatActivity {
         super.onBackPressed();
         startActivity(new Intent(VerificationOTP.this,SignIn.class));
         finish();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

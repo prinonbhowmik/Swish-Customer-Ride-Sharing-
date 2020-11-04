@@ -2,6 +2,7 @@ package com.hydertechno.swishcustomer.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -10,6 +11,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.hydertechno.swishcustomer.Adapter.TabPaggerAdapter;
 import com.hydertechno.swishcustomer.Fragments.InsideDhaka;
 import com.hydertechno.swishcustomer.Fragments.OutsideDhaka;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.R;
 
 public class MyRides extends AppCompatActivity {
@@ -23,6 +25,8 @@ public class MyRides extends AppCompatActivity {
         setContentView(R.layout.activity_my_rides);
 
         init();
+
+        checkConnection();
 
         TabPaggerAdapter tabPaggerAdapter = new TabPaggerAdapter(getSupportFragmentManager());
         tabPaggerAdapter.addFragment(new OutsideDhaka());
@@ -59,5 +63,14 @@ public class MyRides extends AppCompatActivity {
         startActivity(new Intent(MyRides.this,MainActivity.class));
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
         finish();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

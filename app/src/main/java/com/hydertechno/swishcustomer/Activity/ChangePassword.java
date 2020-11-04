@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.R;
 import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
@@ -39,12 +40,15 @@ public class ChangePassword extends AppCompatActivity {
         setContentView(R.layout.activity_change_password);
         init();
 
+        checkConnection();
+
         Intent intent = getIntent();
         userId = intent.getStringExtra("id");
 
         savePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
 
                 pass1 = currentPassword.getText().toString();
                 pass2 = changePass1.getText().toString();
@@ -135,5 +139,14 @@ public class ChangePassword extends AppCompatActivity {
     public void backPressPassword(View view) {
 
         finish();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

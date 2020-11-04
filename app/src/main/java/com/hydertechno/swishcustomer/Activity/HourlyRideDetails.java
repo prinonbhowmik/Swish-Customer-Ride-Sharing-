@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.HourlyRideModel;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.Model.TripReportModel;
@@ -62,8 +63,7 @@ public class HourlyRideDetails extends AppCompatActivity {
     private FirebaseAuth auth;
     private NeomorphFrameLayout editNFL;
     private Boolean editable=false;
-    private String pickUpCity,destinationCity;
-    private int kmdistance,travelduration,price,check;
+    private int check;
     private SharedPreferences sharedPreferences;
     private ApiInterface apiInterface;
     private APIService apiService;
@@ -79,11 +79,14 @@ public class HourlyRideDetails extends AppCompatActivity {
         id = intent.getStringExtra("bookingId");
         check = intent.getIntExtra("check",0);
 
+        checkConnection();
+
         getData();
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 deleteAlertDialog();
             }
         });
@@ -280,6 +283,7 @@ public class HourlyRideDetails extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides")
                         .child(userId).child(id);
                 updateRef.child("pickUpDate").setValue(pickupDateTV.getText().toString());
@@ -497,6 +501,15 @@ public class HourlyRideDetails extends AppCompatActivity {
                 driverInfoBtn.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void init() {

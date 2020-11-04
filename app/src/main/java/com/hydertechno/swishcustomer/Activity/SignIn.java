@@ -64,6 +64,8 @@ public class SignIn extends AppCompatActivity implements ConnectivityReceiver.Co
 
         init();
 
+        checkConnection();
+
         loggedIn = sharedPreferences.getBoolean("loggedIn",false);
 
         if (loggedIn==true){
@@ -79,6 +81,7 @@ public class SignIn extends AppCompatActivity implements ConnectivityReceiver.Co
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 phone=Phn_Et.getText().toString();
                 nextBtn.setEnabled(false);
                 if (TextUtils.isEmpty(phone)) {
@@ -138,6 +141,14 @@ public class SignIn extends AppCompatActivity implements ConnectivityReceiver.Co
         });
     }
 
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
+    }
 
     private void init() {
         Phn_Et = findViewById(R.id.phn_Et);

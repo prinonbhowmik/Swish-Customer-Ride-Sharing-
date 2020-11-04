@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.DriverInfo;
 import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.R;
@@ -33,6 +35,8 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
         view = inflater.inflate(R.layout.on_going_driver_details, container, false);
 
         init(view);
+
+        checkConnection();
 
         Bundle mArgs = getArguments();
         driverId = mArgs.getString("driverId");
@@ -89,6 +93,15 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
         pickupTimeTV = view.findViewById(R.id.pickupTimeTV);
         takaTV = view.findViewById(R.id.takaTV);
         api = ApiUtils.getUserService();
+
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(getContext(), "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
 
     }
 

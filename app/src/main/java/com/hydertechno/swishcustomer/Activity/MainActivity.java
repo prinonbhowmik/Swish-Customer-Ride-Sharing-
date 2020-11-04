@@ -202,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String rideStatus;
     private ConnectivityReceiver connectivityReceiver;
     private IntentFilter intentFilter;
-    private String translatedPickCity, translatedDestCity;
     private int hourBottom = 0;
     private ApiInterface apiInterface;
     private Dialog dialog;
@@ -212,8 +211,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private APIService apiService;
     private double radius = 2;
     private String tripId, picklat, pickLon, deslat, deslon, carType;
-    private long doublePressToExit;
-    private Toast backToasty;
     boolean singleBack = false;
 
     @Override
@@ -224,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         init();
 
         checkVersion();
+
+        checkConnection();
 
         sharedPreferences = getSharedPreferences("MyRef", Context.MODE_PRIVATE);
         dark = sharedPreferences.getBoolean("dark", false);
@@ -306,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pickUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                 pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
                 List<Address> addresses = null;
@@ -335,10 +335,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 pickUpLat = marker.getPosition().latitude;
                                 pickUpLon = marker.getPosition().longitude;
 
-                                Log.d("pickUp", String.valueOf(pickUpLat));
-                                Log.d("pickUplon", String.valueOf(pickUpLon));
-
-                                // Geocoder geocoder = new Geocoder(MainActivity.this, locale);
                                 try {
                                     List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
                                     Address location = addresses.get(0);
@@ -373,6 +369,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         destinationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
 
                 getDestinationPlace();
 
@@ -403,6 +400,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
 
+                checkConnection();
+
                 notify = true;
 
                 if (dateTv.getText().equals("Select Ride Date")) {
@@ -414,9 +413,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     dialog.setContentView(R.layout.payment_type_select);
                     Button doneBtn = dialog.findViewById(R.id.doneBtn);
                     RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
-                    RadioButton cash = dialog.findViewById(R.id.cash);
-                    RadioButton wallet = dialog.findViewById(R.id.wallet);
-
 
                     radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                         @Override
@@ -604,6 +600,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         wantLaterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 timeselectLayout.setVisibility(View.GONE);
                 hourtimeDateLayout.setVisibility(View.VISIBLE);
                 hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
@@ -613,10 +610,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         wantnowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle("Alert!");
+                dialog.setTitle("Sorry!");
                 dialog.setIcon(R.drawable.logo_circle);
-                dialog.setMessage("Instant ride is not available right now!!");
+                dialog.setMessage("No driver available! \nNo car found for your trip");
                 dialog.setCancelable(false);
                 dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -646,6 +644,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rideHourly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("Alert!!");
                 dialog.setIcon(R.drawable.logo_circle);
@@ -674,6 +673,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hourlypickUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 hourlyLayout.setVisibility(View.VISIBLE);
                 hourlysedanPriceShow();
                 hourlysedanPremierePriceShow();
@@ -741,6 +741,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         rideLater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkConnection();
                 PickUpLayout.setVisibility(View.VISIBLE);
                 pickUpBtn.setVisibility(View.VISIBLE);
                 chooseRideType.setVisibility(View.GONE);
@@ -753,6 +754,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hourlyconfirmRideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                checkConnection();
                 if (hourrideDate.getText().equals("Select Ride Date")) {
                     Toast.makeText(MainActivity.this, "Please Enter Ride Date!", Toast.LENGTH_SHORT).show();
                 } else if (hourrideTime.getText().equals("Select Ride Time")) {
@@ -802,6 +804,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkRatingCall();
 
         checkHourlyRatingCall();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void checkVersion() {
@@ -2244,7 +2255,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (dark == true) {
             map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle_aubergine));
         } else {
-            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.light));
+            map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.retro));
         }
 
         //update in 5 seconds
@@ -2294,13 +2305,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (currentPolyline != null)
             currentPolyline.remove();
         currentPolyline = map.addPolyline((PolylineOptions) values[0]);
-        if (dark == false) {
-            currentPolyline.setColor(R.color.colorPrimary);
-            currentPolyline.setWidth(11);
-        } else {
-            currentPolyline.setColor(R.color.red);
-            currentPolyline.setWidth(11);
-        }
     }
 
 

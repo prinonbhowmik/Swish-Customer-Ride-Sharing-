@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.R;
@@ -61,6 +62,8 @@ public class ShowCash extends AppCompatActivity {
         setContentView(R.layout.activity_show_cash);
 
         init();
+
+        checkConnection();
 
         Intent intent = getIntent();
         tripId = intent.getStringExtra("tripId");
@@ -197,5 +200,14 @@ public class ShowCash extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

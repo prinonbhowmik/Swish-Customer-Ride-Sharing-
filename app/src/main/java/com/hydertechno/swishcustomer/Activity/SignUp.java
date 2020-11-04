@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.R;
 import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
@@ -65,6 +66,8 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         init();
+
+        checkConnection();
 
         Intent intent = getIntent();
         phone = intent.getStringExtra("phone");
@@ -256,6 +259,15 @@ public class SignUp extends AppCompatActivity {
         frameLayout=findViewById(R.id.frame_layout11);
         referralEt=findViewById(R.id.referral_Et);
         policy = findViewById(R.id.policy);
+
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
 
     }
 

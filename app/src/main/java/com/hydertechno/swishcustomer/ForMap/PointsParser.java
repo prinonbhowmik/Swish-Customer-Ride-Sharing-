@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.hydertechno.swishcustomer.R;
 
 import org.json.JSONObject;
 
@@ -74,9 +75,8 @@ public class PointsParser extends AsyncTask<String, Integer, List<List<HashMap<S
                 lineOptions.color(Color.MAGENTA);
             } else {
                 lineOptions.width(10);
-                lineOptions.color(Color.DKGRAY);
+                lineOptions.color(Color.parseColor("#38b6e1"));
             }
-            Log.d("mylog", "onPostExecute lineoptions decoded");
         }
 
         // Drawing polyline in the Google Map for the i-th route

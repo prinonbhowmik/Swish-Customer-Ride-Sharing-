@@ -48,6 +48,9 @@ public class Emergency extends AppCompatActivity {
     }
 
     public void emergencyBack(View view) {
+        Intent intent = new Intent(Emergency.this,MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         finish();
     }
 }

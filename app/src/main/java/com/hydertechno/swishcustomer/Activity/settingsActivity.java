@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.R;
 
 
@@ -31,6 +33,8 @@ public class settingsActivity extends AppCompatActivity {
 
         init();
 
+        checkConnection();
+
         sharedpreferences = getSharedPreferences("MyRef", Context.MODE_PRIVATE);
         darkMode = sharedpreferences.getBoolean("dark",false);
         userId = sharedpreferences.getString("id","");
@@ -50,6 +54,15 @@ public class settingsActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
 
     }
 

@@ -42,6 +42,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -54,6 +55,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hydertechno.swishcustomer.ForMap.FetchURL;
 import com.hydertechno.swishcustomer.ForMap.TaskLoadedCallback;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.R;
 import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
@@ -100,6 +102,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_running_trip);
 
         init();
+
+        checkConnection();
 
         userId = sharedPreferences.getString("id", "");
 
@@ -244,6 +248,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         showFareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                checkConnection();
                 gotoShowCash();
             }
         });
@@ -423,6 +429,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
+        map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.retro));
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -585,6 +593,15 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         // DrawableCompat.setTint(vectorDrawable);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {

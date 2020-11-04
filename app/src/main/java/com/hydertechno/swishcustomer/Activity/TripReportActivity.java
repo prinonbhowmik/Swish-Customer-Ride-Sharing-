@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.TripReportModel;
 import com.hydertechno.swishcustomer.Notification.APIService;
 import com.hydertechno.swishcustomer.Notification.Client;
@@ -55,6 +56,7 @@ public class TripReportActivity extends AppCompatActivity {
         driverId = i.getStringExtra("driverId");
 
         init();
+        checkConnection();
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -163,5 +165,14 @@ public class TripReportActivity extends AppCompatActivity {
         submitBtn = findViewById(R.id.submitBtn);
         otherEt = findViewById(R.id.otherEt);
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

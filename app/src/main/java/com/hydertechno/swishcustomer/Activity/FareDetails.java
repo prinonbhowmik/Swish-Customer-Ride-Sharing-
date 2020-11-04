@@ -3,6 +3,7 @@ package com.hydertechno.swishcustomer.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.Rate;
 import com.hydertechno.swishcustomer.R;
 
@@ -28,6 +30,8 @@ public class FareDetails extends AppCompatActivity {
         carType = intent.getStringExtra("carType");
 
         init();
+
+        checkConnection();
 
         DatabaseReference getRef = FirebaseDatabase.getInstance().getReference("RidingRate").child(carType);
         getRef.addValueEventListener(new ValueEventListener() {
@@ -49,6 +53,15 @@ public class FareDetails extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void checkConnection() {
+        boolean isConnected = ConnectivityReceiver.isConnected();
+
+        if (!isConnected){
+            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
+        }
 
     }
 
