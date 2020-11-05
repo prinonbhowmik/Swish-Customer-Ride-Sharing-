@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -48,7 +50,7 @@ public class SignUp extends AppCompatActivity {
     private EditText nameEt,emailEt,passEt,phoneEt,referralEt;
     private RadioGroup genderGroup;
     private FrameLayout frameLayout;
-    private String name,email,referral="";
+    private String name,email,referral="",customer_id;
     private CircleImageView userImage;
     private Button loginBtn;
     private Uri imageUri;
@@ -212,7 +214,22 @@ public class SignUp extends AppCompatActivity {
        call.enqueue(new Callback<List<Profile>>() {
            @Override
            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+               if(response.isSuccessful()){
+                   String done = response.body().get(0).getDone();
+                   if (done.equals("1")){
+                       customer_id = response.body().get(0).getCustomer_id();
 
+                       Log.d("checkId",customer_id);
+
+                       hideKeyboardFrom(getApplicationContext());
+                       SharedPreferences sharedPreferences = getSharedPreferences("MyRef", MODE_PRIVATE);
+                       SharedPreferences.Editor editor = sharedPreferences.edit();
+                       editor.putString("id", customer_id);
+                       editor.putBoolean("loggedIn", true);
+                       editor.commit();
+
+                   }
+               }
            }
 
            @Override
@@ -228,7 +245,7 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(SignUp.this, "Registration Complete", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SignUp.this,SignIn.class);
+                Intent intent = new Intent(SignUp.this,MainActivity.class);
                 intent.putExtra("phone",phone);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

@@ -754,7 +754,7 @@
                                         android:textColor="#000"
                                         android:textSize="15sp"
                                         android:textStyle="bold" />
-                                   
+
                                     <TextView
                                         android:id="@+id/sedanprice"
                                         android:layout_width="wrap_content"
