@@ -3,6 +3,8 @@ package com.hydertechno.swishcustomer.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,7 +21,7 @@ import com.hydertechno.swishcustomer.R;
 public class settingsActivity extends AppCompatActivity {
 
     private ImageView backBtn;
-    private TextView modeTxt;
+    private TextView modeTxt,versionCodeTv;
     private SharedPreferences sharedpreferences;
     private SharedPreferences.Editor editor;
     private static Switch switchBtn;
@@ -70,8 +72,17 @@ public class settingsActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
        /* modeTxt = findViewById(R.id.modeTxt);*/
         switchBtn = findViewById(R.id.switchBtn);
+        versionCodeTv = findViewById(R.id.versionCodeTv);
         sharedpreferences = getSharedPreferences("MyRef", MODE_PRIVATE);
         editor = sharedpreferences.edit();
+
+        PackageInfo pinfo = null;
+        try {
+            pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        versionCodeTv.setText("Version "+pinfo.versionName);
     }
 
     public void switchChange(View view) {

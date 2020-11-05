@@ -96,4 +96,20 @@
             android:onClick="changePassword"/>
     </LinearLayout>
 
+   <RelativeLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_margin="10dp"
+       >
+       <TextView
+           android:id="@+id/versionCodeTv"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:textColor="@color/colorPrimary"
+           android:textSize="15sp"
+           android:text="Version"
+           android:textAlignment="center"
+           android:layout_alignParentBottom="true"
+           android:layout_margin="10dp"/>
+   </RelativeLayout>
 </LinearLayout>
