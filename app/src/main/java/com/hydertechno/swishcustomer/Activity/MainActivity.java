@@ -268,9 +268,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             stringBuilder.append("\n\n");
                             Toast.makeText(getApplicationContext(), stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                         }
-                       /* if (!isContinue && mFusedLocationClient != null) {
-                            mFusedLocationClient.removeLocationUpdates(locationCallback);
-                        }*/
+
                     }
                 }
             }
@@ -2491,5 +2489,65 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 singleBack = false;
             }
         }, 2000);
+    }
+
+    public void homeaddress(View view) {
+
+        DatabaseReference homeRef = FirebaseDatabase.getInstance().getReference("UserLocation");
+        homeRef.child(userId).child("Home").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+
+                }else{
+                    Intent intent = new Intent(MainActivity.this,Home_Work_Address.class);
+                    intent.putExtra("type","home");
+                    intent.putExtra("currentLat",wayLatitude);
+                    intent.putExtra("currentLon",wayLongitude);
+                    intent.putExtra("id",userId);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void workAddress(View view) {
+        DatabaseReference homeRef = FirebaseDatabase.getInstance().getReference("UserLocation");
+        homeRef.child(userId).child("Work").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+
+                    pickUpPlace = snapshot.child("place").toString();
+                    
+
+                    if (pickUpMarker==null){
+                        autocompleteFragment.setText(pickUpPlace);
+
+                    }
+
+
+                }else{
+                    Intent intent = new Intent(MainActivity.this,Home_Work_Address.class);
+                    intent.putExtra("type","work");
+                    intent.putExtra("currentLat",wayLatitude);
+                    intent.putExtra("currentLon",wayLongitude);
+                    intent.putExtra("id",userId);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

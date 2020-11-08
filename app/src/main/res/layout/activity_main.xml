@@ -35,14 +35,14 @@
             android:id="@+id/hourlypickUpBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:layout_alignParentBottom="true"
-            android:visibility="gone"
             android:background="@drawable/btn_background"
             android:text="Confirm PickUp"
             android:textAllCaps="false"
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -134,11 +134,12 @@
                 android:id="@+id/hourlyLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:background="@drawable/rounded_corner"
                 android:orientation="vertical"
                 android:visibility="gone"
-                android:layout_alignParentBottom="true"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
                 <TextView
                     android:id="@+id/hourlyrideTypeTv"
                     android:layout_width="match_parent"
@@ -148,25 +149,29 @@
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textSize="25sp" />
+
                 <HorizontalScrollView
-                    android:layout_below="@+id/rideTypeTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/rideTypeTv"
                     android:background="#fff">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-5dp"
+                            android:layout_weight="1"
                             android:layerType="software"
                             app:neomorph_background_color="@color/neomorph_background_color"
                             app:neomorph_corner_radius="10dp"
                             app:neomorph_elevation="8dp"
                             app:neomorph_view_type="rectangular">
+
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlySedan"
                                 android:layout_width="match_parent"
@@ -204,6 +209,7 @@
                                         android:textColor="#000"
                                         android:textSize="15sp"
                                         android:textStyle="bold" />
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -211,6 +217,7 @@
                                         android:text="Hourly Rent"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="12sp" />
+
                                     <TextView
                                         android:id="@+id/hourlysedanPrice"
                                         android:layout_width="wrap_content"
@@ -223,15 +230,16 @@
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
                         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-5dp"
+                            android:layout_weight="1"
                             android:layerType="software"
                             app:neomorph_background_color="@color/neomorph_background_color"
                             app:neomorph_corner_radius="10dp"
                             app:neomorph_elevation="8dp"
                             app:neomorph_view_type="rectangular">
+
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlySedanpremiere"
                                 android:layout_width="match_parent"
@@ -269,6 +277,7 @@
                                         android:textColor="#000"
                                         android:textSize="15sp"
                                         android:textStyle="bold" />
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -276,6 +285,7 @@
                                         android:text="Hourly Rent"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="12sp" />
+
                                     <TextView
                                         android:id="@+id/hourlysedanpremierePrice"
                                         android:layout_width="wrap_content"
@@ -288,15 +298,16 @@
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
                         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-5dp"
+                            android:layout_weight="1"
                             android:layerType="software"
                             app:neomorph_background_color="@color/neomorph_background_color"
                             app:neomorph_corner_radius="10dp"
                             app:neomorph_elevation="8dp"
                             app:neomorph_view_type="rectangular">
+
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlySedanbusiness"
                                 android:layout_width="match_parent"
@@ -334,6 +345,7 @@
                                         android:textColor="#000"
                                         android:textSize="15sp"
                                         android:textStyle="bold" />
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -341,6 +353,7 @@
                                         android:text="Hourly Rent"
                                         android:textColor="@color/colorPrimary"
                                         android:textSize="12sp" />
+
                                     <TextView
                                         android:id="@+id/hourlysedanbusinessPrice"
                                         android:layout_width="wrap_content"
@@ -353,15 +366,16 @@
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
                         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-5dp"
+                            android:layout_weight="1"
                             android:layerType="software"
                             app:neomorph_background_color="@color/neomorph_background_color"
                             app:neomorph_corner_radius="10dp"
                             app:neomorph_elevation="8dp"
                             app:neomorph_view_type="rectangular">
+
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlyMicro"
                                 android:layout_width="match_parent"
@@ -399,6 +413,7 @@
                                         android:textColor="#000"
                                         android:textSize="15sp"
                                         android:textStyle="bold" />
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -419,15 +434,16 @@
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
                         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-                            android:layout_weight="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-5dp"
+                            android:layout_weight="1"
                             android:layerType="software"
                             app:neomorph_background_color="@color/neomorph_background_color"
                             app:neomorph_corner_radius="10dp"
                             app:neomorph_elevation="8dp"
                             app:neomorph_view_type="rectangular">
+
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlyMicro11"
                                 android:layout_width="match_parent"
@@ -465,6 +481,7 @@
                                         android:textColor="#000"
                                         android:textSize="15sp"
                                         android:textStyle="bold" />
+
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -487,17 +504,18 @@
                 </HorizontalScrollView>
 
 
-
                 <LinearLayout
                     android:id="@+id/timeselectLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
                     android:weightSum="2">
+
                     <LinearLayout
-                        android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
                         <Button
                             android:id="@+id/wantnowBtn"
                             android:layout_width="0dp"
@@ -509,10 +527,12 @@
                             android:textAllCaps="false"
                             android:textColor="#fff" />
                     </LinearLayout>
+
                     <LinearLayout
-                        android:layout_weight="1"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
                         <Button
                             android:id="@+id/wantLaterBtn"
                             android:layout_width="0dp"
@@ -528,9 +548,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_below="@+id/hourlyrideTypes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/hourlyrideTypes"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -612,6 +632,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="0.6">
+
                         <ImageView
                             android:id="@+id/nav_icon"
                             android:layout_width="wrap_content"
@@ -664,6 +685,27 @@
                 android:src="@drawable/my_location"
                 app:fabSize="mini" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/homeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/locationBtn"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="10dp"
+                android:onClick="homeaddress"
+                android:src="@drawable/ic_baseline_home_24"
+                app:fabSize="mini" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/workBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/homeBtn"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="10dp"
+                android:onClick="workAddress"
+                android:src="@drawable/ic_baseline_work_24"
+                app:fabSize="mini" />
 
         </RelativeLayout>
 
@@ -694,9 +736,9 @@
 
                 <HorizontalScrollView
                     android:id="@+id/rideTypes"
-                    android:layout_below="@+id/rideTypeTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/rideTypeTv"
                     android:background="#fff">
 
                     <LinearLayout
@@ -1024,9 +1066,9 @@
                 </HorizontalScrollView>
 
                 <LinearLayout
-                    android:layout_below="@+id/rideTypes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/rideTypes"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -1088,25 +1130,26 @@
             android:id="@+id/backNFL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:neomorph_view_type="circular"
-            app:neomorph_shadow_type="outer"
-            app:neomorph_elevation="5dp"
-            android:visibility="gone"
-            app:neomorph_corner_radius="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
             android:layerType="software"
+            android:visibility="gone"
             app:neomorph_background_color="@color/neomorph_background_color"
-            app:neomorph_shadow_color="@color/neomorph_shadow_color"
+            app:neomorph_corner_radius="10dp"
+            app:neomorph_elevation="5dp"
             app:neomorph_highlight_color="@color/neomorph_highlight_color"
-            android:layout_marginBottom="5dp">
+            app:neomorph_shadow_color="@color/neomorph_shadow_color"
+            app:neomorph_shadow_type="outer"
+            app:neomorph_view_type="circular">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:background="@drawable/round_stroke2"
                 android:onClick="backPressUp"
                 android:padding="7dp"
-                android:background="@drawable/round_stroke2"
-                android:src="@drawable/ic_arrow_gray"/>
+                android:src="@drawable/ic_arrow_gray" />
         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
     </FrameLayout>
@@ -1119,8 +1162,8 @@
         android:background="@android:color/white"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navigation_drawer_header"
-        app:itemTextColor="@color/themColor2"
         app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/themColor2"
         app:menu="@menu/nav_options">
 
     </com.google.android.material.navigation.NavigationView>
