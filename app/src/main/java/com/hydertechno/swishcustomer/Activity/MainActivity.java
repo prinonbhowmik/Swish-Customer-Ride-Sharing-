@@ -1805,9 +1805,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                String currentDate = day + "-" + month + "-" + year;
+                String currentDate =  year + "-" + month+"-"+day ;
                 datePicker.setMinDate(System.currentTimeMillis() - 1000);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = null;
 
                 try {
@@ -2498,7 +2498,119 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
+                    if (pickUpMarker==null){
+                        pickUpPlace = snapshot.child("place").getValue().toString();
+                        pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
+                        pickUpLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
+                        autocompleteFragment.setText(pickUpPlace);
 
+                        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                        pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
+                        List<Address> addresses = null;
+                        try {
+                            addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                            if (addresses.size() > 0) {
+                                Address location = addresses.get(0);
+                                pickUpPlace = location.getAddressLine(0);
+                                pickUpCity = addresses.get(0).getAddressLine(1);
+                                map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
+                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
+
+                                map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                    @Override
+                                    public void onMarkerDragStart(Marker marker) {
+
+                                    }
+
+                                    @Override
+                                    public void onMarkerDrag(Marker marker) {
+
+                                    }
+
+                                    @Override
+                                    public void onMarkerDragEnd(Marker marker) {
+                                        pickUpLat = marker.getPosition().latitude;
+                                        pickUpLon = marker.getPosition().longitude;
+
+                                        try {
+                                            List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                                            Address location = addresses.get(0);
+                                            pickUpPlace = location.getAddressLine(0);
+                                            pickUpCity = location.getLocality();
+                                            autocompleteFragment.setText(pickUpPlace);
+                                            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                                            marker.setIcon(markerIcon);
+
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            } else {
+                                Toasty.error(MainActivity.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        pickUpBtn.setVisibility(View.GONE);
+                        btnanim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fadein);
+                        destinationBtn.setVisibility(View.VISIBLE);
+                        destinationBtn.setAnimation(btnanim);
+                        destinationLayout.setVisibility(View.VISIBLE);
+                        Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+
+                    }
+                    else {
+                        destinationPlace = snapshot.child("place").getValue().toString();
+                        destinationLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
+                        destinationLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
+                        autocompleteDestination.setText(destinationPlace);
+
+                        if (destinationPlace.equals(pickUpPlace)) {
+                            Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+                        } else {
+                            map.clear();
+                            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                            pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon))
+                                    .icon(markerIcon);
+
+                            BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                            map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for suitable position")).showInfoWindow();
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
+
+                            map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                @Override
+                                public void onMarkerDragStart(Marker marker) {
+                                }
+
+                                @Override
+                                public void onMarkerDrag(Marker marker) {
+                                }
+
+                                @Override
+                                public void onMarkerDragEnd(Marker marker) {
+
+                                    destinationLat = marker.getPosition().latitude;
+                                    destinationLon = marker.getPosition().longitude;
+
+                                    try {
+                                        List<Address> addresses = geocoder.getFromLocation(destinationLat, destinationLon, 1);
+                                        Address location = addresses.get(0);
+                                        destinationPlace = location.getAddressLine(0);
+                                        destinationCity = location.getLocality();
+
+                                        autocompleteDestination.setText(destinationPlace);
+                                        BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                                        marker.setIcon(markerIcon2);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    }
                 }else{
                     Intent intent = new Intent(MainActivity.this,Home_Work_Address.class);
                     intent.putExtra("type","home");
@@ -2524,15 +2636,119 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
 
-                    pickUpPlace = snapshot.child("place").toString();
-                    
-
                     if (pickUpMarker==null){
+                        pickUpPlace = snapshot.child("place").getValue().toString();
+                        pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
+                        pickUpLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
                         autocompleteFragment.setText(pickUpPlace);
 
+                        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                        pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
+                        List<Address> addresses = null;
+                        try {
+                            addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                            if (addresses.size() > 0) {
+                                Address location = addresses.get(0);
+                                pickUpPlace = location.getAddressLine(0);
+                                pickUpCity = addresses.get(0).getAddressLine(1);
+                                map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
+                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
+
+                                map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                    @Override
+                                    public void onMarkerDragStart(Marker marker) {
+
+                                    }
+
+                                    @Override
+                                    public void onMarkerDrag(Marker marker) {
+
+                                    }
+
+                                    @Override
+                                    public void onMarkerDragEnd(Marker marker) {
+                                        pickUpLat = marker.getPosition().latitude;
+                                        pickUpLon = marker.getPosition().longitude;
+
+                                        try {
+                                            List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                                            Address location = addresses.get(0);
+                                            pickUpPlace = location.getAddressLine(0);
+                                            pickUpCity = location.getLocality();
+                                            autocompleteFragment.setText(pickUpPlace);
+                                            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                                            marker.setIcon(markerIcon);
+
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            } else {
+                                Toasty.error(MainActivity.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        pickUpBtn.setVisibility(View.GONE);
+                        btnanim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fadein);
+                        destinationBtn.setVisibility(View.VISIBLE);
+                        destinationBtn.setAnimation(btnanim);
+                        destinationLayout.setVisibility(View.VISIBLE);
+                        Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+
                     }
+                    else {
+                        destinationPlace = snapshot.child("place").getValue().toString();
+                        destinationLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
+                        destinationLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
+                        autocompleteDestination.setText(destinationPlace);
 
+                        if (destinationPlace.equals(pickUpPlace)) {
+                            Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+                        } else {
+                            map.clear();
+                            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                            pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon))
+                                    .icon(markerIcon);
 
+                            BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                            map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for suitable position")).showInfoWindow();
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
+
+                            map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                @Override
+                                public void onMarkerDragStart(Marker marker) {
+                                }
+
+                                @Override
+                                public void onMarkerDrag(Marker marker) {
+                                }
+
+                                @Override
+                                public void onMarkerDragEnd(Marker marker) {
+
+                                    destinationLat = marker.getPosition().latitude;
+                                    destinationLon = marker.getPosition().longitude;
+
+                                    try {
+                                        List<Address> addresses = geocoder.getFromLocation(destinationLat, destinationLon, 1);
+                                        Address location = addresses.get(0);
+                                        destinationPlace = location.getAddressLine(0);
+                                        destinationCity = location.getLocality();
+
+                                        autocompleteDestination.setText(destinationPlace);
+                                        BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                                        marker.setIcon(markerIcon2);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    }
                 }else{
                     Intent intent = new Intent(MainActivity.this,Home_Work_Address.class);
                     intent.putExtra("type","work");

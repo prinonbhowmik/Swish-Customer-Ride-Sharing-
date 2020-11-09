@@ -78,8 +78,8 @@ public class OutsideDhaka extends Fragment {
                         String tripId = data.child("bookingId").getValue().toString();
                         carType = data.child("carType").getValue().toString();
 
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                        String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
                         try {
                              d1 = dateFormat.parse(date1);
