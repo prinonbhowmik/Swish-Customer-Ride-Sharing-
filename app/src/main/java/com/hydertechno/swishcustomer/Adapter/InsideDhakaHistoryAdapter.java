@@ -1,5 +1,6 @@
 package com.hydertechno.swishcustomer.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -53,7 +54,7 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
         String status = holder.bookingStatus.getText().toString();
 
         String date1 = holder.DateTv.getText().toString();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date eDate = null;
         try {
             eDate = dateFormat.parse(date1);
@@ -63,7 +64,8 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
 
         if (rideModel.getRideStatus().equals("End")) {
             holder.bookingStatus.setText("Ride Finished");
-            holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_gray));
+            //holder.relativeLayout1.setBackgroundColor(ContextCompat.getColor(context,R.color.colorTextSecondary));
+            holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_blue));
         }
         else if(rideModel.getRideStatus().equals("Cancel")){
             holder.bookingStatus.setText("Ride Cancelled");
@@ -72,6 +74,7 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
         }
         else {
             holder.bookingStatus.setText("Ride Expire");
+            //holder.relativeLayout1.setBackgroundColor(ContextCompat.getColor(context,R.color.colorTextSecondary));
             holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_gray));
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +92,7 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
                     intent.putExtra("custId",rideModel.getDriverId());
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
+                    ((Activity)context).finish();
                 } catch (Exception e) {
 
                 }

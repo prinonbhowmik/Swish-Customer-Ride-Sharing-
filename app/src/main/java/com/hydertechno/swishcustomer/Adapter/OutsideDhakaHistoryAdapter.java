@@ -1,5 +1,6 @@
 package com.hydertechno.swishcustomer.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
         String status = holder.bookingStatus.getText().toString();
 
         String date1 = holder.DateTv.getText().toString();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date eDate = null;
         try {
             eDate = dateFormat.parse(date1);
@@ -95,6 +96,7 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
                     intent.putExtra("custId",rideModel.getDriverId());
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
+                    ((Activity)context).finish();
                 } catch (Exception e) {
 
                 }

@@ -152,6 +152,8 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Toasty.success(Home_Work_Address.this, "Home Address Saved!", Toasty.LENGTH_LONG).show();
+                            startActivity(new Intent(Home_Work_Address.this,MainActivity.class));
+                            finish();
                         }
                     });
                 }else{
@@ -159,6 +161,8 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Toasty.success(Home_Work_Address.this, "Work Address Saved!", Toasty.LENGTH_LONG).show();
+                            startActivity(new Intent(Home_Work_Address.this,MainActivity.class));
+                            finish();
                         }
                     });
                 }

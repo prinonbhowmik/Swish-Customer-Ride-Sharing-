@@ -80,7 +80,6 @@ public class OutsideDhakaHistory extends Fragment {
 
                     rideModels = response.body();
 
-
                     adapter = new OutsideDhakaHistoryAdapter(rideModels, getActivity());
                     rideRecycler.setAdapter(adapter);
                     if (rideModels.size() == 0) {
@@ -99,36 +98,6 @@ public class OutsideDhakaHistory extends Fragment {
                 Toast.makeText(getContext(), ""+t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
-       /* DatabaseReference historyRef = reference.child("CustomerRides").child(userId);
-        historyRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    rideModels.clear();
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        rideStatus = data.child("rideStatus").getValue().toString();
-                        driverID = data.child("driverId").getValue().toString();
-
-                        if (rideStatus.equals("End")) {
-                            RideModel ride = data.getValue(RideModel.class);
-                            rideModels.add(ride);
-                        }
-                    }
-                    if (rideModels.size() == 0) {
-                        nohistorytxt.setVisibility(View.VISIBLE);
-                        rideRecycler.setVisibility(View.GONE);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(History.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
 
     }
 }
