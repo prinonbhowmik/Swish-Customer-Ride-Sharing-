@@ -96,6 +96,89 @@
             android:onClick="changePassword"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#B6B2B2"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Saved Addess"
+        android:layout_marginStart="10dp"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/homeCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="10dp"
+        android:padding="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="   Home"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+                android:drawableStart="@drawable/home_icon_black"
+                android:layout_marginStart="10dp"/>
+             <TextView
+                 android:id="@+id/homeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                 android:textColor="#000"
+                android:textSize="15sp"
+                 android:layout_margin="10dp" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/workCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="10dp"
+        android:padding="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="   Work"
+                android:textSize="18sp"
+                android:layout_marginTop="5dp"
+                android:drawableStart="@drawable/work_icon_black"
+                android:layout_marginStart="10dp"/>
+            <TextView
+                android:id="@+id/workTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="15sp"
+                android:textColor="#000"
+                android:layout_margin="10dp" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
    <RelativeLayout
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"

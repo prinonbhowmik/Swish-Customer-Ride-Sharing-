@@ -215,4 +215,12 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        startActivity(new Intent(Home_Work_Address.this,MainActivity.class));
+        finish();
+    }
 }

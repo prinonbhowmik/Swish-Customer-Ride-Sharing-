@@ -2611,7 +2611,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             });
                         }
                     }
-                }else{
+                }
+                else{
                     Intent intent = new Intent(MainActivity.this,Home_Work_Address.class);
                     intent.putExtra("type","home");
                     intent.putExtra("currentLat",wayLatitude);
