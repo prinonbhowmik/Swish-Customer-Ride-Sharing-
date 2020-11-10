@@ -2212,6 +2212,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawerLayout.closeDrawers();
                 finish();
                 break;
+            case R.id.notification:
+                startActivity(new Intent(MainActivity.this, NotificationsActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                drawerLayout.closeDrawers();
+                finish();
+                break;
             case R.id.history:
                 startActivity(new Intent(MainActivity.this, History.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

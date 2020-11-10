@@ -7,6 +7,7 @@ import com.hydertechno.swishcustomer.Model.CouponShow;
 import com.hydertechno.swishcustomer.Model.DriverInfo;
 import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.Model.HourlyRideModel;
+import com.hydertechno.swishcustomer.Model.NotificationModel;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.Model.RidingRate;
@@ -210,5 +211,7 @@ public interface ApiInterface {
     @PUT("hourlyridestart/{bookingId}")
     Call<List<HourlyRideModel>> cancelHourTrip(@Path("bookingId") String bookingId,
                                                   @Field("rideStatus") String rideStatus);
+    @GET("dcustomer-noti-list?")
+    Call<List<NotificationModel>> getNotificationData(@Query("customer_id") String customer_id);
 
 }

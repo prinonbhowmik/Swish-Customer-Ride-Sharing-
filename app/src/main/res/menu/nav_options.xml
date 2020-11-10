@@ -36,6 +36,10 @@
             android:icon="@drawable/ic_emergency"
             android:title="Emergency" />
         <item
+            android:id="@+id/notification"
+            android:title="Notifications"
+            android:icon="@drawable/ic_notification"/>
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_logout"
             android:title="logout" />
