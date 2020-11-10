@@ -36,6 +36,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
@@ -173,7 +174,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private MarkerOptions pickUpMarker;
-    private LinearLayout destinationLayout, timeDateLayout, chooseRideType, hourlyLayout, hourlyrideTypes, hourtimeDateLayout, timeselectLayout;
+    private LinearLayout destinationLayout, timeDateLayout, chooseRideType, hourlyLayout, hourlyrideTypes,
+            hourtimeDateLayout, timeselectLayout;
     private RelativeLayout PickUpLayout;
     private Polyline currentPolyline;
     private MarkerOptions place1, place2;
@@ -212,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private double radius = 2;
     private String tripId, picklat, pickLon, deslat, deslon, carType;
     boolean singleBack = false;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -370,6 +373,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 checkConnection();
 
                 getDestinationPlace();
+
+                progressBar.setVisibility(View.VISIBLE);
 
                 if (destinationLat == 0.0 && destinationLon == 0.0 || destinationLat == pickUpLat && destinationLon == pickUpLon) {
                     Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
@@ -608,20 +613,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         wantnowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 checkConnection();
-                androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle("Sorry!");
-                dialog.setIcon(R.drawable.logo_circle);
-                dialog.setMessage("No driver available! \nNo car found for your trip");
-                dialog.setCancelable(false);
-                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                searchlottie.setVisibility(View.VISIBLE);
+
+                new Handler().postDelayed(new Runnable() {
+
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
+                    public void run() {
+                        searchlottie.setVisibility(View.GONE);
+                        androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
+                        dialog.setTitle("Sorry!");
+                        dialog.setIcon(R.drawable.logo_circle);
+                        dialog.setMessage("No driver available! \nNo car found for your trip");
+                        dialog.setCancelable(false);
+                        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                finish();
+                                startActivity(getIntent());
+                            }
+                        });
+                        androidx.appcompat.app.AlertDialog alertDialog = dialog.create();
+                        alertDialog.show();
                     }
-                });
-                androidx.appcompat.app.AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
+
+                }, 3000);
+
+
+
             }
         });
 
@@ -655,6 +676,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         rideHourly.setVisibility(View.GONE);
                         rideLater.setVisibility(View.GONE);
                         hourlypickUpBtn.setVisibility(View.VISIBLE);
+
                     }
                 });
                 dialog.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
@@ -678,7 +700,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 hourlysedanBusinessPriceShow();
                 hourlyMicroPriceShow();
                 hourlyMicro11PriceShow();
-
 
                 BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                 pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
@@ -1415,8 +1436,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         finish();
         startActivity(getIntent());
-
-
     }
 
     private void hourlyRideCheck() {
@@ -1614,6 +1633,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("trduration", String.valueOf(trduration));
 
                     bottomsheet.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
 
                     sedanPrice(kmdistance, travelduration);
                     sedanPremierePrice(kmdistance, travelduration);
@@ -2116,6 +2136,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         timeselectLayout = findViewById(R.id.timeselectLayout);
         wantnowBtn = findViewById(R.id.wantnowBtn);
         wantLaterBtn = findViewById(R.id.wantLaterBtn);
+        progressBar = findViewById(R.id.progressbar);
     }
 
     private void navHeaderData() {
