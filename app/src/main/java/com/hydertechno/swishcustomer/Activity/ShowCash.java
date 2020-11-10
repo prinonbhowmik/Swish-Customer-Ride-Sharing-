@@ -168,7 +168,6 @@ public class ShowCash extends AppCompatActivity {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ShowCash.this, "" + carType, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(ShowCash.this, FareDetails.class).putExtra("carType", carType));
             }
         });

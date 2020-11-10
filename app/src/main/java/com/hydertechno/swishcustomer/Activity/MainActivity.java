@@ -2767,4 +2767,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+
+    public void rideInfo(View view) {
+        switch (view.getId()){
+            case R.id.sedanInfo:
+                carType = "Sedan";
+                break;
+            case R.id.sedanpremiereInfo:
+                carType = "SedanPremiere";
+                break;
+            case R.id.sedanbusinessInfo:
+                carType = "SedanBusiness";
+                break;
+             case R.id.micro7Info:
+                carType = "Micro7";
+                break;
+            case R.id.micro11Info:
+                carType = "Micro11";
+                break;
+        }
+
+        startActivity(new Intent(MainActivity.this, FareDetails.class).putExtra("carType", carType));
+    }
 }

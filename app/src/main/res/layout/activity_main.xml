@@ -174,7 +174,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlySedan"
-                                android:layout_width="match_parent"
+                                android:layout_width="150dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -183,12 +183,24 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="4"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                    </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
@@ -242,7 +254,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlySedanpremiere"
-                                android:layout_width="match_parent"
+                                android:layout_width="150dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -251,12 +263,24 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="4"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                    </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
@@ -310,7 +334,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlySedanbusiness"
-                                android:layout_width="match_parent"
+                                android:layout_width="150dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -319,12 +343,24 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="4"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                    </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
@@ -378,7 +414,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlyMicro"
-                                android:layout_width="match_parent"
+                                android:layout_width="150dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -387,12 +423,24 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="7"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                    </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
@@ -446,7 +494,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hourlyMicro11"
-                                android:layout_width="match_parent"
+                                android:layout_width="150dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -455,12 +503,24 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="11"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                    </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
@@ -631,14 +691,14 @@
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.6">
+                        android:layout_weight="0.3">
 
                         <ImageView
                             android:id="@+id/nav_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_gravity="center"
+                            android:layout_centerInParent="true"
                             android:layout_marginLeft="5dp"
                             android:layout_marginTop="5dp"
                             android:layout_weight="1"
@@ -648,7 +708,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5.4"
+                        android:layout_weight="5.7"
                         android:orientation="vertical">
 
                         <fragment
@@ -713,7 +773,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            <RelativeLayout
                 android:id="@+id/bottomsheet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -762,7 +822,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/sedan"
-                                android:layout_width="wrap_content"
+                                android:layout_width="150dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -771,17 +831,35 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="4"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+
+                                        <ImageView
+                                            android:id="@+id/sedanInfo"
+                                            android:layout_width="18dp"
+                                            android:layout_height="18dp"
+                                            android:src="@drawable/ic_icons8_info"
+                                            android:onClick="rideInfo"
+                                            android:layout_alignParentRight="true"/>
+                                    </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
                                         android:layout_height="100dp"
-                                        android:layout_centerInParent="true"
-                                        android:layout_centerHorizontal="true"
+                                        android:layout_gravity="center"
                                         android:background="#fff"
                                         app:lottie_autoPlay="true"
                                         app:lottie_fileName="14716-coupe-car-loop.json"
@@ -826,7 +904,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/sedanpremiere"
-                                android:layout_width="wrap_content"
+                                android:layout_width="150dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -835,13 +913,30 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
-
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="4"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                        <ImageView
+                                            android:id="@+id/sedanpremiereInfo"
+                                            android:layout_width="18dp"
+                                            android:layout_height="18dp"
+                                            android:src="@drawable/ic_icons8_info"
+                                            android:onClick="rideInfo"
+                                            android:layout_alignParentRight="true"/>
+                                    </RelativeLayout>
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
                                         android:layout_height="100dp"
@@ -890,7 +985,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/sedanbusiness"
-                                android:layout_width="wrap_content"
+                                android:layout_width="150dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -899,12 +994,31 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="4"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                        <ImageView
+                                            android:id="@+id/sedanbusinessInfo"
+                                            android:layout_width="18dp"
+                                            android:layout_height="18dp"
+                                            android:src="@drawable/ic_icons8_info"
+                                            android:onClick="rideInfo"
+                                            android:layout_alignParentRight="true"/>
+                                    </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
@@ -954,7 +1068,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/hiace"
-                                android:layout_width="wrap_content"
+                                android:layout_width="150dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -963,11 +1077,30 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="7"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                        <ImageView
+                                            android:id="@+id/micro7Info"
+                                            android:layout_width="18dp"
+                                            android:layout_height="18dp"
+                                            android:src="@drawable/ic_icons8_info"
+                                            android:onClick="rideInfo"
+                                            android:layout_alignParentRight="true"/>
+                                    </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
                                         android:layout_width="100dp"
@@ -1000,7 +1133,6 @@
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
 
-
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
                         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
@@ -1018,7 +1150,7 @@
 
                             <androidx.cardview.widget.CardView
                                 android:id="@+id/micro"
-                                android:layout_width="wrap_content"
+                                android:layout_width="150dp"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
                                 android:background="#fff"
@@ -1027,11 +1159,30 @@
                                 app:cardCornerRadius="5dp">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="#fff"
                                     android:orientation="vertical"
                                     android:padding="10dp">
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="11"
+                                            android:layout_alignParentLeft="true"
+                                            android:textSize="15dp"
+                                            android:drawableStart="@drawable/person_light"/>
+                                        <ImageView
+                                            android:id="@+id/micro11Info"
+                                            android:layout_width="18dp"
+                                            android:layout_height="18dp"
+                                            android:src="@drawable/ic_icons8_info"
+                                            android:onClick="rideInfo"
+                                            android:layout_alignParentRight="true"/>
+                                    </RelativeLayout>
 
                                     <ImageView
                                         android:layout_width="100dp"
@@ -1164,7 +1315,8 @@
         app:headerLayout="@layout/navigation_drawer_header"
         app:itemIconTint="@color/colorPrimary"
         app:itemTextColor="@color/themColor2"
-        app:menu="@menu/nav_options">
+        app:menu="@menu/nav_options"
+        android:visibility="gone">
 
     </com.google.android.material.navigation.NavigationView>
 

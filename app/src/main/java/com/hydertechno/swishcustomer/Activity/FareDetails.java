@@ -15,7 +15,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.Rate;
+import com.hydertechno.swishcustomer.Model.RidingRate;
 import com.hydertechno.swishcustomer.R;
+import com.hydertechno.swishcustomer.ServerApi.ApiUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FareDetails extends AppCompatActivity {
 
@@ -33,27 +42,28 @@ public class FareDetails extends AppCompatActivity {
 
         checkConnection();
 
-        DatabaseReference getRef = FirebaseDatabase.getInstance().getReference("RidingRate").child(carType);
-        getRef.addValueEventListener(new ValueEventListener() {
+        Call<List<RidingRate>> call1 = ApiUtils.getUserService().getPrice(carType);
+        call1.enqueue(new Callback<List<RidingRate>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Rate rate = snapshot.getValue(Rate.class);
+            public void onResponse(Call<List<RidingRate>> call, Response<List<RidingRate>> response) {
+                if (response.isSuccessful()){
+                    List<RidingRate> rate = new ArrayList<>();
+                    rate = response.body();
+                    int kmRate = rate.get(0).getKm_charge();
+                    int minRate =rate.get(0).getMin_charge();
+                    int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
 
-                kiloFare = rate.getKm();
-                minuteFare = rate.getMin();
-                baseFare = rate.getMinimumfare();
-
-                baseTv.setText(baseFare);
-                kiloTv.setText(kiloFare);
-                minuteTv.setText(minuteFare);
+                    baseTv.setText(""+minimumRate);
+                    kiloTv.setText(""+kmRate);
+                    minuteTv.setText(""+minRate);
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onFailure(Call<List<RidingRate>> call, Throwable t) {
 
             }
         });
-
     }
 
     private void checkConnection() {
