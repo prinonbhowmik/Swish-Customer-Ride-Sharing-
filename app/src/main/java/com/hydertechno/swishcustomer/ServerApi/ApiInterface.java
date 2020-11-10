@@ -211,7 +211,7 @@ public interface ApiInterface {
     @PUT("hourlyridestart/{bookingId}")
     Call<List<HourlyRideModel>> cancelHourTrip(@Path("bookingId") String bookingId,
                                                   @Field("rideStatus") String rideStatus);
-    @GET("dcustomer-noti-list?")
+    @GET("customer-noti-list?")
     Call<List<NotificationModel>> getNotificationData(@Query("customer_id") String customer_id);
 
 }

@@ -1,14 +1,23 @@
 package com.hydertechno.swishcustomer.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.hydertechno.swishcustomer.Activity.MainActivity;
+import com.hydertechno.swishcustomer.Activity.SignUp;
 import com.hydertechno.swishcustomer.Model.NotificationModel;
 import com.hydertechno.swishcustomer.R;
 import com.hydertechno.swishcustomer.Utils.Config;
@@ -18,6 +27,7 @@ import java.util.List;
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
     private List<NotificationModel> notificationModels;
     private Context context;
+    private Dialog dialog;
 
     public NotificationAdapter(List<NotificationModel> notificationModels, Context context) {
         this.notificationModels = notificationModels;
@@ -42,11 +52,29 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         Picasso.get().load(Config.NOTIFICATION_LINE + imageFile).into(holder.imageView, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
+                holder.relativeLayout1.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onError(Exception e) {
                 Log.d("kiKahini", e.getMessage());
+            }
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog(context);
+                dialog.setContentView(R.layout.notification_details_layout_design);
+                ImageView close = dialog.findViewById(R.id.close);
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setCancelable(false);
+
+                dialog.show();
             }
         });
 
@@ -60,7 +88,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView;
         private TextView title, body, date, time;
-
+        private RelativeLayout relativeLayout1;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.notificationLargeImage);
@@ -68,7 +96,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             body = itemView.findViewById(R.id.notificationBody);
             time = itemView.findViewById(R.id.time);
             date = itemView.findViewById(R.id.date);
-
+            relativeLayout1=itemView.findViewById(R.id.r1);
         }
     }
 }
