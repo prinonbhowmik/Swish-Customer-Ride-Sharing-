@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -66,6 +67,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 dialog = new Dialog(context);
                 dialog.setContentView(R.layout.notification_details_layout_design);
                 ImageView close = dialog.findViewById(R.id.close);
+                TextView titleTv = dialog.findViewById(R.id.titleTv);
+                TextView bodyTv = dialog.findViewById(R.id.bodyTv);
+                ImageView notiImage = dialog.findViewById(R.id.largeImage);
+
+                titleTv.setText(model.getTitle());
+                bodyTv.setText(model.getBody());
+                Picasso.get().load(Config.NOTIFICATION_LINE + imageFile).into(notiImage, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.relativeLayout1.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.d("kiKahini", e.getMessage());
+                    }
+                });
+
+
                 close.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -75,6 +95,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 dialog.setCancelable(false);
 
                 dialog.show();
+                Window window = dialog.getWindow();
+                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             }
         });
 

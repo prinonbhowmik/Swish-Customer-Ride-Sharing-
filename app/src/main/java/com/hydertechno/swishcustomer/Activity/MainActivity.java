@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -88,6 +89,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -193,7 +195,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             businessmin, businessminfare, pickUpCity, destinationCity;
     private Button rideHourly, rideLater, hourlyconfirmRideBtn, wantnowBtn, wantLaterBtn;
     private SharedPreferences sharedPreferences;
-    private LottieAnimationView searchlottie;
     private Boolean notify = false, firstTime = true;
     private List<String> driverList;
     private int bottomSheetCount = 0, driverRatingCount = 0;
@@ -215,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private String tripId, picklat, pickLon, deslat, deslon, carType;
     boolean singleBack = false;
     private ProgressBar progressBar;
+    private FloatingActionButton homeBtn,workBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -615,13 +617,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
 
                 checkConnection();
-                searchlottie.setVisibility(View.VISIBLE);
+                ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "Searching",
+                        "Searching Nearby Drivers....", true);
 
                 new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-                        searchlottie.setVisibility(View.GONE);
+                        dialog.dismiss();
                         androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
                         dialog.setTitle("Sorry!");
                         dialog.setIcon(R.drawable.logo_circle);
@@ -664,6 +667,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
+
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("Alert!!");
                 dialog.setIcon(R.drawable.logo_circle);
@@ -748,7 +752,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                         });
                     } else {
-                        Toasty.error(MainActivity.this, "Place Not Found!");
+                        Toasty.error(MainActivity.this, "Place Not Found!").show();
                     }
 
                 } catch (IOException e) {
@@ -764,9 +768,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 PickUpLayout.setVisibility(View.VISIBLE);
                 pickUpBtn.setVisibility(View.VISIBLE);
                 chooseRideType.setVisibility(View.GONE);
-               /* timeDateLayout.setVisibility(View.VISIBLE);
-                chooseRideType.setVisibility(View.GONE);
-                confirmRideBtn.setVisibility(View.VISIBLE);*/
+
             }
         });
 
@@ -2112,7 +2114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         confirmRideBtn = findViewById(R.id.confirmRideBtn);
         sedanbusiness = findViewById(R.id.sedanbusiness);
         sedanbusinessprice = findViewById(R.id.sedanbusinessPrice);
-        searchlottie = findViewById(R.id.searchlottie);
         rideTypeTv = findViewById(R.id.rideTypeTv);
         hourlyconfirmRideBtn = findViewById(R.id.hourlyconfirmRideBtn);
         hourlyLayout = findViewById(R.id.hourlyLayout);
@@ -2137,6 +2138,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         wantnowBtn = findViewById(R.id.wantnowBtn);
         wantLaterBtn = findViewById(R.id.wantLaterBtn);
         progressBar = findViewById(R.id.progressbar);
+        homeBtn = findViewById(R.id.homeBtn);
+        workBtn = findViewById(R.id.workBtn);
     }
 
     private void navHeaderData() {

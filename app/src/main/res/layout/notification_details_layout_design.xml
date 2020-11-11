@@ -15,24 +15,21 @@
         android:src="@drawable/logo"/>
     <ImageView
         android:id="@+id/close"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
         android:src="@drawable/ic_close"/>
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/largeImage"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
         android:src="@drawable/customer_care"
         android:layout_below="@id/logo"/>
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/titleTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -44,10 +41,10 @@
         android:textColor="@android:color/holo_red_light"
         android:layout_below="@+id/largeImage"/>
     <TextView
-        android:id="@+id/body"
+        android:id="@+id/bodyTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
+        android:layout_below="@id/titleTv"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
