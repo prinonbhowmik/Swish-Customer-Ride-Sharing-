@@ -1370,23 +1370,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     });
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setIcon(R.drawable.logo_circle);
-                    builder.setTitle("Request Complete!");
-                    builder.setMessage("Your ride request is complete! \n " +
-                            "You will be notified when any driver accepts your request");
-
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            bottomsheet.setVisibility(View.GONE);
-                        }
-                    });
-
-                    if(!isFinishing()){
-                        builder.create().show();
-                    }
                 }
             }
         });
@@ -1435,9 +1418,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+        dialog.setTitle("Ride Created");
+        dialog.setIcon(R.drawable.logo_circle);
+        dialog.setMessage("Your ride has been created. If any driver accept your ride you will be notified!");
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
-        finish();
-        startActivity(getIntent());
+                finish();
+                startActivity(getIntent());
+            }
+        });
+        AlertDialog alertDialog = dialog.create();
+        if (!isFinishing()){
+            alertDialog.show();
+        }
+
+
     }
 
     private void hourlyRideCheck() {
@@ -1502,24 +1501,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                     });
 
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setIcon(R.drawable.logo_circle);
-                    builder.setTitle("Request Complete!");
-                    builder.setMessage("Your hourly ride request is complete! \n " +
-                            "You will be notified when any driver accepts your request");
-
-                    builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            map.clear();
-                            hourlyLayout.setVisibility(View.GONE);
-                            chooseRideType.setVisibility(View.VISIBLE);
-                        }
-                    });
-
-                    builder.create().show();
                 }
             }
         });
@@ -1568,8 +1549,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        finish();
-        startActivity(getIntent());
+        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+        dialog.setTitle("Ride Created");
+        dialog.setIcon(R.drawable.logo_circle);
+        dialog.setMessage("Your ride has been created. If any driver accept your ride you will be notified!");
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                finish();
+                startActivity(getIntent());
+            }
+        });
+        AlertDialog alertDialog = dialog.create();
+        if (!isFinishing()){
+            alertDialog.show();
+        }
 
     }
 

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 30
@@ -108,9 +107,6 @@ dependencies {
     //neomorphic
     implementation 'com.github.4inodev:Neomorphic-FrameLayout-Android:1.03'
 
-    implementation 'com.google.firebase:firebase-ml-natural-language:22.0.0'
-    implementation 'com.google.firebase:firebase-ml-natural-language-translate-model:20.0.8'
-    implementation 'com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.8'
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
 
 
