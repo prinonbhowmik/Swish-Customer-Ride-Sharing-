@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -31,6 +32,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.hydertechno.swishcustomer.Activity.HourlyRideDetails;
 import com.hydertechno.swishcustomer.Activity.MainActivity;
 import com.hydertechno.swishcustomer.Activity.MyRidesDetails;
+import com.hydertechno.swishcustomer.Activity.NotificationsActivity;
 import com.hydertechno.swishcustomer.Activity.ShowCash;
 import com.hydertechno.swishcustomer.R;
 
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
     public static final String TAG = "FirebaseMessaging";
@@ -88,10 +91,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String bookingId = remoteMessage.getData().get("bookingId");
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(userID.replaceAll("[\\D]", ""));
+        int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
         switch (toActivity) {
             case "my_ride_details": {
                 Intent intent = new Intent(getApplicationContext(), MyRidesDetails.class);
-
                 intent.putExtra("bookingId", bookingId);
                 intent.putExtra("check", 1);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -104,7 +107,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 int i = 0;
                 if (j > 0) {
                     i = j;
-
                 }
                 oreoNotification.getManager().notify(i, builder.build());
                 break;
@@ -124,7 +126,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 int i = 0;
                 if (j > 0) {
                     i = j;
-
                 }
                 oreoNotification.getManager().notify(i, builder.build());
                 break;
@@ -142,11 +143,22 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 int i = 0;
                 if (j > 0) {
                     i = j;
-
                 }
                 oreoNotification.getManager().notify(i, builder.build());
-
-
+                break;
+            }case "notification": {
+                Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                OreoNotification oreoNotification = new OreoNotification(this);
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                        defaultSound, icon);
+                int i = 0;
+                if (j > 0) {
+                    i = j;
+                }
+                oreoNotification.getManager().notify(i, builder.build());
                 break;
             }
             case "show_cash": {
@@ -182,7 +194,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 int i = 0;
                 if (j > 0) {
                     i = j;
-
                 }
                 oreoNotification.getManager().notify(i, builder.build());
                 break;
@@ -241,6 +252,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Bitmap anImage = ((BitmapDrawable) myDrawable).getBitmap();
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(userID.replaceAll("[\\D]", ""));
+        int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
         switch (toActivity) {
             case "my_ride_details": {
                 Intent intent = new Intent(getApplicationContext(), MyRidesDetails.class);
@@ -255,6 +267,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentText(body)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
+                        .setColor(Color.parseColor("#1785DA"))
                         .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
                         .setContentIntent(pendingIntent);
                 NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -263,7 +276,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 if (j > 0) {
                     i = j;
                 }
-
                 noti.notify(i, builder.build());
                 break;
             }
@@ -280,6 +292,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentText(body)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
+                        .setColor(Color.parseColor("#1785DA"))
                         .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
                         .setContentIntent(pendingIntent);
                 NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -288,7 +301,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 if (j > 0) {
                     i = j;
                 }
-
                 noti.notify(i, builder.build());
                 break;
             }
@@ -304,17 +316,32 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentText(body)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
+                        .setColor(Color.parseColor("#1785DA"))
                         .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
                         .setContentIntent(pendingIntent);
                 NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
                 int i = 0;
                 if (j > 0) {
                     i = j;
                 }
-
                 noti.notify(i, builder.build());
-
+                break;
+            }case "notification": {
+                Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_noti_foreground)
+                        .setContentTitle(title)
+                        .setLargeIcon(anImage)
+                        .setContentText(body)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)
+                        .setColor(Color.parseColor("#1785DA"))
+                        .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
+                        .setContentIntent(pendingIntent);
+                NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                noti.notify(m, builder.build());
                 break;
             }
             case "show_cash": {
@@ -330,17 +357,15 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentText(body)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
+                        .setColor(Color.parseColor("#1785DA"))
                         .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
                         .setContentIntent(pendingIntent);
                 NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
                 int i = 0;
                 if (j > 0) {
                     i = j;
                 }
-
                 noti.notify(i, builder.build());
-
                 break;
             }
             case "show_cash2": {
@@ -356,21 +381,17 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentText(body)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
+                        .setColor(Color.parseColor("#1785DA"))
                         .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
                         .setContentIntent(pendingIntent);
                 NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
                 int i = 0;
                 if (j > 0) {
                     i = j;
                 }
-
                 noti.notify(i, builder.build());
-
                 break;
             }
         }
-
-
     }
 }
