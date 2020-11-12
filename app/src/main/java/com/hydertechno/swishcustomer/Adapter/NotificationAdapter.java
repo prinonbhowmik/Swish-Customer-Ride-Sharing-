@@ -47,7 +47,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         NotificationModel model = notificationModels.get(position);
         holder.title.setText(model.getTitle());
         holder.body.setText(model.getBody());
-        holder.time.setText(model.getTime());
+        holder.time.setText(model.getTime()+",");
         holder.date.setText(model.getDate());
         String imageFile = model.getImage();
         Picasso.get().load(Config.NOTIFICATION_LINE + imageFile).into(holder.imageView, new com.squareup.picasso.Callback() {

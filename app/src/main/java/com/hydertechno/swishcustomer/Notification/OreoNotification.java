@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
@@ -75,6 +76,7 @@ public class OreoNotification extends ContextWrapper {
                 .setContentText(body)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setShowWhen(true)
+                .setColor(Color.parseColor("#1785DA"))
                 .setSmallIcon(R.mipmap.ic_noti_foreground)
                 .setAutoCancel(true);
 
