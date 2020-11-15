@@ -3,6 +3,8 @@ package com.hydertechno.swishcustomer.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +38,8 @@ public class ResetPassword extends AppCompatActivity {
     List<Profile> list;
     private ApiInterface api;
     private LottieAnimationView progressbar;
+    private String blockCharacterSet = "~#^|$%&*!-_(){}[]/;:',=+?%.";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +89,26 @@ public class ResetPassword extends AppCompatActivity {
 
     }
 
+    private InputFilter filter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            if (source != null && blockCharacterSet.contains(("" + source))) {
+                password_LT.setErrorEnabled(true);
+                password_LT.setError("Special Characters are not acceptable!");
+                passEt.requestFocus();
+                return "";
+            }else{
+                password_LT.setErrorEnabled(false);
+            }
+            return null;
+        }
+    };
+
     private void init() {
         passEt = findViewById(R.id.passEt);
+        passEt.setFilters(new InputFilter[] { filter });
         forgotPassTv = findViewById(R.id.forgotPassTv);
         password_LT = findViewById(R.id.password_LT);
         changePasswordBtn = findViewById(R.id.changePasswordBtn);

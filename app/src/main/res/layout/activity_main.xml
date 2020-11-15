@@ -110,7 +110,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_background"
-                android:text="Book Hourly"
+                android:text="Hourly"
                 android:textAllCaps="false"
                 android:textColor="#fff" />
 
@@ -121,7 +121,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_background"
-                android:text="Book For Later"
+                android:text="Inter City"
                 android:textAllCaps="false"
                 android:textColor="#fff" />
 

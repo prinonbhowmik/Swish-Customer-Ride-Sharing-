@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.textfield.TextInputLayout;
 import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.R;
@@ -61,7 +64,8 @@ public class SignUp extends AppCompatActivity {
     private ApiInterface api;
     private RequestBody  referralBody;
     private Dialog dialog;
-
+    private String blockCharacterSet = "~#^|$%&*!-_(){}[]/;:',=+?%.";
+    private TextInputLayout password_LT;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,6 +189,23 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
+    private final InputFilter filter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            if (source != null && blockCharacterSet.contains(("" + source))) {
+                password_LT.setErrorEnabled(true);
+                password_LT.setError("Special Characters are not acceptable!");
+                passEt.requestFocus();
+                return "";
+            }else{
+                password_LT.setErrorEnabled(false);
+            }
+            return null;
+        }
+    };
+
     private void signup(final String name, final String email, final String password, final String phone,final String gender,String referral) {
 
         loginBtn.setEnabled(false);
@@ -266,6 +287,7 @@ public class SignUp extends AppCompatActivity {
         nameEt=findViewById(R.id.name_Et);
         emailEt=findViewById(R.id.email_Et);
         passEt = findViewById(R.id.password_Et);
+        passEt.setFilters(new InputFilter[] { filter });
         phoneEt = findViewById(R.id.phoneEt);
         genderGroup=findViewById(R.id.radio);
         loginBtn=findViewById(R.id.loginBtn);
@@ -276,7 +298,7 @@ public class SignUp extends AppCompatActivity {
         frameLayout=findViewById(R.id.frame_layout11);
         referralEt=findViewById(R.id.referral_Et);
         policy = findViewById(R.id.policy);
-
+        password_LT = findViewById(R.id.password_LT);
     }
 
     private void checkConnection() {
