@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -41,6 +43,7 @@ public class Password extends AppCompatActivity {
     List<Profile> list;
     private ApiInterface api;
     private LottieAnimationView progressbar;
+    private String blockCharacterSet = "~#^|$%&*!-_(){}[]/;:',=+?%.";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +146,7 @@ public class Password extends AppCompatActivity {
 
     private void init() {
         passEt = findViewById(R.id.passEt);
+        passEt.setFilters(new InputFilter[] { filter });
         forgotPassTv = findViewById(R.id.forgotPassTv);
         password_LT = findViewById(R.id.password_LT);
         loginBtn = findViewById(R.id.loginBtn);
@@ -150,6 +154,23 @@ public class Password extends AppCompatActivity {
         api = ApiUtils.getUserService();
         progressbar = findViewById(R.id.progrssbar);
     }
+
+    private InputFilter filter = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+
+            if (source != null && blockCharacterSet.contains(("" + source))) {
+                password_LT.setErrorEnabled(true);
+                password_LT.setError("Special Characters are not acceptable!");
+                passEt.requestFocus();
+                return "";
+            }else{
+                password_LT.setErrorEnabled(false);
+            }
+            return null;
+        }
+    };
 
     @Override
     public void onBackPressed() {
