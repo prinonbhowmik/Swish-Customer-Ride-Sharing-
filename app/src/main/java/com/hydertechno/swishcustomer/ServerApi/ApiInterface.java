@@ -9,6 +9,7 @@ import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.Model.HourlyRideModel;
 import com.hydertechno.swishcustomer.Model.NotificationModel;
 import com.hydertechno.swishcustomer.Model.Profile;
+import com.hydertechno.swishcustomer.Model.ReferralCount;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.Model.RidingRate;
 import com.hydertechno.swishcustomer.Model.TripReportModel;
@@ -42,7 +43,7 @@ public interface ApiInterface {
     @PUT("cpasswordupdate/{customer_id}")
     @FormUrlEncoded
     Call<List<Profile>> resetPassword(@Path("customer_id") String customer_id,
-                                          @Field("password") String password);
+                                      @Field("password") String password);
 
     @POST("customersave")
     @Multipart
@@ -160,9 +161,8 @@ public interface ApiInterface {
     @DELETE("bookingdelete/{bookingId}")
     Call<Void> deleteTrip(@Path("bookingId") String bookingId);
 
-     @DELETE("hourlydelete/{bookingId}")
+    @DELETE("hourlydelete/{bookingId}")
     Call<Void> hourdeleteTrip(@Path("bookingId") String bookingId);
-
 
 
     @FormUrlEncoded
@@ -195,12 +195,12 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("report-an-issue")
     Call<List<TripReportModel>> report(@Field("r_id") String trip_id,
-                                       @Field("d_id")String driver_id,
+                                       @Field("d_id") String driver_id,
                                        @Field("c_id") String cust_id,
                                        @Field("issue") String reportmsg);
 
     @GET("report-check?")
-    Call<List<TripReportModel>> reportCheck(@Query("r_id")String tripId);
+    Call<List<TripReportModel>> reportCheck(@Query("r_id") String tripId);
 
     @FormUrlEncoded
     @PUT("bookingtripstart/{bookingId}")
@@ -210,8 +210,12 @@ public interface ApiInterface {
     @FormUrlEncoded
     @PUT("hourlyridestart/{bookingId}")
     Call<List<HourlyRideModel>> cancelHourTrip(@Path("bookingId") String bookingId,
-                                                  @Field("rideStatus") String rideStatus);
+                                               @Field("rideStatus") String rideStatus);
+
     @GET("customer-noti-list?")
     Call<List<NotificationModel>> getNotificationData(@Query("customer_id") String customer_id);
+
+    @GET("customeReferralList?")
+    Call<List<ReferralCount>> getReffarelCount(@Query("customer_id") String customer_id);
 
 }
