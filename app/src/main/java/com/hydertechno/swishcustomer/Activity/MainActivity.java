@@ -905,6 +905,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             dialog = new Dialog(MainActivity.this);
                             dialog.setContentView(R.layout.driver_rating_popup);
                             TextView driveName = dialog.findViewById(R.id.driverNaamTv);
+                            TextView skipTv = dialog.findViewById(R.id.skipTv);
                             CircleImageView driverImage = dialog.findViewById(R.id.profileIV);
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
@@ -968,7 +969,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             submitBTN.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if (ratingGiven == true) {
+                                    if (ratingGiven==false){
+                                        Toast.makeText(MainActivity.this, "Please give a rating!", Toast.LENGTH_SHORT).show();
+                                    }else{
                                         Call<List<DriverProfile>> call1 = apiInterface.updateRating(driver_id, totalRating, totalCount);
                                         call1.enqueue(new Callback<List<DriverProfile>>() {
                                             @Override
@@ -981,31 +984,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                             }
                                         });
-                                        Call<List<HourlyRideModel>> ratingCall = apiInterface.addHourRating(tripId, rating1);
-                                        ratingCall.enqueue(new Callback<List<HourlyRideModel>>() {
+
+                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, rating1);
+                                        ratingCall.enqueue(new Callback<List<RideModel>>() {
                                             @Override
-                                            public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
+                                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
 
                                             }
 
                                             @Override
-                                            public void onFailure(Call<List<HourlyRideModel>> call, Throwable t) {
+                                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
 
                                             }
                                         });
 
-                                        DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
+                                        DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
                                         delRef.child(tripId).removeValue();
 
-                                        DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookHourly").child(carType);
+                                        DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
                                         del1Ref.child(tripId).removeValue();
-                                    } else {
-                                        DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
-                                        delRef.child(tripId).removeValue();
-
-                                        DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookHourly").child(carType);
-                                        del1Ref.child(tripId).removeValue();
+                                        dialog.dismiss();
                                     }
+
+                                }
+                            });
+
+                            skipTv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, 0);
+                                    ratingCall.enqueue(new Callback<List<RideModel>>() {
+                                        @Override
+                                        public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                                        }
+                                    });
+                                    DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
+                                    delRef.child(tripId).removeValue();
+
+                                    DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
+                                    del1Ref.child(tripId).removeValue();
                                     dialog.dismiss();
                                 }
                             });
@@ -1125,6 +1148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             dialog = new Dialog(MainActivity.this);
                             dialog.setContentView(R.layout.driver_rating_popup);
                             TextView driveName = dialog.findViewById(R.id.driverNaamTv);
+                            TextView skipTv = dialog.findViewById(R.id.skipTv);
                             CircleImageView driverImage = dialog.findViewById(R.id.profileIV);
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
@@ -1191,10 +1215,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             });
 
 
+
+
                             submitBTN.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if (ratingGiven == true) {
+                                    if (ratingGiven==false){
+                                        Toast.makeText(MainActivity.this, "Please give a rating!", Toast.LENGTH_SHORT).show();
+                                    }else{
                                         Call<List<DriverProfile>> call1 = apiInterface.updateRating(driver_id, totalRating, totalCount);
                                         call1.enqueue(new Callback<List<DriverProfile>>() {
                                             @Override
@@ -1226,26 +1254,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                         DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
                                         del1Ref.child(tripId).removeValue();
-                                    } else {
-
-                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, 0);
-                                        ratingCall.enqueue(new Callback<List<RideModel>>() {
-                                            @Override
-                                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
-
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
-
-                                            }
-                                        });
-                                        DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
-                                        delRef.child(tripId).removeValue();
-
-                                        DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
-                                        del1Ref.child(tripId).removeValue();
+                                        dialog.dismiss();
                                     }
+
+                                }
+                            });
+
+                            skipTv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, 0);
+                                    ratingCall.enqueue(new Callback<List<RideModel>>() {
+                                        @Override
+                                        public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                                        }
+                                    });
+                                    DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
+                                    delRef.child(tripId).removeValue();
+
+                                    DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
+                                    del1Ref.child(tripId).removeValue();
                                     dialog.dismiss();
                                 }
                             });
@@ -1627,7 +1661,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     kmdistance = distance / 1000;
                     travelduration = trduration / 60;
 
-                    Log.d("kmDist", kmdistance + "," + travelduration);
+                    Log.d("kmDist", distance + "," + kmdistance);
                     Log.d("trduration", String.valueOf(trduration));
 
                     bottomsheet.setVisibility(View.VISIBLE);
@@ -2147,7 +2181,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful()) {
                     List<Profile> list = new ArrayList<>();
                     list = response.body();
-                    if (Config.IMAGE_LINE + list.get(0).getImage() != null) {
+                    if (list.get(0).getImage() == null) {
+                        String uri = "@drawable/logo_circle";  // where myresource (without the extension) is the file
+
+                        int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+
+
+                        Drawable res = getResources().getDrawable(imageResource);
+                        circularImageView.setImageDrawable(res);
+                    }else{
                         Picasso.get().load(Config.IMAGE_LINE + list.get(0).getImage())
                                 .into(circularImageView, new com.squareup.picasso.Callback() {
                                     @Override
@@ -2159,6 +2201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         Log.d("kiKahini", e.getMessage());
                                     }
                                 });
+
                     }
                     UserName.setText(list.get(0).getName());
                     userPhone.setText("+88" + list.get(0).getPhone());
@@ -2190,6 +2233,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(MainActivity.this, SignIn.class);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("loggedIn", false);
+                editor.putString("id", "");
                 editor.commit();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

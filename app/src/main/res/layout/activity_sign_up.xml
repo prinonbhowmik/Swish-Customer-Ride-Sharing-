@@ -10,36 +10,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/frame_layout11"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/userImage"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:padding="3dp"
-            android:background="@drawable/round_stroke"
-            android:src="@drawable/ic_person_24"/>
-        <ImageView
-            android:id="@+id/cameraIV"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/custom_round2"
-            android:layout_gravity="bottom|end"
-            android:padding="8dp"
-            android:src="@drawable/ic_photo_camera_black_24" />
-    </FrameLayout>
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_LT"
         style="@style/Edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/frame_layout11"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"

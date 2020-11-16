@@ -16,8 +16,8 @@ android {
         applicationId "com.hydertechno.swishcustomer"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 9
-        versionName "1.0.8"
+        versionCode 10
+        versionName "1.0.9"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

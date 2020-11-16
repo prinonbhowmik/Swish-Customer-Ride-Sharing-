@@ -7,6 +7,15 @@
     android:background="@drawable/dialog_layout"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/skipTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="SKIP"
+        android:textColor="#000"
+        android:textSize="18sp" />
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileIV"

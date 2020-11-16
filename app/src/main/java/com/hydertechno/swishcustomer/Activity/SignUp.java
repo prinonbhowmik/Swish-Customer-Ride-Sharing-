@@ -2,6 +2,7 @@ package com.hydertechno.swishcustomer.Activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -66,6 +67,7 @@ public class SignUp extends AppCompatActivity {
     private Dialog dialog;
     private String blockCharacterSet = "~#^|$%&*!-_(){}[]/;:',=+?%.";
     private TextInputLayout password_LT;
+    private ProgressDialog loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,18 +95,6 @@ public class SignUp extends AppCompatActivity {
                         gender = "Other";
                         break;
                 }
-            }
-        });
-
-        frameLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CropImage.activity()
-                        .setFixAspectRatio(true)
-                        .setGuidelines(CropImageView.Guidelines.ON)
-                        .setCropShape(CropImageView.CropShape.OVAL)
-                        .start(SignUp.this);
-
             }
         });
 
@@ -151,6 +141,7 @@ public class SignUp extends AppCompatActivity {
                 password = passEt.getText().toString();
                 referral=referralEt.getText().toString();
 
+
                 if (TextUtils.isEmpty(name)){
                     nameEt.setError("Enter name");
                     nameEt.requestFocus();
@@ -173,15 +164,8 @@ public class SignUp extends AppCompatActivity {
                }else if(!terms.isChecked()){
                     Toasty.info(SignUp.this,"Agree terms and conditions.",Toasty.LENGTH_SHORT).show();
                 }
-                else if (imageUri==null){
-                    Toasty.info(SignUp.this,"Please provide profile image!",Toasty.LENGTH_SHORT).show();
-
-                }
                 else{
-                    progressbar.setVisibility(View.VISIBLE);
                     hideKeyboardFrom(getApplicationContext());
-                    progressbar.setAnimation("car_moving.json");
-                    progressbar.playAnimation();
                     signup(name,email,password,phone,gender,referral);
                 }
 
@@ -207,15 +191,9 @@ public class SignUp extends AppCompatActivity {
     };
 
     private void signup(final String name, final String email, final String password, final String phone,final String gender,String referral) {
-
+        loading = ProgressDialog.show(SignUp.this, "Uploading",
+                "Your data is saving....", true);
         loginBtn.setEnabled(false);
-
-        File file = new File(imageUri.getPath());
-
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
-
-        // MultipartBody.Part is used to send also the actual file name
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
 
         RequestBody  fullName = RequestBody .create(MediaType.parse("text/plain"), name);
         RequestBody  genderbody = RequestBody .create(MediaType.parse("text/plain"), gender);
@@ -230,16 +208,19 @@ public class SignUp extends AppCompatActivity {
             referralBody = RequestBody.create(MediaType.parse("text/plain"), referral);
 
         }
-        Call<List<Profile>> call = api.register(emailBody,body,fullName,passBody,phoneBody,genderbody,
-                rem_tokenBody,tokenBody,100,referralBody);
+
+        Call<List<Profile>> call = api.register(emailBody,fullName,passBody,phoneBody,genderbody,
+                "","",100,referralBody);
        call.enqueue(new Callback<List<Profile>>() {
            @Override
            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
                if(response.isSuccessful()){
                    String done = response.body().get(0).getDone();
+                   Log.d("checkId",done);
+
                    if (done.equals("1")){
                        customer_id = response.body().get(0).getCustomer_id();
-
+                       loading.dismiss();
                        Log.d("checkId",customer_id);
 
                        hideKeyboardFrom(getApplicationContext());
@@ -249,41 +230,43 @@ public class SignUp extends AppCompatActivity {
                        editor.putBoolean("loggedIn", true);
                        editor.commit();
 
+                       dialog = new Dialog(SignUp.this);
+                       dialog.setContentView(R.layout.wallet_price_layout);
+                       Button okBtn = dialog.findViewById(R.id.okBtn);
+
+                       okBtn.setOnClickListener(new View.OnClickListener() {
+                           @Override
+                           public void onClick(View view) {
+                               Toast.makeText(SignUp.this, "Registration Complete", Toast.LENGTH_SHORT).show();
+                               Intent intent = new Intent(SignUp.this,MainActivity.class);
+                               intent.putExtra("phone",phone);
+                               intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                               startActivity(intent);
+                               loginBtn.setEnabled(true);
+                               progressbar.setVisibility(View.GONE);
+                               finish();
+                           }
+                       });
+                       dialog.setCancelable(false);
+
+                       dialog.show();
+
                    }
                }
            }
 
            @Override
            public void onFailure(Call<List<Profile>> call, Throwable t) {
-
+               Log.d("kahiniki",t.getMessage());
            }
        });
-        dialog = new Dialog(SignUp.this);
-        dialog.setContentView(R.layout.wallet_price_layout);
-        Button okBtn = dialog.findViewById(R.id.okBtn);
 
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(SignUp.this, "Registration Complete", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SignUp.this,MainActivity.class);
-                intent.putExtra("phone",phone);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                loginBtn.setEnabled(true);
-                progressbar.setVisibility(View.GONE);
-                finish();
-            }
-        });
-        dialog.setCancelable(false);
-
-        dialog.show();
 
 
     }
 
     private void init() {
-        userImage = findViewById(R.id.userImage);
+
         nameEt=findViewById(R.id.name_Et);
         emailEt=findViewById(R.id.email_Et);
         passEt = findViewById(R.id.password_Et);
@@ -295,7 +278,6 @@ public class SignUp extends AppCompatActivity {
         progressbar=findViewById(R.id.progrssbar);
         terms=findViewById(R.id.termsCheckBox);
         conditions=findViewById(R.id.conditions);
-        frameLayout=findViewById(R.id.frame_layout11);
         referralEt=findViewById(R.id.referral_Et);
         policy = findViewById(R.id.policy);
         password_LT = findViewById(R.id.password_LT);

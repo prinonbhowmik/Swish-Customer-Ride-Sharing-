@@ -48,13 +48,12 @@ public interface ApiInterface {
     @POST("customersave")
     @Multipart
     Call<List<Profile>> register(@Part("email") RequestBody email,
-                                 @Part MultipartBody.Part image,
                                  @Part("name") RequestBody name,
                                  @Part("password") RequestBody password,
                                  @Part("phone") RequestBody phone,
                                  @Part("gender") RequestBody gender,
-                                 @Part("remember_token") RequestBody remember_token,
-                                 @Part("token") RequestBody token,
+                                 @Part("remember_token") String remember_token,
+                                 @Part("token") String token,
                                  @Part("wallet") int wallet,
                                  @Part("referral") RequestBody referral);
 
