@@ -985,15 +985,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             }
                                         });
 
-                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, rating1);
-                                        ratingCall.enqueue(new Callback<List<RideModel>>() {
+                                        Call<List<HourlyRideModel>> ratingCall = apiInterface.addHourRating(tripId, rating1);
+                                        ratingCall.enqueue(new Callback<List<HourlyRideModel>>() {
                                             @Override
-                                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+                                            public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
 
                                             }
 
                                             @Override
-                                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
+                                            public void onFailure(Call<List<HourlyRideModel>> call, Throwable t) {
 
                                             }
                                         });
