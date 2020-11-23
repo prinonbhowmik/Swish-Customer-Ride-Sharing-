@@ -588,4 +588,15 @@ public class HourlyRideDetails extends AppCompatActivity {
         });
     }
 
+    public void GoBack(View view) {
+       if (check==1){
+           startActivity(new Intent(HourlyRideDetails.this,History.class));
+           overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+           finish();
+       }else{
+           startActivity(new Intent(HourlyRideDetails.this,MyRides.class));
+           overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+           finish();
+       }
+    }
 }

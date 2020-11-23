@@ -775,5 +775,4 @@ public class MyRidesDetails extends AppCompatActivity {
         });
     }
 
-
 }

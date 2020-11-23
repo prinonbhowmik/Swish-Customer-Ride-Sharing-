@@ -2,6 +2,7 @@ package com.hydertechno.swishcustomer.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,5 +73,11 @@ public class MyRides extends AppCompatActivity {
             Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    public void GoBack(View view) {
+        startActivity(new Intent(MyRides.this,MainActivity.class));
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+        finish();
     }
 }

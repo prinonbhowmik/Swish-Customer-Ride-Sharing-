@@ -11,6 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/referralBackBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="GoBack"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_baseline_arrow_back_24"
+            android:layout_centerVertical="true"/>
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout1"
             android:layout_width="wrap_content"

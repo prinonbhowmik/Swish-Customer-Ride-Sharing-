@@ -2,6 +2,7 @@ package com.hydertechno.swishcustomer.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,6 +75,12 @@ public class History extends AppCompatActivity {
         super.onBackPressed();
         startActivity(new Intent(History.this, MainActivity.class));
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
+    }
+
+    public void GoBack(View view) {
+        startActivity(new Intent(History.this,MainActivity.class));
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
         finish();
     }
 }
