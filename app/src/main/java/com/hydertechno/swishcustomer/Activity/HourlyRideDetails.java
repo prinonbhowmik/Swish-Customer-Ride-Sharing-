@@ -51,7 +51,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 public class HourlyRideDetails extends AppCompatActivity {
 
     private TextView pickupPlaceTV, pickupDateTV, pickupTimeTV, carTypeTV, takaTV,headerTitle,reportTrip;
@@ -448,7 +447,23 @@ public class HourlyRideDetails extends AppCompatActivity {
 
                         pickupDateTV.setText(pickupDate);
                         pickupTimeTV.setText(pickupTime);
-                        carTypeTV.setText(carType);
+                        switch (carType) {
+                            case "Sedan":
+                                carTypeTV.setText("Sedan");
+                                break;
+                            case "SedanPremiere":
+                                carTypeTV.setText("Sedan Premiere");
+                                break;
+                            case "SedanBusiness":
+                                carTypeTV.setText("Sedan Business");
+                                break;
+                            case "Micro7":
+                                carTypeTV.setText("Micro 7");
+                                break;
+                            case "Micro11":
+                                carTypeTV.setText("Micro 11");
+                                break;
+                        }
 
                         buttonsShow();
                     }

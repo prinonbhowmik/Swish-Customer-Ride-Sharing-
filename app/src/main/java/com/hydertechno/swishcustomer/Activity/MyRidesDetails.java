@@ -125,41 +125,41 @@ public class MyRidesDetails extends AppCompatActivity {
                             finish();
                         }
                         else if (nextStep.equals("true")){
-                          String status = response.body().get(0).getStatus();
-                          if (status.equals("0")){
-                              AlertDialog.Builder builder = new AlertDialog.Builder(MyRidesDetails.this);
-                              builder.setIcon(R.drawable.logo_circle);
-                              builder.setTitle("Complain Under Review!");
-                              builder.setMessage("Your complain is taken under review! \n" +
-                                      "Our Customer service team will contact you very shortly");
+                            String status = response.body().get(0).getStatus();
+                            if (status.equals("0")){
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MyRidesDetails.this);
+                                builder.setIcon(R.drawable.logo_circle);
+                                builder.setTitle("Complain Under Review!");
+                                builder.setMessage("Your complain is taken under review! \n" +
+                                        "Our Customer service team will contact you very shortly");
 
-                              builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                  @Override
-                                  public void onClick(DialogInterface dialog, int which) {
-                                      dialog.dismiss();
-                                  }
-                              });
+                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
 
-                              if(!isFinishing()){
-                                  builder.create().show();
-                              }
-                          }else{
-                              AlertDialog.Builder builder = new AlertDialog.Builder(MyRidesDetails.this);
-                              builder.setIcon(R.drawable.logo_circle);
-                              builder.setTitle("Complain Review!");
-                              builder.setMessage("We have taken neccesary steps against your driver! \n " +
-                                      "Sorry for your issue and Thanks for staying with SWISH");
+                                if(!isFinishing()){
+                                    builder.create().show();
+                                }
+                            }else{
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MyRidesDetails.this);
+                                builder.setIcon(R.drawable.logo_circle);
+                                builder.setTitle("Complain Review!");
+                                builder.setMessage("We have taken neccesary steps against your driver! \n " +
+                                        "Sorry for your issue and Thanks for staying with SWISH");
 
-                              builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                  @Override
-                                  public void onClick(DialogInterface dialog, int which) {
-                                      dialog.dismiss();
-                                  }
-                              });
+                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
 
-                              if(!isFinishing()){
-                                  builder.create().show();
-                              }                          }
+                                if(!isFinishing()){
+                                    builder.create().show();
+                                }                          }
                         }
                     }
 
@@ -666,7 +666,23 @@ public class MyRidesDetails extends AppCompatActivity {
                         destinationTV.setText(destinationPlace);
                         pickupDateTV.setText(pickupDate);
                         pickupTimeTV.setText(pickupTime);
-                        carTypeTV.setText(carType);
+                        switch (carType) {
+                            case "Sedan":
+                                carTypeTV.setText("Sedan");
+                                break;
+                            case "SedanPremiere":
+                                carTypeTV.setText("Sedan Premiere");
+                                break;
+                            case "SedanBusiness":
+                                carTypeTV.setText("Sedan Business");
+                                break;
+                            case "Micro7":
+                                carTypeTV.setText("Micro 7");
+                                break;
+                            case "Micro11":
+                                carTypeTV.setText("Micro 11");
+                                break;
+                        }
 
                         getPrice(pickUpLat, pickUpLon, destinationLat, destinationLon);
                         buttonsShow();

@@ -26,7 +26,7 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.ViewHolder
 
     private List<RideModel> ride;
     private Context context;
-
+    private String car_type,carType;
     public MyRideAdapter(List<RideModel> ride, Context context) {
         this.ride = ride;
         this.context = context;
@@ -49,10 +49,29 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.ViewHolder
         holder.TimeTV.setText(rideModel.getPickUpTime());
         holder.startLocation.setText(rideModel.getPickUpPlace());
         holder.endLocation.setText(rideModel.getDestinationPlace());
-        holder.carType.setText(rideModel.getCarType());
+
         holder.ridePrice.setText(rideModel.getPrice());
         holder.bookingStatus.setText(rideModel.getBookingStatus());
         String status=holder.bookingStatus.getText().toString();
+        car_type=rideModel.getCarType();
+        switch (car_type) {
+            case "Sedan":
+                carType="Sedan";
+                break;
+            case "SedanPremiere":
+                carType="Sedan Premiere";
+                break;
+            case "SedanBusiness":
+                carType="Sedan Business";
+                break;
+            case "Micro7":
+                carType="Micro 7";
+                break;
+            case "Micro11":
+                carType="Micro 11";
+                break;
+        }
+        holder.carTypeTv.setText(carType);
 
         if(status.equals("Pending")) {
             holder.relativeLayout1.setBackground(ContextCompat.getDrawable(context, R.drawable.my_ride_status_blue));
@@ -97,7 +116,7 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout relativeLayout1;
-        private TextView startLocation,endLocation,TimeTV,DateTv,carType,ridePrice,bookingStatus;
+        private TextView startLocation,endLocation,TimeTV,DateTv,carTypeTv,ridePrice,bookingStatus;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,7 +125,7 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.ViewHolder
             endLocation = itemView.findViewById(R.id.endLocation);
             TimeTV = itemView.findViewById(R.id.rideTime);
             DateTv = itemView.findViewById(R.id.rideDate);
-            carType = itemView.findViewById(R.id.rideType);
+            carTypeTv = itemView.findViewById(R.id.rideType);
             ridePrice = itemView.findViewById(R.id.ridePrice);
             bookingStatus=itemView.findViewById(R.id.status);
             relativeLayout1=itemView.findViewById(R.id.relative1);

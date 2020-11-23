@@ -27,7 +27,7 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
 
     private List<HourlyRideModel> hourly;
     private Context context;
-
+    private String car_type,carType;
     public InsideDhakaHistoryAdapter(List<HourlyRideModel> hourly, Context context) {
         this.hourly = hourly;
         this.context = context;
@@ -43,12 +43,11 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-         HourlyRideModel rideModel= hourly.get(position);
+        HourlyRideModel rideModel= hourly.get(position);
 
         holder.DateTv.setText(rideModel.getPickUpDate());
         holder.TimeTV.setText(rideModel.getPickUpTime());
         holder.startLocation.setText(rideModel.getPickUpPlace());
-        holder.carType.setText(rideModel.getCarType());
         holder.ridePrice.setText(rideModel.getPrice());
         holder.bookingStatus.setText(rideModel.getBookingStatus());
         String status = holder.bookingStatus.getText().toString();
@@ -61,6 +60,26 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        car_type=rideModel.getCarType();
+        switch (car_type) {
+            case "Sedan":
+                carType="Sedan";
+                break;
+            case "SedanPremiere":
+                carType="Sedan Premiere";
+                break;
+            case "SedanBusiness":
+                carType="Sedan Business";
+                break;
+            case "Micro7":
+                carType="Micro 7";
+                break;
+            case "Micro11":
+                carType="Micro 11";
+                break;
+        }
+
+        holder.carTypeTv.setText(carType);
 
         if (rideModel.getRideStatus().equals("End")) {
             holder.bookingStatus.setText("Ride Finished");
@@ -87,7 +106,7 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
                     intent.putExtra("pickplace",rideModel.getPickUpPlace());
                     intent.putExtra("pickdate",rideModel.getPickUpDate());
                     intent.putExtra("picktime",rideModel.getPickUpTime());
-                    intent.putExtra("cartype",rideModel.getCarType());
+                    intent.putExtra("cartype",carType);
                     intent.putExtra("price",rideModel.getPrice());
                     intent.putExtra("custId",rideModel.getDriverId());
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -109,14 +128,14 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
 
 
         private RelativeLayout relativeLayout1;
-        private TextView startLocation,TimeTV, DateTv, carType, ridePrice, bookingStatus;
+        private TextView startLocation,TimeTV, DateTv, carTypeTv, ridePrice, bookingStatus;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             startLocation = itemView.findViewById(R.id.startLocation);
             TimeTV = itemView.findViewById(R.id.rideTime);
             DateTv = itemView.findViewById(R.id.rideDate);
-            carType = itemView.findViewById(R.id.rideType);
+            carTypeTv = itemView.findViewById(R.id.rideType);
             ridePrice = itemView.findViewById(R.id.ridePrice);
             bookingStatus = itemView.findViewById(R.id.status);
             relativeLayout1 = itemView.findViewById(R.id.relative1);
