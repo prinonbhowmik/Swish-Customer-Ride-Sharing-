@@ -2857,6 +2857,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
 
-        startActivity(new Intent(MainActivity.this, FareDetails.class).putExtra("carType", carType));
+        startActivity(new Intent(MainActivity.this, FareDetails.class)
+                .putExtra("check",3)
+                .putExtra("carType", carType));
     }
 }

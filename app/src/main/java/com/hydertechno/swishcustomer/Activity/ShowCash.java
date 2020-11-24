@@ -168,7 +168,9 @@ public class ShowCash extends AppCompatActivity {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ShowCash.this, FareDetails.class).putExtra("carType", carType));
+                startActivity(new Intent(ShowCash.this, FareDetails.class)
+                        .putExtra("check",check)
+                        .putExtra("carType", carType));
             }
         });
 
