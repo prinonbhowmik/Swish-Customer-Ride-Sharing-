@@ -998,10 +998,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             }
                                         });
 
-                                        DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
+                                        DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
                                         delRef.child(tripId).removeValue();
 
-                                        DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
+                                        DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookHourly").child(carType);
                                         del1Ref.child(tripId).removeValue();
                                         dialog.dismiss();
                                     }
@@ -1024,10 +1024,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                         }
                                     });
-                                    DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
+                                    DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
                                     delRef.child(tripId).removeValue();
 
-                                    DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
+                                    DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookHourly").child(carType);
                                     del1Ref.child(tripId).removeValue();
                                     dialog.dismiss();
                                 }

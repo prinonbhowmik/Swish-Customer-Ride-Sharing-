@@ -96,7 +96,7 @@ dependencies {
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
     //toasty
-    implementation 'com.github.GrenderG:Toasty:1.4.2'
+    implementation 'com.github.GrenderG:Toasty:1.5.0'
 
     //Api fetching
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.8.5'
