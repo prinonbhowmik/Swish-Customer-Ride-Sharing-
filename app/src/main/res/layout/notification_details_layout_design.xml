@@ -1,56 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp">
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:src="@drawable/logo"/>
-    <ImageView
-        android:id="@+id/close"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/ic_close"/>
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/largeImage"
-        android:layout_width="fill_parent"
-        android:layout_height="250dp"
-        android:src="@drawable/customer_care"
-        android:layout_below="@id/logo"/>
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/titleTv"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:text="You got 10% discount."
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/holo_red_light"
-        android:layout_below="@+id/largeImage"/>
-    <TextView
-        android:id="@+id/bodyTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/titleTv"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
-        android:justificationMode="inter_word"
-        android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
-        android:textColor="@color/black"
-        android:textSize="18sp" />
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp">
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/logo"/>
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_close"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/largeImage"
+            android:layout_width="fill_parent"
+            android:layout_height="250dp"
+            android:src="@drawable/customer_care"
+            android:layout_below="@id/logo"/>
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="You got 10% discount."
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_light"
+            android:layout_below="@+id/largeImage"/>
+        <TextView
+            android:id="@+id/bodyTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleTv"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:justificationMode="inter_word"
+            android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus."
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</ScrollView>
