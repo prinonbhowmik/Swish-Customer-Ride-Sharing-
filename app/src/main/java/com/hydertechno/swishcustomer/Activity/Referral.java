@@ -25,26 +25,18 @@ import retrofit2.Response;
 
 
 public class Referral extends AppCompatActivity {
-
     private String userId;
-    private TextView referralTV,takenReffarelTv;
-
+    private TextView referralTV,takenReferralTv,activeReferralTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_referral);
-
+        init();
         Intent intent =getIntent();
         userId = intent.getStringExtra("id");
-
         checkConnection();
-
-        referralTV = findViewById(R.id.referralTV);
-        takenReffarelTv = findViewById(R.id.takenReffarelTv);
-
         referralTV.setText(userId);
-
-        getReferalCount();
+        getReferralCount();
 
         referralTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,14 +48,22 @@ public class Referral extends AppCompatActivity {
         });
     }
 
-    private void getReferalCount() {
+    private void init() {
+        referralTV = findViewById(R.id.referralTV);
+        takenReferralTv = findViewById(R.id.takenReferralTv);
+        activeReferralTv = findViewById(R.id.activeReferralTv);
+    }
+
+    private void getReferralCount() {
         Call<List<ReferralCount>> call = ApiUtils.getUserService().getReffarelCount(userId);
         call.enqueue(new Callback<List<ReferralCount>>() {
             @Override
             public void onResponse(Call<List<ReferralCount>> call, Response<List<ReferralCount>> response) {
                 if (response.isSuccessful()){
                     int count = response.body().get(0).getTotal();
-                    takenReffarelTv.setText(""+count);
+                    int active=response.body().get(0).getActive();
+                    takenReferralTv.setText(""+count);
+                    activeReferralTv.setText(""+active);
                 }
             }
 
