@@ -82,10 +82,17 @@
         android:textColor="@color/black"/>
 
 
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/referralTV" >
         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
             android:id="@+id/NFL1"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layerType="software"
             app:neomorph_background_color="@color/neomorph_background_color"
@@ -94,11 +101,10 @@
             app:neomorph_highlight_color="@color/neomorph_highlight_color"
             app:neomorph_shadow_color="@color/neomorph_shadow_color"
             app:neomorph_shadow_type="outer"
-            app:neomorph_view_type="rectangular"
-            android:layout_below="@id/referralTV">
+            app:neomorph_view_type="rectangular">
 
             <RelativeLayout
-                android:id="@+id/todayEarnRelative"
+                android:id="@+id/takenRelative"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_below="@+id/card_view5"
@@ -106,7 +112,53 @@
                 android:background="@drawable/details_btn_design">
 
                 <TextView
-                    android:id="@+id/takenReffarelTv"
+                    android:id="@+id/takenReferralTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/takenTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/takenReferralTv"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="Referrals Taken"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+
+            </RelativeLayout>
+        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+            android:id="@+id/NFL2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layerType="software"
+            app:neomorph_background_color="@color/neomorph_background_color"
+            app:neomorph_corner_radius="10dp"
+            app:neomorph_elevation="6dp"
+            app:neomorph_highlight_color="@color/neomorph_highlight_color"
+            app:neomorph_shadow_color="@color/neomorph_shadow_color"
+            app:neomorph_shadow_type="outer"
+            app:neomorph_view_type="rectangular">
+
+            <RelativeLayout
+                android:id="@+id/ActiveRelative"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@+id/card_view5"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/details_btn_design">
+
+                <TextView
+                    android:id="@+id/activeReferralTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -119,10 +171,10 @@
                     android:id="@+id/todayEarnTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/takenReffarelTv"
+                    android:layout_below="@+id/activeReferralTv"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="Referral Take"
+                    android:text="Referrals Active"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
 
@@ -130,6 +182,7 @@
             </RelativeLayout>
         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
+    </LinearLayout>
 
 
 
