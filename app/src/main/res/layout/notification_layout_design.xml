@@ -48,7 +48,7 @@
                     android:maxLines="1"
                     android:layout_toStartOf="@+id/time"
                     android:layout_centerVertical="true"
-                    android:textColor="@android:color/holo_red_light"
+                    android:textColor="@color/themColor"
                     android:textSize="21sp" />
                 <TextView
                     android:id="@+id/time"
