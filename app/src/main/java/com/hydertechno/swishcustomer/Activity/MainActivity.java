@@ -2359,7 +2359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(MainActivity.this, MyRides.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 drawerLayout.closeDrawers();
-
+                finish();
                 break;
             case R.id.settings:
                 startActivity(new Intent(MainActivity.this, settingsActivity.class));
