@@ -536,7 +536,13 @@ public class MyRidesDetails extends AppCompatActivity {
             if (!bookingStatus.matches("Booked")) {
                 editBtn.setVisibility(View.VISIBLE);
                 driverInfoBtn.setVisibility(View.GONE);
-            } else {
+            } else if(rideStatus.equals("Start")){
+                cancelBtn.setVisibility(View.GONE);
+                editNFL.setVisibility(View.GONE);
+                editBtn.setVisibility(View.GONE);
+                driverInfoBtn.setVisibility(View.VISIBLE);
+                deleteBtn.setVisibility(View.GONE);
+            }else {
                 editNFL.setVisibility(View.GONE);
                 editBtn.setVisibility(View.GONE);
                 cancelBtn.setVisibility(View.VISIBLE);
@@ -774,5 +780,6 @@ public class MyRidesDetails extends AppCompatActivity {
             }
         });
     }
+
 
 }

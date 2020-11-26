@@ -51,6 +51,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 public class HourlyRideDetails extends AppCompatActivity {
 
     private TextView pickupPlaceTV, pickupDateTV, pickupTimeTV, carTypeTV, takaTV,headerTitle,reportTrip;
@@ -496,6 +497,12 @@ public class HourlyRideDetails extends AppCompatActivity {
             if(!bookingStatus.matches("Booked")){
                 editBtn.setVisibility(View.VISIBLE);
                 driverInfoBtn.setVisibility(View.GONE);
+            }else if(rideStatus.equals("Start")){
+                cancelBtn.setVisibility(View.GONE);
+                editNFL.setVisibility(View.GONE);
+                editBtn.setVisibility(View.GONE);
+                driverInfoBtn.setVisibility(View.VISIBLE);
+                deleteBtn.setVisibility(View.GONE);
             }
             else{
                 editNFL.setVisibility(View.GONE);
@@ -586,17 +593,20 @@ public class HourlyRideDetails extends AppCompatActivity {
 
             }
         });
+
+
     }
 
-    public void GoBack(View view) {
-       if (check==1){
-           startActivity(new Intent(HourlyRideDetails.this,History.class));
-           overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
-           finish();
-       }else{
-           startActivity(new Intent(HourlyRideDetails.this,MyRides.class));
-           overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
-           finish();
-       }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (check == 1) {
+            startActivity(new Intent(HourlyRideDetails.this, MyRides.class));
+        }
+        if (check == 2) {
+            startActivity(new Intent(HourlyRideDetails.this, History.class));
+        }
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
     }
 }

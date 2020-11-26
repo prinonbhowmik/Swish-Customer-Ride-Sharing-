@@ -114,7 +114,7 @@ public class EditProfile extends AppCompatActivity {
                         gender = "Other";
                         break;
                 }
-                 genderEt.setText(gender);
+                genderEt.setText(gender);
 
             }
         });

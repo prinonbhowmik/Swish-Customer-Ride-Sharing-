@@ -68,13 +68,13 @@ public class UserProfile extends AppCompatActivity {
 
                     Picasso.get().load(Config.IMAGE_LINE+list.get(0).getImage())
                             .into(userImage, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {}
-                        @Override
-                        public void onError(Exception e) {
-                            Log.d("kiKahini", e.getMessage());
-                        }
-                    });
+                                @Override
+                                public void onSuccess() {}
+                                @Override
+                                public void onError(Exception e) {
+                                    Log.d("kiKahini", e.getMessage());
+                                }
+                            });
                     nametv.setText(list.get(0).getName());
                     emailtv.setText(list.get(0).getEmail());
                     phonetv.setText(list.get(0).getPhone());
@@ -96,7 +96,7 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-               Intent intent = new Intent(UserProfile.this, EditProfile.class);
+                Intent intent = new Intent(UserProfile.this, EditProfile.class);
                 intent.putExtra("id",userId);
                 intent.putExtra("name", nametv.getText());
                 intent.putExtra("email",emailtv.getText());

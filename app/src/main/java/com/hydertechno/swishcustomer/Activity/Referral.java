@@ -23,10 +23,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class Referral extends AppCompatActivity {
+
     private String userId;
     private TextView referralTV,takenReferralTv,activeReferralTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +35,12 @@ public class Referral extends AppCompatActivity {
         init();
         Intent intent =getIntent();
         userId = intent.getStringExtra("id");
+
         checkConnection();
+
+
         referralTV.setText(userId);
+
         getReferralCount();
 
         referralTV.setOnClickListener(new View.OnClickListener() {

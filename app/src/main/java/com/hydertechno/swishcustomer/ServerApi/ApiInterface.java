@@ -217,4 +217,19 @@ public interface ApiInterface {
     @GET("customeReferralList?")
     Call<List<ReferralCount>> getReffarelCount(@Query("customer_id") String customer_id);
 
+    @GET("referral-commission?")
+    Call<List<Profile>> getReffarelCommision(@Query("customer_id") String customer_id);
+
+    @GET("customer?")
+    Call<List<Profile>> getCustomerData(@Query("id") String customer_id);
+
+    @FormUrlEncoded
+    @PUT("priceupdate/{bookingId}")
+    Call<List<RideModel>> tripFareUpdate(@Path("bookingId") String bookingId,
+                                         @Field("price") String price,
+                                         @Field("discount") String discount,
+                                         @Field("updatedPrice") String updatedPrice,
+                                         @Field("totalDistance") String km,
+                                         @Field("totalTime") String time);
+
 }

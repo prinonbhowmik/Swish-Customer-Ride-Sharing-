@@ -19,7 +19,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.hydertechno.swishcustomer.R;
 
-
 public class OreoNotification extends ContextWrapper {
 
     private static final String CHANNEL_ID = "com.hydertechno.swishcustomer";

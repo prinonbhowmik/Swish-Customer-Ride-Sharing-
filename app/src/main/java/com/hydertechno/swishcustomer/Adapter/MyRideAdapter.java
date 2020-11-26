@@ -1,5 +1,6 @@
 package com.hydertechno.swishcustomer.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -102,6 +103,7 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.ViewHolder
                     intent.putExtra("check", 1);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
+                    ((Activity)context).finish();
                 }catch (Exception e){
 
                 }

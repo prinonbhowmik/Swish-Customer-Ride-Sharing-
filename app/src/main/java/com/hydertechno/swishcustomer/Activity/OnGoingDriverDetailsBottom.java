@@ -82,7 +82,7 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
         pickupTimeTV.setText(pickTime);
         takaTV.setText("৳ " +price);
 
-    return view;
+        return view;
     }
 
     private void init(View view) {

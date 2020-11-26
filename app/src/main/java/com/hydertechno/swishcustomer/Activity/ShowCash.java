@@ -126,6 +126,7 @@ public class ShowCash extends AppCompatActivity {
                         RideModel model = snapshot.getValue(RideModel.class);
                         price = model.getPrice();
                         pickUpPlace = model.getPickUpPlace();
+                        destinationPlace = model.getPickUpPlace();
                         driverId = model.getDriverId();
                         finalPrice = model.getFinalPrice();
                         discountPrice = model.getDiscount();
@@ -137,7 +138,7 @@ public class ShowCash extends AppCompatActivity {
                         discountTv.setText(discountPrice);
                         final_Txt.setText(finalPrice);
                         hourLayout.setVisibility(View.VISIBLE);
-                        hourTv.setText(snapshot.child("totalTime").getValue().toString());
+                        hourTv.setText(snapshot.child("totalTime").getValue().toString()+" Hour");
 
                     }else {
                         startActivity(new Intent(ShowCash.this,History.class));

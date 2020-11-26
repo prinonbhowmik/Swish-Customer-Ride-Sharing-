@@ -15,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -217,7 +218,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     boolean singleBack = false;
     private ProgressBar progressBar;
     private FloatingActionButton homeBtn,workBtn;
+    private String language = "en";
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,9 +228,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         init();
 
+        //change language
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+
         checkVersion();
 
         checkConnection();
+
+        checkPermission();
 
         sharedPreferences = getSharedPreferences("MyRef", Context.MODE_PRIVATE);
         dark = sharedPreferences.getBoolean("dark", false);
@@ -318,7 +331,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (addresses.size() > 0) {
                         Address location = addresses.get(0);
                         pickUpPlace = location.getAddressLine(0);
-                        pickUpCity = addresses.get(0).getAddressLine(1);
                         map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
 
@@ -342,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
                                     Address location = addresses.get(0);
                                     pickUpPlace = location.getAddressLine(0);
-                                    pickUpCity = location.getLocality();
+
                                     autocompleteFragment.setText(pickUpPlace);
                                     BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                                     marker.setIcon(markerIcon);
@@ -668,6 +680,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 checkConnection();
 
+
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("Alert!!");
                 dialog.setIcon(R.drawable.logo_circle);
@@ -698,12 +711,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
-                hourlyLayout.setVisibility(View.VISIBLE);
-                hourlysedanPriceShow();
-                hourlysedanPremierePriceShow();
-                hourlysedanBusinessPriceShow();
-                hourlyMicroPriceShow();
-                hourlyMicro11PriceShow();
 
                 BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                 pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
@@ -714,7 +721,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (addresses.size() > 0) {
                         Address location = addresses.get(0);
                         pickUpPlace = location.getAddressLine(0);
-                        pickUpCity = addresses.get(0).getAddressLine(1);
+                        pickUpCity = location.getLocality();
                         map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
 
@@ -734,8 +741,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 pickUpLat = marker.getPosition().latitude;
                                 pickUpLon = marker.getPosition().longitude;
 
-                                Log.d("pickUp", String.valueOf(pickUpLat));
-                                Log.d("pickUplon", String.valueOf(pickUpLon));
 
                                 try {
                                     List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
@@ -758,6 +763,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                Log.d("hourlyCity",pickUpCity);
+
+                if (pickUpCity.equals("ঢাকা") || pickUpCity.equals("Dhaka")) {
+                    hourlyLayout.setVisibility(View.VISIBLE);
+                    hourlysedanPriceShow();
+                    hourlysedanPremierePriceShow();
+                    hourlysedanBusinessPriceShow();
+                    hourlyMicroPriceShow();
+                    hourlyMicro11PriceShow();
+                }else{
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                    dialog.setTitle("Alert!!");
+                    dialog.setIcon(R.drawable.logo_circle);
+                    dialog.setMessage("Hourly service is available within Dhaka city only.");
+                    dialog.setCancelable(false);
+                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            finish();
+                            startActivity(getIntent());
+                        }
+                    });
+
+                    AlertDialog alertDialog = dialog.create();
+
+                    if (!isFinishing()) {
+                        alertDialog.show();
+                    }
+                }
             }
         });
 
@@ -779,7 +815,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (hourrideDate.getText().equals("Select Ride Date")) {
                     Toast.makeText(MainActivity.this, "Please Enter Ride Date!", Toast.LENGTH_SHORT).show();
                 } else if (hourrideTime.getText().equals("Select Ride Time")) {
-                    Toast.makeText(MainActivity.this, "Please Selecet Ride Time!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please Enter Ride Time!", Toast.LENGTH_SHORT).show();
                 } else {
                     dialog = new Dialog(MainActivity.this);
                     dialog.setContentView(R.layout.payment_type_select);
@@ -825,6 +861,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkRatingCall();
 
         checkHourlyRatingCall();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void checkPermission() {
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }else{
+            getLastLocation();
+        }
     }
 
     private void checkConnection() {
@@ -888,6 +936,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     protected void checkHourlyRatingCall() {
+
+        Call<List<Profile>> call = apiInterface.getReffarelCommision(userId);
+        call.enqueue(new Callback<List<Profile>>() {
+            @Override
+            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Profile>> call, Throwable t) {
+
+            }
+        });
+
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -985,15 +1047,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             }
                                         });
 
-                                        Call<List<HourlyRideModel>> ratingCall = apiInterface.addHourRating(tripId, rating1);
-                                        ratingCall.enqueue(new Callback<List<HourlyRideModel>>() {
+                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, rating1);
+                                        ratingCall.enqueue(new Callback<List<RideModel>>() {
                                             @Override
-                                            public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
+                                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
 
                                             }
 
                                             @Override
-                                            public void onFailure(Call<List<HourlyRideModel>> call, Throwable t) {
+                                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
 
                                             }
                                         });
@@ -1131,6 +1193,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     protected void checkRatingCall() {
+        Call<List<Profile>> call = apiInterface.getReffarelCommision(userId);
+        call.enqueue(new Callback<List<Profile>>() {
+            @Override
+            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Profile>> call, Throwable t) {
+
+            }
+        });
+
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1609,23 +1684,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         backNFL.setVisibility(View.VISIBLE);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-        place1 = new MarkerOptions().icon(markerIcon)
-                .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace);
-        BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
-        place2 = new MarkerOptions().icon(markerIcon2)
-                .position(new LatLng(destinationLat, destinationLon)).title(destinationPlace);
+        Locale locale2 = new Locale("bn","BN");
+        Geocoder geocoder1 = new Geocoder(this, locale2);
 
-        new FetchURL(MainActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(),
-                "driving"), "driving");
+        try {
+            List<Address> addresses = geocoder1.getFromLocation(pickUpLat, pickUpLon, 1);
+            Address location = addresses.get(0);
+            pickUpCity = location.getLocality();
 
-        map.addMarker(place1);
-        map.addMarker(place2);
+            List<Address> addresses2 = geocoder1.getFromLocation(destinationLat, destinationLon, 1);
+            Address location1 = addresses2.get(0);
+            destinationCity = location1.getLocality();
 
-        map.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        calculateDirections(pickUpLat, pickUpLon, destinationLat, destinationLon);
+        Log.d("checkCity",pickUpCity+","+destinationCity);
 
+        if (pickUpCity.equals(destinationCity)){
+            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+            dialog.setTitle("Alert!!");
+            dialog.setIcon(R.drawable.logo_circle);
+            dialog.setMessage("Intercity service is available in outside of Dhaka city only!");
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    finish();
+                    startActivity(getIntent());
+                }
+            });
+
+            AlertDialog alertDialog = dialog.create();
+            if (!isFinishing()) {
+                alertDialog.show();
+            }
+        }else {
+            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+            place1 = new MarkerOptions().icon(markerIcon)
+                    .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace);
+            BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+            place2 = new MarkerOptions().icon(markerIcon2)
+                    .position(new LatLng(destinationLat, destinationLon)).title(destinationPlace);
+
+            new FetchURL(MainActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(),
+                    "driving"), "driving");
+
+            map.addMarker(place1);
+            map.addMarker(place2);
+
+            map.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+
+            calculateDirections(pickUpLat, pickUpLon, destinationLat, destinationLon);
+        }
     }
 
     private void calculateDirections(double pickUpLat, double pickUpLon, double destinationLat, double destinationLon) {
@@ -1904,7 +2017,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Address location = latlonaddress.get(0);
                             destinationLat = location.getLatitude();
                             destinationLon = location.getLongitude();
-                            destinationCity = latlonaddress.get(0).getLocality();
 
                             map.clear();
                             BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
@@ -1934,7 +2046,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         List<Address> addresses = geocoder.getFromLocation(destinationLat, destinationLon, 1);
                                         Address location = addresses.get(0);
                                         destinationPlace = location.getAddressLine(0);
-                                        destinationCity = location.getLocality();
 
                                         autocompleteDestination.setText(destinationPlace);
                                         BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
@@ -1976,7 +2087,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         pickUpLat = location.getLatitude();
                         pickUpLon = location.getLongitude();
-                        pickUpCity = location.getLocality();
 
                         pickUpMarker = new MarkerOptions();
 
@@ -2006,7 +2116,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 try {
                                     List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
                                     pickUpPlace = addresses.get(0).getAddressLine(0);
-                                    pickUpCity = addresses.get(0).getLocality();
                                     autocompleteFragment.setText(pickUpPlace);
                                     BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                                     marker.setIcon(markerIcon);
@@ -2250,7 +2359,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(MainActivity.this, MyRides.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 drawerLayout.closeDrawers();
-                finish();
+
                 break;
             case R.id.settings:
                 startActivity(new Intent(MainActivity.this, settingsActivity.class));
@@ -2582,7 +2691,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (addresses.size() > 0) {
                                 Address location = addresses.get(0);
                                 pickUpPlace = location.getAddressLine(0);
-                                pickUpCity = addresses.get(0).getAddressLine(1);
                                 map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
                                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
 
@@ -2606,7 +2714,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
                                             Address location = addresses.get(0);
                                             pickUpPlace = location.getAddressLine(0);
-                                            pickUpCity = location.getLocality();
                                             autocompleteFragment.setText(pickUpPlace);
                                             BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                                             marker.setIcon(markerIcon);
@@ -2721,7 +2828,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (addresses.size() > 0) {
                                 Address location = addresses.get(0);
                                 pickUpPlace = location.getAddressLine(0);
-                                pickUpCity = addresses.get(0).getAddressLine(1);
                                 map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
                                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
 
@@ -2745,7 +2851,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
                                             Address location = addresses.get(0);
                                             pickUpPlace = location.getAddressLine(0);
-                                            pickUpCity = location.getLocality();
                                             autocompleteFragment.setText(pickUpPlace);
                                             BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                                             marker.setIcon(markerIcon);
@@ -2849,7 +2954,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.sedanbusinessInfo:
                 carType = "SedanBusiness";
                 break;
-             case R.id.micro7Info:
+            case R.id.micro7Info:
                 carType = "Micro7";
                 break;
             case R.id.micro11Info:

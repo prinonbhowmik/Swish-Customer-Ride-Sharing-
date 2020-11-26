@@ -263,13 +263,13 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               if (snapshot.exists()){
-                   rideStatus = snapshot.child("rideStatus").getValue().toString();
-                   if (rideStatus.equals("End")) {
-                       detailsBtn.setVisibility(View.GONE);
-                       showFareBtn.setVisibility(View.VISIBLE);
-                   }
-               }
+                if (snapshot.exists()){
+                    rideStatus = snapshot.child("rideStatus").getValue().toString();
+                    if (rideStatus.equals("End")) {
+                        detailsBtn.setVisibility(View.GONE);
+                        showFareBtn.setVisibility(View.VISIBLE);
+                    }
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

@@ -286,30 +286,30 @@
                 android:layout_below="@+id/card_view5"
                 android:layout_centerHorizontal="true">
 
-            <TextView
-                android:id="@+id/txt6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Fare : "
-                android:layout_centerVertical="true"
-                android:textColor="@android:color/black"
-                android:textSize="21sp" />
+                <TextView
+                    android:id="@+id/txt6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="Fare : "
+                    android:layout_centerVertical="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="21sp" />
 
-            <TextView
-                android:id="@+id/takaTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingEnd="10dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/txt6"
-                android:textColor="@android:color/black"
-                android:textSize="21sp" />
+                <TextView
+                    android:id="@+id/takaTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/txt6"
+                    android:textColor="@android:color/black"
+                    android:textSize="21sp" />
 
 
-        </RelativeLayout>
+            </RelativeLayout>
         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
         <TextView
@@ -343,25 +343,25 @@
                 app:neomorph_shadow_color="@color/neomorph_shadow_color"
                 app:neomorph_shadow_type="outer"
                 app:neomorph_view_type="rectangular">
-            <Button
-                android:id="@+id/editBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/details_btn_design"
-                android:text="Edit"
-                android:textAllCaps="false"
-                android:textColor="@color/blue1"
-                android:textSize="18sp" />
                 <Button
-                android:id="@+id/saveBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/details_btn_design"
-                android:text="Save"
-                android:textAllCaps="false"
-                android:textColor="@color/green1"
-                android:visibility="gone"
-                android:textSize="18sp" />
+                    android:id="@+id/editBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/details_btn_design"
+                    android:text="Edit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blue1"
+                    android:textSize="18sp" />
+                <Button
+                    android:id="@+id/saveBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/details_btn_design"
+                    android:text="Save"
+                    android:textAllCaps="false"
+                    android:textColor="@color/green1"
+                    android:visibility="gone"
+                    android:textSize="18sp" />
             </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
             <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
@@ -375,16 +375,16 @@
                 app:neomorph_shadow_color="@color/neomorph_shadow_color"
                 app:neomorph_shadow_type="outer"
                 app:neomorph_view_type="rectangular">
-            <Button
-                android:id="@+id/driverDetailsBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/details_btn_design"
-                android:text="Driver Details"
-                android:textAllCaps="false"
-                android:textSize="18sp"
-                android:textColor="@color/green1"
-                android:visibility="gone" />
+                <Button
+                    android:id="@+id/driverDetailsBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/details_btn_design"
+                    android:text="Driver Details"
+                    android:textAllCaps="false"
+                    android:textSize="18sp"
+                    android:textColor="@color/green1"
+                    android:visibility="gone" />
             </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
         </RelativeLayout>
         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
@@ -400,16 +400,16 @@
             app:neomorph_shadow_type="outer"
             app:neomorph_view_type="rectangular"
             android:layout_below="@id/relative">
-        <Button
-            android:id="@+id/deleteBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/details_btn_design"
-            android:text="Delete Ride"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textColor="@color/red"
-            android:visibility="visible" />
+            <Button
+                android:id="@+id/deleteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/details_btn_design"
+                android:text="Delete Ride"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textColor="@color/red"
+                android:visibility="visible" />
         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
         <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
             android:id="@+id/cancelNFL"
@@ -424,16 +424,16 @@
             app:neomorph_shadow_type="outer"
             app:neomorph_view_type="rectangular"
             android:layout_below="@id/relative">
-        <Button
-            android:id="@+id/cancelBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/details_btn_design"
-            android:text="Cancel Ride"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:textColor="@color/red"
-            android:visibility="gone" />
+            <Button
+                android:id="@+id/cancelBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/details_btn_design"
+                android:text="Cancel Ride"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textColor="@color/red"
+                android:visibility="gone" />
         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
     </RelativeLayout>

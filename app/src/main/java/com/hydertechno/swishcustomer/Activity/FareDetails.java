@@ -30,12 +30,11 @@ import retrofit2.Response;
 
 
 public class FareDetails extends AppCompatActivity {
-    private RelativeLayout interRelative, hourlyRelative;
-    private TextView baseTv, kiloTv, minuteTv, baseHourTv, perHourTv;
-    private String baseFare, kiloFare, minuteFare, baseHour, perHour, carType;
+    private RelativeLayout interRelative,hourlyRelative;
+    private TextView baseTv,kiloTv,minuteTv,baseHourTv,perHourTv;
+    private String baseFare,kiloFare,minuteFare,baseHour,perHour,carType;
     private int check;
     private DatabaseReference databaseReference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +42,11 @@ public class FareDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         carType = intent.getStringExtra("carType");
-        check = intent.getIntExtra("check", 0);
+        check=intent.getIntExtra("check",0);
         init();
 
         checkConnection();
-        if (check == 3) {
+        if(check==3) {
             interRelative.setVisibility(View.VISIBLE);
             Call<List<RidingRate>> call1 = ApiUtils.getUserService().getPrice(carType);
             call1.enqueue(new Callback<List<RidingRate>>() {
@@ -60,9 +59,9 @@ public class FareDetails extends AppCompatActivity {
                         int minRate = rate.get(0).getMin_charge();
                         int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
 
-                        baseTv.setText("" + minimumRate + " Tk");
-                        kiloTv.setText("" + kmRate + " Tk");
-                        minuteTv.setText("" + minRate + " Tk");
+                        baseTv.setText("" + minimumRate+" Tk");
+                        kiloTv.setText("" + kmRate+" Tk");
+                        minuteTv.setText("" + minRate+" Tk");
                     }
                 }
 
@@ -71,15 +70,15 @@ public class FareDetails extends AppCompatActivity {
 
                 }
             });
-        } else if (check == 4) {
+        }else if(check==4){
             hourlyRelative.setVisibility(View.VISIBLE);
-            DatabaseReference hourlyRate = databaseReference.child("HourlyRate").child(carType);
+            DatabaseReference hourlyRate=databaseReference.child("HourlyRate").child(carType);
             hourlyRate.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     baseHourTv.setText("2 Hour");
                     String price = snapshot.getValue().toString();
-                    perHourTv.setText(price + " Tk");
+                    perHourTv.setText(price+" Tk");
 
                 }
 
@@ -95,21 +94,21 @@ public class FareDetails extends AppCompatActivity {
     private void checkConnection() {
         boolean isConnected = ConnectivityReceiver.isConnected();
 
-        if (!isConnected) {
+        if (!isConnected){
             Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
         }
 
     }
 
     private void init() {
-        baseTv = findViewById(R.id.baseTv);
-        kiloTv = findViewById(R.id.kiloTv);
-        minuteTv = findViewById(R.id.minuteTv);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        interRelative = findViewById(R.id.interRelative);
-        hourlyRelative = findViewById(R.id.hourlyRelative);
-        baseHourTv = findViewById(R.id.baseHourTv);
-        perHourTv = findViewById(R.id.perHourTv);
+        baseTv=findViewById(R.id.baseTv);
+        kiloTv=findViewById(R.id.kiloTv);
+        minuteTv=findViewById(R.id.minuteTv);
+        databaseReference=FirebaseDatabase.getInstance().getReference();
+        interRelative=findViewById(R.id.interRelative);
+        hourlyRelative=findViewById(R.id.hourlyRelative);
+        baseHourTv=findViewById(R.id.baseHourTv);
+        perHourTv=findViewById(R.id.perHourTv);
     }
 
     public void fareDetailsBack(View view) {

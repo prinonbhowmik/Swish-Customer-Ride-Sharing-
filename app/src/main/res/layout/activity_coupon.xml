@@ -115,16 +115,16 @@
             android:background="@color/themColor"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"/>
-    <TextView
-        android:id="@+id/activeTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Activated Coupon"
-        android:layout_below="@+id/view1"
-        android:textSize="18sp"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/black"
-        android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/activeTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activated Coupon"
+            android:layout_below="@+id/view1"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:layout_centerHorizontal="true"/>
         <TextView
             android:id="@+id/couponCode"
             android:layout_width="wrap_content"
