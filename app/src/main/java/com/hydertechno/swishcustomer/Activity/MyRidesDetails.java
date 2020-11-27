@@ -542,6 +542,12 @@ public class MyRidesDetails extends AppCompatActivity {
                 editBtn.setVisibility(View.GONE);
                 driverInfoBtn.setVisibility(View.VISIBLE);
                 deleteBtn.setVisibility(View.GONE);
+            }else if(rideStatus.equals("End")){
+                cancelBtn.setVisibility(View.GONE);
+                editNFL.setVisibility(View.GONE);
+                editBtn.setVisibility(View.GONE);
+                driverInfoBtn.setVisibility(View.VISIBLE);
+                deleteBtn.setVisibility(View.GONE);
             }else {
                 editNFL.setVisibility(View.GONE);
                 editBtn.setVisibility(View.GONE);
@@ -555,6 +561,7 @@ public class MyRidesDetails extends AppCompatActivity {
             editNFL.setVisibility(View.GONE);
             editBtn.setVisibility(View.GONE);
             deleteBtn.setVisibility(View.GONE);
+            cancelBtn.setVisibility(View.GONE);
             if (driverId == null) {
                 driverInfoBtn.setVisibility(View.GONE);
             }
