@@ -58,13 +58,13 @@ public class MyRides extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
     }
-   /* @Override
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         startActivity(new Intent(MyRides.this,MainActivity.class));
         overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
         finish();
-    }*/
+    }
 
     private void checkConnection() {
         boolean isConnected = ConnectivityReceiver.isConnected();
@@ -76,7 +76,8 @@ public class MyRides extends AppCompatActivity {
     }
 
     public void GoBack(View view) {
-
+        startActivity(new Intent(MyRides.this,MainActivity.class));
+        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
         finish();
     }
 }
