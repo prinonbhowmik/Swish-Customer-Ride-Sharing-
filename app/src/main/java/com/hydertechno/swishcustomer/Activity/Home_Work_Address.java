@@ -51,7 +51,7 @@ import es.dmoral.toasty.Toasty;
 public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap map;
     private AutocompleteSupportFragment autocompleteFragment;
-    private Double currentLat, currentLon,latitude,longitude;
+    private Double currentLat, currentLon,latitude=0.0,longitude=0.0;
     private String type, userId ,apiKey = "AIzaSyCCqD0ogQ8adzJp_z2Y2W2ybSFItXYwFfI";
     private String placeName;
     private Locale locale;
@@ -59,6 +59,7 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
     private MarkerOptions marker;
     BitmapDescriptor markerIcon;
     private Button saveAddressBtn;
+    private MarkerOptions addressMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,7 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
         userId = intent.getStringExtra("id");
 
         init();
+
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -140,6 +142,10 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
         saveAddressBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (latitude==0.0 && longitude==0.0){
+                    latitude=currentLat;
+                    longitude=currentLon;
+                }
 
                 DatabaseReference homeRef = FirebaseDatabase.getInstance().getReference("UserLocation").child(userId);
                 HashMap<String, Object> rideInfo = new HashMap<>();
@@ -156,7 +162,8 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
                             finish();
                         }
                     });
-                }else{
+                }
+                else{
                     homeRef.child("Work").setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -168,7 +175,6 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
                 }
             }
         });
-
 
     }
 
@@ -206,6 +212,62 @@ public class Home_Work_Address extends AppCompatActivity implements OnMapReadyCa
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.retro));
+
+        if (type.equals("home")){
+            markerIcon = vectorToBitmap(R.drawable.ic_pin);
+        }else{
+            markerIcon = vectorToBitmap(R.drawable.ic_destination);
+        }
+
+        addressMarker = new MarkerOptions().position(new LatLng(currentLat, currentLon)).icon(markerIcon).draggable(true);
+        List<Address> addresses = null;
+
+        try {
+            addresses = geocoder.getFromLocation(currentLat, currentLon, 1);
+            if (addresses.size() > 0) {
+                Address location = addresses.get(0);
+                placeName = location.getAddressLine(0);
+                autocompleteFragment.setText(placeName);
+                map.addMarker(addressMarker.title("Drag for suitable position")).showInfoWindow();
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLat, currentLon), 19));
+
+                map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                    @Override
+                    public void onMarkerDragStart(Marker marker) {
+
+                    }
+
+                    @Override
+                    public void onMarkerDrag(Marker marker) {
+
+                    }
+
+                    @Override
+                    public void onMarkerDragEnd(Marker marker) {
+                        latitude = marker.getPosition().latitude;
+                        longitude = marker.getPosition().longitude;
+
+                        try {
+                            List<Address> addresses = geocoder.getFromLocation(currentLat, currentLon, 1);
+                            Address location = addresses.get(0);
+                            placeName = location.getAddressLine(0);
+
+                            autocompleteFragment.setText(placeName);
+
+                            marker.setIcon(markerIcon);
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } else {
+                Toasty.error(Home_Work_Address.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
