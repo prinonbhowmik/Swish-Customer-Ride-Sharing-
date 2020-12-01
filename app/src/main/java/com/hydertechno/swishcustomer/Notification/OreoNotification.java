@@ -66,8 +66,7 @@ public class OreoNotification extends ContextWrapper {
     Drawable myDrawable = getResources().getDrawable(R.drawable.logo_circle);
     Bitmap anImage      = ((BitmapDrawable) myDrawable).getBitmap();
     @TargetApi(Build.VERSION_CODES.O)
-    public  NotificationCompat.Builder getOreoNotification(String title, String body,
-                                                           PendingIntent pendingIntent, Uri soundUri, String icon){
+    public  NotificationCompat.Builder getOreoNotification(String title, String body, PendingIntent pendingIntent){
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
@@ -78,6 +77,20 @@ public class OreoNotification extends ContextWrapper {
                 .setColor(Color.parseColor("#1785DA"))
                 .setSmallIcon(R.mipmap.ic_noti_foreground)
                 .setAutoCancel(true);
+    }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    public  NotificationCompat.Builder getOreoNotification1(String title, String body, PendingIntent pendingIntent,Bitmap image){
+        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setContentIntent(pendingIntent)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setLargeIcon(image)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(image).bigLargeIcon(null))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setShowWhen(true)
+                .setColor(Color.parseColor("#1785DA"))
+                .setSmallIcon(R.mipmap.ic_noti_foreground)
+                .setAutoCancel(true);
     }
 }

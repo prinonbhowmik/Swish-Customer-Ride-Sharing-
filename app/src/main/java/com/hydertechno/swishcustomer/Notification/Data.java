@@ -2,15 +2,15 @@ package com.hydertechno.swishcustomer.Notification;
 
 public class Data {
     private String bookingId;
-    private int icon;
+    private String image;
     private String body;
     private String title;
     private String sent;
     private String toActivity;
 
-    public Data(String bookingId, int icon, String body, String title, String sent, String toActivity) {
+    public Data(String bookingId, String image, String body, String title, String sent, String toActivity) {
         this.bookingId = bookingId;
-        this.icon = icon;
+        this.image = image;
         this.body = body;
         this.title = title;
         this.sent = sent;
@@ -28,12 +28,12 @@ public class Data {
         this.bookingId = bookingId;
     }
 
-    public int getIcon() {
-        return icon;
+    public String getImage() {
+        return image;
     }
 
-    public void setIcon(int icon) {
-        this.icon = icon;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getBody() {

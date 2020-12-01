@@ -2514,7 +2514,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(id, R.drawable.ic_car, message, title, receiverId1, toActivity);
+                    Data data = new Data(id, "1", message, title, receiverId1, toActivity);
 
                     Sender sender = new Sender(data, token.getToken());
 
@@ -2554,7 +2554,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(bookingId, R.mipmap.ic_noti_foreground, message, title, receiverId1, toActivity);
+                    Data data = new Data(bookingId, "1", message, title, receiverId1, toActivity);
 
                     Sender sender = new Sender(data, token.getToken());
 
@@ -2606,7 +2606,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.exists()) {
                                         Token token = dataSnapshot.getValue(Token.class);
-                                        Data data = new Data(id, R.drawable.ic_car, message, title, (String) driverNotificationList.get(finalI), toActivity);
+                                        Data data = new Data(id, "1", message, title, (String) driverNotificationList.get(finalI), toActivity);
                                         Sender sender = new Sender(data, token.getToken());
 
                                         apiService.sendNotification(sender)

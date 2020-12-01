@@ -758,7 +758,7 @@ public class MyRidesDetails extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(id, R.drawable.ic_car, message, title, receiverId1, toActivity);
+                    Data data = new Data(id, "1", message, title, receiverId1, toActivity);
 
                     Sender sender = new Sender(data, token.getToken());
 

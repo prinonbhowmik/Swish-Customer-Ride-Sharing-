@@ -84,11 +84,14 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     private void sendOreoNotification(RemoteMessage remoteMessage) {
         String userID = remoteMessage.getData().get("sent");
-        String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
         String toActivity = remoteMessage.getData().get("toActivity");
         String bookingId = remoteMessage.getData().get("bookingId");
+        Bitmap bitmap = null;
+        if (remoteMessage.getData().get("image").trim().length() != 2) {
+            bitmap = getBitmapFromURL(remoteMessage.getData().get("image"));
+        }
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(userID.replaceAll("[\\D]", ""));
         int m = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
@@ -102,8 +105,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
-                        defaultSound, icon);
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent);
                 int i = 0;
                 if (j > 0) {
                     i = j;
@@ -121,8 +123,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
-                        defaultSound, icon);
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent);
                 int i = 0;
                 if (j > 0) {
                     i = j;
@@ -138,8 +139,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
-                        defaultSound, icon);
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent);
                 int i = 0;
                 if (j > 0) {
                     i = j;
@@ -152,8 +152,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 OreoNotification oreoNotification = new OreoNotification(this);
-                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
-                        defaultSound, icon);
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent);
                 int i = 0;
                 if (j > 0) {
                     i = j;
@@ -170,8 +169,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
-                        defaultSound, icon);
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent);
                 int i = 0;
                 if (j > 0) {
                     i = j;
@@ -189,8 +187,21 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
                 OreoNotification oreoNotification = new OreoNotification(this);
-                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
-                        defaultSound, icon);
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent);
+                int i = 0;
+                if (j > 0) {
+                    i = j;
+                }
+                oreoNotification.getManager().notify(i, builder.build());
+                break;
+            }
+            case "notification_with_image": {
+                Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
+                Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                OreoNotification oreoNotification = new OreoNotification(this);
+                NotificationCompat.Builder builder = oreoNotification.getOreoNotification1(title, body, pendingIntent,bitmap);
                 int i = 0;
                 if (j > 0) {
                     i = j;
@@ -243,11 +254,15 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     private void sendNotification(RemoteMessage remoteMessage) {
 
         String userID = remoteMessage.getData().get("sent");
-        String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
         String bookingId = remoteMessage.getData().get("bookingId");
         String toActivity = remoteMessage.getData().get("toActivity");
+        Bitmap bitmap = null;
+        if (remoteMessage.getData().get("image").trim().length() != 2) {
+            bitmap = getBitmapFromURL(remoteMessage.getData().get("image"));
+        }
+
         Drawable myDrawable = getResources().getDrawable(R.drawable.logo_circle);
         Bitmap anImage = ((BitmapDrawable) myDrawable).getBitmap();
         RemoteMessage.Notification notification = remoteMessage.getNotification();
@@ -390,6 +405,26 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                     i = j;
                 }
                 noti.notify(i, builder.build());
+                break;
+            }
+
+            case "notification_with_image": {
+                Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), j, intent, PendingIntent.FLAG_ONE_SHOT);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_noti_foreground)
+                        .setContentTitle(title)
+                        .setLargeIcon(bitmap)
+                        .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(null))
+                        .setContentText(body)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)
+                        .setColor(Color.parseColor("#1785DA"))
+                        .setSound(Uri.parse("android.resource://" + getApplicationContext().getPackageName() + "/" + R.raw.swiftly))
+                        .setContentIntent(pendingIntent);
+                NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                noti.notify(m, builder.build());
                 break;
             }
         }
