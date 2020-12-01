@@ -204,8 +204,8 @@
                                     </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_centerInParent="true"
                                         android:layout_centerHorizontal="true"
                                         android:layout_gravity="center"
@@ -236,8 +236,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
@@ -284,8 +284,8 @@
                                     </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_centerInParent="true"
                                         android:layout_centerHorizontal="true"
                                         android:layout_gravity="center"
@@ -316,8 +316,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
@@ -364,8 +364,8 @@
                                     </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_centerInParent="true"
                                         android:layout_centerHorizontal="true"
                                         android:layout_gravity="center"
@@ -396,8 +396,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
@@ -444,8 +444,8 @@
                                     </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_centerInParent="true"
                                         android:layout_centerHorizontal="true"
                                         android:layout_gravity="center"
@@ -476,8 +476,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
@@ -524,8 +524,8 @@
                                     </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_centerInParent="true"
                                         android:layout_centerHorizontal="true"
                                         android:layout_gravity="center"
@@ -556,8 +556,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
@@ -858,8 +858,8 @@
                                     </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_gravity="center"
                                         android:background="#fff"
                                         app:lottie_autoPlay="true"
@@ -882,8 +882,8 @@
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:text="---"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
 
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
@@ -939,8 +939,8 @@
                                             android:layout_alignParentRight="true"/>
                                     </RelativeLayout>
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_centerInParent="true"
                                         android:layout_centerHorizontal="true"
                                         android:layout_gravity="center"
@@ -964,8 +964,8 @@
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:text="---"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
 
@@ -1022,8 +1022,8 @@
                                     </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_centerInParent="true"
                                         android:layout_centerHorizontal="true"
                                         android:layout_gravity="center"
@@ -1047,8 +1047,8 @@
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:text="---"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
 
@@ -1104,8 +1104,8 @@
                                     </RelativeLayout>
 
                                     <com.airbnb.lottie.LottieAnimationView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_centerInParent="true"
                                         android:layout_centerHorizontal="true"
                                         android:layout_gravity="center"
@@ -1129,8 +1129,8 @@
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:text="---"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
 
@@ -1186,8 +1186,8 @@
                                     </RelativeLayout>
 
                                     <ImageView
-                                        android:layout_width="100dp"
-                                        android:layout_height="100dp"
+                                        android:layout_width="70dp"
+                                        android:layout_height="70dp"
                                         android:layout_gravity="center"
                                         android:src="@drawable/microbus" />
 
@@ -1207,8 +1207,8 @@
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:text="---"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="12sp" />
+                                        android:textColor="@color/red"
+                                        android:textSize="15sp" />
                                 </LinearLayout>
                             </androidx.cardview.widget.CardView>
                         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
