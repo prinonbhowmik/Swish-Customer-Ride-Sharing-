@@ -711,6 +711,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
+                map.clear();
+                searchLayout.setVisibility(View.GONE);
+                backNFL.setVisibility(View.VISIBLE);
 
                 BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                 pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
@@ -1118,7 +1121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlyMicroPrice.setText(price + " Tk/Hr");
+                hourlyMicroPrice.setText(price);
             }
 
             @Override
@@ -1134,7 +1137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlyMicro11Price.setText(price + " Tk/Hr");
+                hourlyMicro11Price.setText(price);
             }
 
             @Override
@@ -1150,7 +1153,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlysedanPrice.setText(price + " Tk/Hr");
+                hourlysedanPrice.setText(price);
             }
 
             @Override
@@ -1166,7 +1169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlysedanPremeirePrice.setText(price + " Tk/Hr");
+                hourlysedanPremeirePrice.setText(price);
             }
 
             @Override
@@ -1182,7 +1185,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String price = snapshot.getValue().toString();
-                hourlysedanBusinessPrice.setText(price + " Tk/Hr");
+                hourlysedanBusinessPrice.setText(price);
             }
 
             @Override
