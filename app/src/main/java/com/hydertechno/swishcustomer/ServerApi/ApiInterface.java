@@ -1,6 +1,7 @@
 package com.hydertechno.swishcustomer.ServerApi;
 
 
+import com.hydertechno.swishcustomer.Model.ApiDeviceToken;
 import com.hydertechno.swishcustomer.Model.CheckModel;
 import com.hydertechno.swishcustomer.Model.CouponModel;
 import com.hydertechno.swishcustomer.Model.CouponShow;
@@ -56,6 +57,14 @@ public interface ApiInterface {
                                  @Part("token") String token,
                                  @Part("wallet") int wallet,
                                  @Part("referral") RequestBody referral);
+
+    @POST("customer_device_token")
+    @FormUrlEncoded
+    Call<List<ApiDeviceToken>> updateToken(@Field("customer_id") String customer_id,
+                                           @Field("device_token") String token);
+    @POST("customer_remove_token")
+    @FormUrlEncoded
+    Call<List<ApiDeviceToken>> deleteToken(@Field("customer_id") String customer_id);
 
     @GET("customer?")
     Call<List<Profile>> getData(@Query("id") String customer_id);

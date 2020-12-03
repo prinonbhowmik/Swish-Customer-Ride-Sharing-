@@ -108,6 +108,7 @@ import com.hydertechno.swishcustomer.ForApi.RestUtil;
 import com.hydertechno.swishcustomer.ForMap.FetchURL;
 import com.hydertechno.swishcustomer.ForMap.TaskLoadedCallback;
 import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
+import com.hydertechno.swishcustomer.Model.ApiDeviceToken;
 import com.hydertechno.swishcustomer.Model.DriverInfo;
 import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.Model.HourlyRideModel;
@@ -2338,6 +2339,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.logout:
+                Call<List<ApiDeviceToken>> call = apiInterface.deleteToken(userId);
+                call.enqueue(new Callback<List<ApiDeviceToken>>() {
+                    @Override
+                    public void onResponse(Call<List<ApiDeviceToken>> call, Response<List<ApiDeviceToken>> response) {
+                    }
+                    @Override
+                    public void onFailure(Call<List<ApiDeviceToken>> call, Throwable t) {
+                        Log.d("kahiniki",t.getMessage());
+                    }
+                });
 
                 DatabaseReference deleteTokenRef = FirebaseDatabase.getInstance().getReference("CustomersToken").child(userId);
                 deleteTokenRef.removeValue();
@@ -2489,6 +2500,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void updateToken(String token) {
+        Call<List<ApiDeviceToken>> call = apiInterface.updateToken(userId,token);
+        call.enqueue(new Callback<List<ApiDeviceToken>>() {
+            @Override
+            public void onResponse(Call<List<ApiDeviceToken>> call, Response<List<ApiDeviceToken>> response) {
+            }
+            @Override
+            public void onFailure(Call<List<ApiDeviceToken>> call, Throwable t) {
+                Log.d("kahiniki",t.getMessage());
+            }
+        });
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("CustomersToken").child(userId);
         userRef.child("token").setValue(token);
     }
