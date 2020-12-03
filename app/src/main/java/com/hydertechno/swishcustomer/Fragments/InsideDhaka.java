@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,7 @@ public class InsideDhaka extends Fragment {
     Date currentDate=null;
     private SharedPreferences sharedPreferences;
     private Date d1,d2;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +95,7 @@ public class InsideDhaka extends Fragment {
                             del1Ref.child(tripId).removeValue();
                         }
                         if (!rideStatus.equals("End")) {
+                            progressBar.setVisibility(View.GONE);
                             HourlyRideModel ride = data.getValue(HourlyRideModel.class);
                             rideModels.add(ride);
                             if(rideModels.size()==0){
@@ -108,6 +111,7 @@ public class InsideDhaka extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
                 if(rideModels.size()<1){
+                    progressBar.setVisibility(View.GONE);
                     nodatatxt.setVisibility(View.VISIBLE);
                     nodatatxt.setText("No Request Available");
                 }else {
@@ -126,6 +130,7 @@ public class InsideDhaka extends Fragment {
         backBtn = view.findViewById(R.id.backBtn);
         //rideType = findViewById(R.id.rideType);
         nodatatxt= view.findViewById(R.id.nodatatxt);
+        progressBar= view.findViewById(R.id.progressBar);
         rideModels = new ArrayList<>();
         rideRecycler =  view.findViewById(R.id.rideRecycler);
         rideRecycler.setLayoutManager(new LinearLayoutManager(getContext()));

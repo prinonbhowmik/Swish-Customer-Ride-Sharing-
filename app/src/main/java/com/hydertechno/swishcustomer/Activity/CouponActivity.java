@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class CouponActivity extends AppCompatActivity {
     private RelativeLayout couponLayout;
     private String msg;
     private int amount,set_coupons;
+    private ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class CouponActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
+                couponLayout.setVisibility(View.GONE);
                 checkConnection();
 
                 checkCoupon();
@@ -61,8 +65,10 @@ public class CouponActivity extends AppCompatActivity {
             public void onResponse(Call<List<CouponShow>> call, Response<List<CouponShow>> response) {
                 if (response.isSuccessful()){
                     showList = response.body();
+                    coupon_Et.setText("");
                     set_coupons = showList.get(0).getSetCoupons();
                     if (set_coupons==1){
+                        progressBar.setVisibility(View.GONE);
                         couponLayout.setVisibility(View.VISIBLE);
                         couponCode.setText(showList.get(0).getCouponsCode());
                         couponDiscount.setText(showList.get(0).getAmount()+"%");
@@ -106,6 +112,7 @@ public class CouponActivity extends AppCompatActivity {
         couponCode= findViewById(R.id.couponCode);
         couponDiscount= findViewById(R.id.couponDiscount);
         date= findViewById(R.id.date);
+        progressBar= findViewById(R.id.progressBar);
         list = new ArrayList<>();
         showList = new ArrayList<>();
         sharedPreferences = getSharedPreferences("MyRef",MODE_PRIVATE);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class OutsideDhakaHistory extends Fragment {
     private TextView nohistorytxt;
     private SharedPreferences sharedPreferences;
     private ApiInterface apiInterface;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +61,7 @@ public class OutsideDhakaHistory extends Fragment {
     private void init(View view) {
         rideModels = new ArrayList<>();
         rideRecycler =view.findViewById(R.id.historyRecyclerView);
+        progressBar =view.findViewById(R.id.progressBar);
         rideRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         auth = FirebaseAuth.getInstance();
         reference = FirebaseDatabase.getInstance().getReference();
@@ -66,7 +69,6 @@ public class OutsideDhakaHistory extends Fragment {
         userId = sharedPreferences.getString("id", "");
         nohistorytxt = view.findViewById(R.id.nohistorytxt);
         apiInterface = ApiUtils.getUserService();
-
     }
 
 
@@ -77,9 +79,8 @@ public class OutsideDhakaHistory extends Fragment {
             @Override
             public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
                 if (response.isSuccessful()){
-
+                    progressBar.setVisibility(View.GONE);
                     rideModels = response.body();
-
                     adapter = new OutsideDhakaHistoryAdapter(rideModels, getActivity());
                     rideRecycler.setAdapter(adapter);
                     if (rideModels.size() == 0) {

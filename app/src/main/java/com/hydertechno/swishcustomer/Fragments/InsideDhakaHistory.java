@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -42,6 +43,7 @@ public class InsideDhakaHistory extends Fragment {
     private TextView nohistorytxt;
     private SharedPreferences sharedPreferences;
     private ApiInterface apiInterface;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +60,7 @@ public class InsideDhakaHistory extends Fragment {
 
         rideModels = new ArrayList<>();
         rideRecycler =view.findViewById(R.id.historyHourlyRecyclerView);
+        progressBar =view.findViewById(R.id.progressBar);
         rideRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new InsideDhakaHistoryAdapter(rideModels, getContext());
         rideRecycler.setAdapter(adapter);
@@ -77,6 +80,7 @@ public class InsideDhakaHistory extends Fragment {
             @Override
             public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
                 if (response.isSuccessful()){
+                    progressBar.setVisibility(View.GONE);
                     rideModels.clear();
                     rideModels = response.body();
                     adapter = new InsideDhakaHistoryAdapter(rideModels,getContext());

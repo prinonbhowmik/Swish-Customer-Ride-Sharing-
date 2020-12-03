@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class OutsideDhaka extends Fragment {
     private FirebaseAuth auth;
     private DatabaseReference reference;
     private String rideStatus;
+    private ProgressBar progressBar;
     Date eDate = null;
     Date currentDate=null;
     private SharedPreferences sharedPreferences;
@@ -82,8 +84,8 @@ public class OutsideDhaka extends Fragment {
                         String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
                         try {
-                             d1 = dateFormat.parse(date1);
-                             d2 = dateFormat.parse(currentDate);
+                            d1 = dateFormat.parse(date1);
+                            d2 = dateFormat.parse(currentDate);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -96,6 +98,7 @@ public class OutsideDhaka extends Fragment {
                         }
 
                         if (!rideStatus.equals("End")) {
+                            progressBar.setVisibility(View.GONE);
                             RideModel ride = data.getValue(RideModel.class);
                             rideModels.add(ride);
                             if(rideModels.size()==0){
@@ -111,6 +114,7 @@ public class OutsideDhaka extends Fragment {
                     adapter.notifyDataSetChanged();
                 }
                 if(rideModels.size()<1){
+                    progressBar.setVisibility(View.GONE);
                     nodatatxt.setVisibility(View.VISIBLE);
                     nodatatxt.setText("No Request Available");
                 }else {
@@ -129,6 +133,7 @@ public class OutsideDhaka extends Fragment {
         backBtn = view.findViewById(R.id.backBtn);
         //rideType = findViewById(R.id.rideType);
         nodatatxt= view.findViewById(R.id.nodatatxt);
+        progressBar= view.findViewById(R.id.progressBar);
         rideModels = new ArrayList<>();
         rideRecycler =  view.findViewById(R.id.rideRecycler);
         rideRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
