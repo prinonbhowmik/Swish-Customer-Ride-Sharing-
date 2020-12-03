@@ -30,7 +30,7 @@ import retrofit2.Response;
 public class CouponActivity extends AppCompatActivity {
     private String userId;
     private TextInputEditText coupon_Et;
-    private TextView couponCode,couponDiscount,date;
+    private TextView couponCode,couponDiscount,date,no_couponTxt;
     private Button submitBtn;
     private List<CouponModel> list;
     private List<CouponShow> showList;
@@ -69,12 +69,14 @@ public class CouponActivity extends AppCompatActivity {
                     set_coupons = showList.get(0).getSetCoupons();
                     if (set_coupons==1){
                         progressBar.setVisibility(View.GONE);
+                        no_couponTxt.setVisibility(View.GONE);
                         couponLayout.setVisibility(View.VISIBLE);
                         couponCode.setText(showList.get(0).getCouponsCode());
                         couponDiscount.setText(showList.get(0).getAmount()+"%");
                         date.setText(showList.get(0).getEndDate());
                     }else {
-                        return;
+                        progressBar.setVisibility(View.GONE);
+                        no_couponTxt.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -106,6 +108,7 @@ public class CouponActivity extends AppCompatActivity {
 
     private void init() {
         coupon_Et= findViewById(R.id.coupon_Et);
+        no_couponTxt= findViewById(R.id.no_couponTxt);
         submitBtn= findViewById(R.id.submitBtn);
         couponCode= findViewById(R.id.couponCode);
         couponLayout= findViewById(R.id.couponLayout);
