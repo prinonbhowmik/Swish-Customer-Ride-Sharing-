@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class Referral extends AppCompatActivity {
 
     private String userId;
     private TextView referralTV,takenReferralTv,activeReferralTv;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,6 @@ public class Referral extends AppCompatActivity {
         userId = intent.getStringExtra("id");
 
         checkConnection();
-
 
         referralTV.setText(userId);
 
@@ -57,6 +58,7 @@ public class Referral extends AppCompatActivity {
         referralTV = findViewById(R.id.referralTV);
         takenReferralTv = findViewById(R.id.takenReferralTv);
         activeReferralTv = findViewById(R.id.activeReferralTv);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void getReferralCount() {
@@ -67,6 +69,7 @@ public class Referral extends AppCompatActivity {
                 if (response.isSuccessful()){
                     int count = response.body().get(0).getTotal();
                     int active=response.body().get(0).getActive();
+                    progressBar.setVisibility(View.GONE);
                     takenReferralTv.setText(""+count);
                     activeReferralTv.setText(""+active);
                 }
