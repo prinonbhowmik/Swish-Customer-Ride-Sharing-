@@ -55,7 +55,7 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
     private ImageView phoneIV;
     private TextView phoneTxt;
     private NeomorphFrameLayout card_view2;
-    private RatingBar driverRatingBar;
+    private TextView driverRatingBar;
     private List<DriverProfile> list;
     private ApiInterface api;
 
@@ -120,7 +120,7 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
                         rideTxt.setVisibility(View.GONE);
                         rideCountTV.setVisibility(View.GONE);
                     }
-                    driverRatingBar.setRating(rat);
+                    driverRatingBar.setText(" "+String.format("%.2f",rat));
                     rideCountTV.setText(String.valueOf(list.get(0).getRideCount()));
                 }
             }
