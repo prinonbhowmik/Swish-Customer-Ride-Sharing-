@@ -22,7 +22,7 @@ import com.hydertechno.swishcustomer.R;
 public class OreoNotification extends ContextWrapper {
 
     private static final String CHANNEL_ID = "com.hydertechno.swishcustomer";
-    private static final String CHANNEL_NAME = "swishcustomer";
+    private static final String CHANNEL_NAME = "swish customer";
 
     private NotificationManager notificationManager;
 
@@ -42,9 +42,7 @@ public class OreoNotification extends ContextWrapper {
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .build();
 
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
         channel.enableLights(true);
         channel.enableVibration(true);
         channel.setSound(sound,audioAttributes);
@@ -82,15 +80,15 @@ public class OreoNotification extends ContextWrapper {
     @TargetApi(Build.VERSION_CODES.O)
     public  NotificationCompat.Builder getOreoNotification1(String title, String body, PendingIntent pendingIntent,Bitmap image){
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.mipmap.ic_noti_foreground)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setLargeIcon(image)
-                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(image).bigLargeIcon(null))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                 .setShowWhen(true)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(image).bigLargeIcon(null))
+                //.setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setContentIntent(pendingIntent)
                 .setColor(Color.parseColor("#1785DA"))
-                .setSmallIcon(R.mipmap.ic_noti_foreground)
                 .setAutoCancel(true);
     }
 }

@@ -89,7 +89,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String toActivity = remoteMessage.getData().get("toActivity");
         String bookingId = remoteMessage.getData().get("bookingId");
         Bitmap bitmap = null;
-        if (remoteMessage.getData().get("image").trim().length() != 2) {
+        if (remoteMessage.getData().get("image").trim().length() > 2) {
             bitmap = getBitmapFromURL(remoteMessage.getData().get("image"));
         }
         RemoteMessage.Notification notification = remoteMessage.getNotification();
@@ -259,7 +259,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String bookingId = remoteMessage.getData().get("bookingId");
         String toActivity = remoteMessage.getData().get("toActivity");
         Bitmap bitmap = null;
-        if (remoteMessage.getData().get("image").trim().length() != 2) {
+        if (remoteMessage.getData().get("image").trim().length() > 2) {
             bitmap = getBitmapFromURL(remoteMessage.getData().get("image"));
         }
 
@@ -280,6 +280,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setLargeIcon(anImage)
                         .setContentText(body)
+                        .setShowWhen(true)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setColor(Color.parseColor("#1785DA"))
@@ -305,6 +306,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setLargeIcon(anImage)
                         .setContentText(body)
+                        .setShowWhen(true)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setColor(Color.parseColor("#1785DA"))
@@ -329,6 +331,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setLargeIcon(anImage)
                         .setContentText(body)
+                        .setShowWhen(true)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setColor(Color.parseColor("#1785DA"))
@@ -350,6 +353,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setLargeIcon(anImage)
                         .setContentText(body)
+                        .setShowWhen(true)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setColor(Color.parseColor("#1785DA"))
@@ -370,6 +374,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setLargeIcon(anImage)
                         .setContentText(body)
+                        .setShowWhen(true)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setColor(Color.parseColor("#1785DA"))
@@ -394,6 +399,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setLargeIcon(anImage)
                         .setContentText(body)
+                        .setShowWhen(true)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setColor(Color.parseColor("#1785DA"))
@@ -415,6 +421,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                         .setSmallIcon(R.mipmap.ic_noti_foreground)
                         .setContentTitle(title)
+                        .setShowWhen(true)
                         .setLargeIcon(bitmap)
                         .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(null))
                         .setContentText(body)
