@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -77,12 +78,15 @@ public class MyRidesDetails extends AppCompatActivity {
     private FirebaseAuth auth;
     private NeomorphFrameLayout editNFL,cancelNFL;
     private Boolean editable = false;
-    private String pickUpCity, destinationCity,areaName;
+    private String pickUpCity, destinationCity,discount,payment,totalTime,totalDistance,finalPrice,realPrice;
     private int kmdistance, travelduration, price, check;
     private SharedPreferences sharedPreferences;
     private ApiInterface apiInterface;
+    private ImageView receiptIv;
     private APIService apiService;
-    private TextView reportTrip;
+    private TextView reportTrip,discountTv,paymentTv;
+    private LinearLayout discountLayout;
+    private NeomorphFrameLayout receiptCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +173,21 @@ public class MyRidesDetails extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        receiptCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyRidesDetails.this,ReceiptActivity.class)
+                        .putExtra("price",realPrice)
+                        .putExtra("carType",carType)
+                        .putExtra("finalPrice",finalPrice)
+                        .putExtra("distance",totalDistance)
+                        .putExtra("time",totalTime)
+                        .putExtra("discount",discount)
+                        .putExtra("bookingId",tripId)
+                        .putExtra("check",1));
             }
         });
 
@@ -639,7 +658,9 @@ public class MyRidesDetails extends AppCompatActivity {
         destinationTV = findViewById(R.id.destinationTV);
         pickupTimeTV = findViewById(R.id.pickupTimeTV);
         carTypeTV = findViewById(R.id.carTypeTV);
+        receiptIv = findViewById(R.id.receiptIv);
         takaTV = findViewById(R.id.takaTV);
+        receiptCard = findViewById(R.id.receiptCard);
         editBtn = findViewById(R.id.editBtn);
         deleteBtn = findViewById(R.id.deleteBtn);
         cancelNFL = findViewById(R.id.cancelNFL);
@@ -711,15 +732,23 @@ public class MyRidesDetails extends AppCompatActivity {
         else if (check == 2) {
             headerTitle.setText("Ride History");
             reportTrip.setVisibility(View.VISIBLE);
+            receiptCard.setVisibility(View.VISIBLE);
             Intent intent = getIntent();
+            carType = intent.getStringExtra("cartype");
             pickupPlaceTV.setText(intent.getStringExtra("pickplace"));
             destinationTV.setText(intent.getStringExtra("desplace"));
             pickupDateTV.setText(intent.getStringExtra("pickdate"));
             pickupTimeTV.setText(intent.getStringExtra("picktime"));
-            carTypeTV.setText(intent.getStringExtra("cartype"));
-            takaTV.setText(intent.getStringExtra("price"));
+            carTypeTV.setText(carType);
+            realPrice = intent.getStringExtra("price");
+            finalPrice = intent.getStringExtra("finalPrice");
+            takaTV.setText("৳ "+finalPrice);
             tripId = intent.getStringExtra("tripId");
             driverId = intent.getStringExtra("custId");
+            discount = intent.getStringExtra("discount");
+            totalTime = intent.getStringExtra("totalTime");
+            totalDistance = intent.getStringExtra("totalDistance");
+            payment = intent.getStringExtra("payment");
             buttonsShow();
 
         }

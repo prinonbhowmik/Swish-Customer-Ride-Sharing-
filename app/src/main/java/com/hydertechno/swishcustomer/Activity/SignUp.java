@@ -68,6 +68,7 @@ public class SignUp extends AppCompatActivity {
     private String blockCharacterSet = "~#^|$%&*!-_(){}[]/;:',=+?%.";
     private TextInputLayout password_LT;
     private ProgressDialog loading;
+    private String token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,7 +162,7 @@ public class SignUp extends AppCompatActivity {
                 } else if (passEt.length() < 6) {
                     passEt.setError("At least 6 characters!", null);
                     passEt.requestFocus();
-               }else if(!terms.isChecked()){
+                }else if(!terms.isChecked()){
                     Toasty.info(SignUp.this,"Agree terms and conditions.",Toasty.LENGTH_SHORT).show();
                 }
                 else{
@@ -195,6 +196,7 @@ public class SignUp extends AppCompatActivity {
                 "Your data is saving....", true);
         loginBtn.setEnabled(false);
 
+
         RequestBody  fullName = RequestBody .create(MediaType.parse("text/plain"), name);
         RequestBody  genderbody = RequestBody .create(MediaType.parse("text/plain"), gender);
         RequestBody  emailBody = RequestBody .create(MediaType.parse("text/plain"), email);
@@ -208,58 +210,61 @@ public class SignUp extends AppCompatActivity {
             referralBody = RequestBody.create(MediaType.parse("text/plain"), referral);
 
         }
-
         Call<List<Profile>> call = api.register(emailBody,fullName,passBody,phoneBody,genderbody,
-                "","",100,referralBody);
-       call.enqueue(new Callback<List<Profile>>() {
-           @Override
-           public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
-               if(response.isSuccessful()){
-                   String done = response.body().get(0).getDone();
-                   Log.d("checkId",done);
+                "",token,100,referralBody);
+        call.enqueue(new Callback<List<Profile>>() {
+            @Override
+            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+                if(response.isSuccessful()){
+                    String done = response.body().get(0).getDone();
+                    Log.d("checkId",done);
 
-                   if (done.equals("1")){
-                       customer_id = response.body().get(0).getCustomer_id();
-                       loading.dismiss();
-                       Log.d("checkId",customer_id);
+                    if (done.equals("1")){
+                        customer_id = response.body().get(0).getCustomer_id();
+                        loading.dismiss();
+                        Log.d("checkId",customer_id);
 
-                       hideKeyboardFrom(getApplicationContext());
-                       SharedPreferences sharedPreferences = getSharedPreferences("MyRef", MODE_PRIVATE);
-                       SharedPreferences.Editor editor = sharedPreferences.edit();
-                       editor.putString("id", customer_id);
-                       editor.putBoolean("loggedIn", true);
-                       editor.commit();
+                        hideKeyboardFrom(getApplicationContext());
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyRef", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("id", customer_id);
+                        editor.putBoolean("loggedIn", true);
+                        editor.commit();
 
-                       dialog = new Dialog(SignUp.this);
-                       dialog.setContentView(R.layout.wallet_price_layout);
-                       Button okBtn = dialog.findViewById(R.id.okBtn);
 
-                       okBtn.setOnClickListener(new View.OnClickListener() {
-                           @Override
-                           public void onClick(View view) {
-                               Toast.makeText(SignUp.this, "Registration Complete", Toast.LENGTH_SHORT).show();
-                               Intent intent = new Intent(SignUp.this,MainActivity.class);
-                               intent.putExtra("phone",phone);
-                               intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                               startActivity(intent);
-                               loginBtn.setEnabled(true);
-                               progressbar.setVisibility(View.GONE);
-                               finish();
-                           }
-                       });
-                       dialog.setCancelable(false);
 
-                       dialog.show();
+                        dialog = new Dialog(SignUp.this);
+                        dialog.setContentView(R.layout.wallet_price_layout);
+                        Button okBtn = dialog.findViewById(R.id.okBtn);
 
-                   }
-               }
-           }
+                        okBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(SignUp.this, "Registration Complete", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SignUp.this,MainActivity.class);
+                                intent.putExtra("phone",phone);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                loginBtn.setEnabled(true);
+                                progressbar.setVisibility(View.GONE);
+                                finish();
+                            }
+                        });
+                        dialog.setCancelable(false);
 
-           @Override
-           public void onFailure(Call<List<Profile>> call, Throwable t) {
-               Log.d("kahiniki",t.getMessage());
-           }
-       });
+                        dialog.show();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Profile>> call, Throwable t) {
+                Log.d("kahiniki",t.getMessage());
+            }
+        });
+
+
 
 
 

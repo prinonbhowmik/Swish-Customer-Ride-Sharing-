@@ -101,15 +101,20 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
             public void onClick(View view) {
                 try {
                     Intent intent = new Intent(context, HourlyRideDetails.class);
-                    intent.putExtra("bookingId", rideModel.getBookingId());
-                    intent.putExtra("check",2);
-                    intent.putExtra("pickplace",rideModel.getPickUpPlace());
-                    intent.putExtra("pickdate",rideModel.getPickUpDate());
-                    intent.putExtra("picktime",rideModel.getPickUpTime());
-                    intent.putExtra("cartype",carType);
-                    intent.putExtra("price",rideModel.getPrice());
+                    intent.putExtra("bookingId",rideModel.getBookingId());
+                    intent.putExtra("carType",carType);
                     intent.putExtra("custId",rideModel.getDriverId());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("userId",rideModel.getCustomerId());
+                    intent.putExtra("pickUpPlace",rideModel.getPickUpPlace());
+                    intent.putExtra("pickUpDate",rideModel.getPickUpDate());
+                    intent.putExtra("pickUpTime",rideModel.getPickUpTime());
+                    intent.putExtra("userId",rideModel.getCustomerId());
+                    intent.putExtra("price",rideModel.getPrice());
+                    intent.putExtra("finalPrice",rideModel.getFinalPrice());
+                    intent.putExtra("distance",rideModel.getTotalDistance());
+                    intent.putExtra("time",rideModel.getTotalTime());
+                    intent.putExtra("discount",rideModel.getDiscount());
+                    intent.putExtra("check", 2);
                     context.startActivity(intent);
                     ((Activity)context).finish();
                 } catch (Exception e) {

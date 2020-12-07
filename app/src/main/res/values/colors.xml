@@ -9,15 +9,21 @@
     <color name="light_gray">#8BECEBE8</color>
 
 
+    <!-- light UI-->
+
+
+    <!-- dark UI-->
+
+    <color name="themColor">#1785DA</color>
+    <color name="themColor2">#0E1F29</color>
+
 
     <color name="blue">#2196f3</color>
+    <color name="black">#000000</color>
     <color name="colorTextPrimary">#212121</color>
     <color name="colorTextSecondary">#757575</color>
     <color name="colorBackground">#ffffff</color>
     <color name="colorOnBoardingIndicatorInactive">#72BCF7</color>
-
-    <color name="blue1">#4285F4</color>
-    <color name="green1">#0F9D58</color>
 
 
     <color name="neomorph_background_color">#F3F2F2</color>
@@ -30,13 +36,14 @@
     <color name="semi_white">#F8F7F7</color>
 
 
+
+    <color name="gray">#6b7583</color>
+
+
     <!-- dark UI-->
     <color name="dark">#191a1e</color>
-    <color name="black">#000</color>
-
-    <color name="themColor">#1785DA</color>
-    <color name="themColor2">#0E1F29</color>
-
+    <color name="blue1">#4285F4</color>
+    <color name="green1">#0F9D58</color>
 
     <color name="shimmer_background">#dddddd</color>
 </resources>

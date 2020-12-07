@@ -115,6 +115,7 @@ import com.hydertechno.swishcustomer.Model.HourlyRideModel;
 import com.hydertechno.swishcustomer.Model.Profile;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.Model.RidingRate;
+import com.hydertechno.swishcustomer.Model.UniqueId;
 import com.hydertechno.swishcustomer.Notification.APIService;
 import com.hydertechno.swishcustomer.Notification.Client;
 import com.hydertechno.swishcustomer.Notification.Data;
@@ -773,6 +774,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (pickUpCity.equals("ঢাকা") || pickUpCity.equals("Dhaka")) {
                     hourlyLayout.setVisibility(View.VISIBLE);
                     hourlysedanPriceShow();
+                    hourlysedanPriceShow();
                     hourlysedanPremierePriceShow();
                     hourlysedanBusinessPriceShow();
                     hourlyMicroPriceShow();
@@ -941,19 +943,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     protected void checkHourlyRatingCall() {
 
-        Call<List<Profile>> call = apiInterface.getReffarelCommision(userId);
-        call.enqueue(new Callback<List<Profile>>() {
-            @Override
-            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Profile>> call, Throwable t) {
-
-            }
-        });
-
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
         tripRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -975,6 +964,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             CircleImageView driverImage = dialog.findViewById(R.id.profileIV);
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
+
+                            Call<List<Profile>> call = apiInterface.getReffarelCommision(userId);
+                            call.enqueue(new Callback<List<Profile>>() {
+                                @Override
+                                public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<Profile>> call, Throwable t) {
+
+                                }
+                            });
 
                             Call<List<DriverInfo>> call2 = apiInterface.getCarNumber(driver_id);
                             call2.enqueue(new Callback<List<DriverInfo>>() {
@@ -1003,8 +1005,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             });
 
-                            Call<List<DriverProfile>> call = apiInterface.getDriverData(driver_id);
-                            call.enqueue(new Callback<List<DriverProfile>>() {
+                            Call<List<DriverProfile>> call1 = apiInterface.getDriverData(driver_id);
+                            call1.enqueue(new Callback<List<DriverProfile>>() {
                                 @Override
                                 public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
                                     List<DriverProfile> list = response.body();
@@ -1197,18 +1199,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     protected void checkRatingCall() {
-        Call<List<Profile>> call = apiInterface.getReffarelCommision(userId);
-        call.enqueue(new Callback<List<Profile>>() {
-            @Override
-            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Profile>> call, Throwable t) {
-
-            }
-        });
 
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
         tripRef.addValueEventListener(new ValueEventListener() {
@@ -1219,7 +1209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String rideStatus = data.child("rideStatus").getValue().toString();
                         String ratingStatus = data.child("ratingStatus").getValue().toString();
                         String cashReceived = data.child("cashReceived").getValue().toString();
-                        if (rideStatus.equals("End") && ratingStatus.equals("false") && cashReceived.equals("yes")) {
+                        if (rideStatus.equals("End") && ratingStatus.equals("false")) {
                             RideModel model = data.getValue(RideModel.class);
                             String driver_id = model.getDriverId();
                             String tripId = model.getBookingId();
@@ -1235,6 +1225,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (!isFinishing()) {
                                 dialog.show();
                             }
+                            Call<List<Profile>> call = apiInterface.getReffarelCommision(userId);
+                            call.enqueue(new Callback<List<Profile>>() {
+                                @Override
+                                public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<Profile>> call, Throwable t) {
+
+                                }
+                            });
 
                             Call<List<DriverInfo>> call2 = apiInterface.getCarNumber(driver_id);
                             call2.enqueue(new Callback<List<DriverInfo>>() {
@@ -1264,8 +1266,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             });
 
 
-                            Call<List<DriverProfile>> call = apiInterface.getDriverData(driver_id);
-                            call.enqueue(new Callback<List<DriverProfile>>() {
+                            Call<List<DriverProfile>> call1 = apiInterface.getDriverData(driver_id);
+                            call1.enqueue(new Callback<List<DriverProfile>>() {
                                 @Override
                                 public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
                                     List<DriverProfile> list = response.body();
@@ -1292,9 +1294,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                                 }
                             });
-
-
-
 
                             submitBTN.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -1442,113 +1441,122 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void upload() {
 
         confirmRideBtn.setEnabled(false);
-
-        DatabaseReference rideLaterRef = FirebaseDatabase.getInstance().getReference()
-                .child("BookForLater").child(type);
-        bookingId = rideLaterRef.push().getKey();
-
-        HashMap<String, Object> rideInfo = new HashMap<>();
-        rideInfo.put("bookingId", bookingId);
-        rideInfo.put("bookingStatus", "Pending");
-        rideInfo.put("carType", type);
-        rideInfo.put("customerId", userId);
-        rideInfo.put("rideStatus", "Pending");
-        rideInfo.put("driverId", "");
-        rideInfo.put("destinationLat", String.valueOf(destinationLat));
-        rideInfo.put("destinationLon", String.valueOf(destinationLon));
-        rideInfo.put("destinationPlace", destinationPlace);
-        rideInfo.put("pickUpDate", dateTv.getText().toString());
-        rideInfo.put("pickUpLat", String.valueOf(pickUpLat));
-        rideInfo.put("pickUpLon", String.valueOf(pickUpLon));
-        rideInfo.put("pickUpPlace", pickUpPlace);
-        rideInfo.put("pickUpTime", timeTv.getText().toString());
-        rideInfo.put("endTime", "");
-        rideInfo.put("price", price);
-        rideInfo.put("ratingStatus", "false");
-        rideInfo.put("payment", paymentType);
-        rideInfo.put("discount", "");
-        rideInfo.put("finalPrice", "");
-        rideInfo.put("cashReceived", "no");
-        rideInfo.put("totalDistance", "");
-        rideInfo.put("totalTime", "");
-
-        rideLaterRef.child(bookingId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        Call<List<UniqueId>> idcall = apiInterface.getTripId();
+        idcall.enqueue(new Callback<List<UniqueId>>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            public void onResponse(Call<List<UniqueId>> call, Response<List<UniqueId>> response) {
+                bookingId = String.valueOf(response.body().get(0).getUniq_id());
+                DatabaseReference rideLaterRef = FirebaseDatabase.getInstance().getReference()
+                        .child("BookForLater").child(type);
+
+                HashMap<String, Object> rideInfo = new HashMap<>();
+                rideInfo.put("bookingId", bookingId);
+                rideInfo.put("bookingStatus", "Pending");
+                rideInfo.put("carType", type);
+                rideInfo.put("customerId", userId);
+                rideInfo.put("rideStatus", "Pending");
+                rideInfo.put("driverId", "");
+                rideInfo.put("destinationLat", String.valueOf(destinationLat));
+                rideInfo.put("destinationLon", String.valueOf(destinationLon));
+                rideInfo.put("destinationPlace", destinationPlace);
+                rideInfo.put("pickUpDate", dateTv.getText().toString());
+                rideInfo.put("pickUpLat", String.valueOf(pickUpLat));
+                rideInfo.put("pickUpLon", String.valueOf(pickUpLon));
+                rideInfo.put("pickUpPlace", pickUpPlace);
+                rideInfo.put("pickUpTime", timeTv.getText().toString());
+                rideInfo.put("endTime", "");
+                rideInfo.put("price", price);
+                rideInfo.put("ratingStatus", "false");
+                rideInfo.put("payment", paymentType);
+                rideInfo.put("discount", "");
+                rideInfo.put("finalPrice", "");
+                rideInfo.put("cashReceived", "no");
+                rideInfo.put("totalDistance", "");
+                rideInfo.put("totalTime", "");
+
+                rideLaterRef.child(bookingId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                @Override
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    //  updateToken(instanceIdResult.getToken());
+                                }
+                            });
+
+                        }
+                    }
+                });
+
+                if (notify) {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
+                    ref.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            //  updateToken(instanceIdResult.getToken());
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                sendNotificationDriver(bookingId, postSnapshot.getKey(), type, "New Request!","Tap to see full details." , "booking_details");
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
 
+                    sendNotification(bookingId, userId, "Booking Create!", "Tap to see booking details.", "my_ride_details");
                 }
-            }
-        });
+                notify = false;
+                DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides");
 
-        if (notify) {
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        sendNotificationDriver(bookingId, postSnapshot.getKey(), type, "New Request!","Tap to see full details." , "booking_details");
+                userRideRef.child(userId).child(bookingId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            map.clear();
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
+                        }
                     }
+                });
+
+                Call<List<RideModel>> call1 = apiInterface.saveTripRequest(bookingId, "Pending", type, userId, String.valueOf(destinationLat),
+                        String.valueOf(destinationLon), destinationPlace, "", "", dateTv.getText().toString(), String.valueOf(pickUpLat),
+                        String.valueOf(pickUpLon), pickUpPlace, timeTv.getText().toString(), price, "Pending", paymentType);
+                call1.enqueue(new Callback<List<RideModel>>() {
+                    @Override
+                    public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+                        Toast.makeText(MainActivity.this, "Ride request complete", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                    }
+                });
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle("Ride Created");
+                dialog.setIcon(R.drawable.logo_circle);
+                dialog.setMessage("Your ride has been created. If any driver accept your ride you will be notified!");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        finish();
+                        startActivity(getIntent());
+                    }
+                });
+                AlertDialog alertDialog = dialog.create();
+                if (!isFinishing()){
+                    alertDialog.show();
                 }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            }
 
-                }
-            });
-
-            sendNotification(bookingId, userId, "Booking Create!", "Tap to see booking details.", "my_ride_details");
-        }
-        notify = false;
-        DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides");
-
-        userRideRef.child(userId).child(bookingId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    map.clear();
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
-                }
+            public void onFailure(Call<List<UniqueId>> call, Throwable t) {
+
             }
         });
-
-        Call<List<RideModel>> call = apiInterface.saveTripRequest(bookingId, "Pending", type, userId, String.valueOf(destinationLat),
-                String.valueOf(destinationLon), destinationPlace, "", "", dateTv.getText().toString(), String.valueOf(pickUpLat),
-                String.valueOf(pickUpLon), pickUpPlace, timeTv.getText().toString(), price, "Pending", paymentType);
-        call.enqueue(new Callback<List<RideModel>>() {
-            @Override
-            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
-                Toast.makeText(MainActivity.this, "Ride request complete", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<List<RideModel>> call, Throwable t) {
-
-            }
-        });
-        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-        dialog.setTitle("Ride Created");
-        dialog.setIcon(R.drawable.logo_circle);
-        dialog.setMessage("Your ride has been created. If any driver accept your ride you will be notified!");
-        dialog.setCancelable(false);
-        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-                finish();
-                startActivity(getIntent());
-            }
-        });
-        AlertDialog alertDialog = dialog.create();
-        if (!isFinishing()){
-            alertDialog.show();
-        }
-
 
     }
 
@@ -1577,108 +1585,118 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void uploadHourly() {
         notify = true;
 
-        DatabaseReference hourlyLaterRef = FirebaseDatabase.getInstance().getReference()
-                .child("BookHourly").child(type);
-
-        hourlyTripId = hourlyLaterRef.push().getKey();
-
-        HashMap<String, Object> rideInfo = new HashMap<>();
-        rideInfo.put("bookingId", hourlyTripId);
-        rideInfo.put("bookingStatus", "Pending");
-        rideInfo.put("carType", type);
-        rideInfo.put("customerId", userId);
-        rideInfo.put("rideStatus", "Pending");
-        rideInfo.put("pickUpLat", String.valueOf(pickUpLat));
-        rideInfo.put("pickUpLon", String.valueOf(pickUpLon));
-        rideInfo.put("pickUpPlace", pickUpPlace);
-        rideInfo.put("driverId", "");
-        rideInfo.put("pickUpDate", hourrideDate.getText().toString());
-        rideInfo.put("pickUpTime", hourrideTime.getText().toString());
-        rideInfo.put("endTime", "");
-        rideInfo.put("price", "" + price);
-        rideInfo.put("ratingStatus", "false");
-        rideInfo.put("payment", paymentType);
-        rideInfo.put("discount", "");
-        rideInfo.put("finalPrice", "");
-        rideInfo.put("cashReceived", "no");
-        rideInfo.put("totalTime", "");
-
-        hourlyLaterRef.child(hourlyTripId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        Call<List<UniqueId>> idcall = apiInterface.getTripId();
+        idcall.enqueue(new Callback<List<UniqueId>>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            public void onResponse(Call<List<UniqueId>> call, Response<List<UniqueId>> response) {
+                hourlyTripId = String.valueOf(response.body().get(0).getUniq_id());
+
+                DatabaseReference hourlyLaterRef = FirebaseDatabase.getInstance().getReference()
+                        .child("BookHourly").child(type);
+                HashMap<String, Object> rideInfo = new HashMap<>();
+                rideInfo.put("bookingId", hourlyTripId);
+                rideInfo.put("bookingStatus", "Pending");
+                rideInfo.put("carType", type);
+                rideInfo.put("customerId", userId);
+                rideInfo.put("rideStatus", "Pending");
+                rideInfo.put("pickUpLat", String.valueOf(pickUpLat));
+                rideInfo.put("pickUpLon", String.valueOf(pickUpLon));
+                rideInfo.put("pickUpPlace", pickUpPlace);
+                rideInfo.put("driverId", "");
+                rideInfo.put("pickUpDate", hourrideDate.getText().toString());
+                rideInfo.put("pickUpTime", hourrideTime.getText().toString());
+                rideInfo.put("endTime", "");
+                rideInfo.put("price", "" + price);
+                rideInfo.put("ratingStatus", "false");
+                rideInfo.put("payment", paymentType);
+                rideInfo.put("discount", "");
+                rideInfo.put("finalPrice", "");
+                rideInfo.put("cashReceived", "no");
+                rideInfo.put("totalTime", "");
+
+                hourlyLaterRef.child(hourlyTripId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                @Override
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    updateToken(instanceIdResult.getToken());
+                                }
+                            });
+
+                        }
+                    }
+                });
+
+                if (notify) {
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
+                    ref.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            updateToken(instanceIdResult.getToken());
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                sendNotificationDriver(bookingId, postSnapshot.getKey(), type, "New Request!","Tap to see full details." , "hourly_details");
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
                     });
-
+                    sendNotification(hourlyTripId, userId, "Hourly Ride", "Tap to see booking details.", "my_hourly_ride_details");
                 }
-            }
-        });
-
-        if (notify) {
-
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        sendNotificationDriver(bookingId, postSnapshot.getKey(), type, "New Request!","Tap to see full details." , "hourly_details");
+                notify = false;
+                DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerHourRides");
+                userRideRef.child(userId).child(hourlyTripId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            map.clear();
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
+                        }
                     }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                });
 
+                Call<List<HourlyRideModel>> call1 = apiInterface.saveHourlyTripRequest(hourlyTripId, "Pending",
+                        type, userId, "", "", hourrideDate.getText().toString(), String.valueOf(pickUpLat),
+                        String.valueOf(pickUpLon), pickUpPlace, hourrideTime.getText().toString(), "0", "Pending", paymentType);
+                call1.enqueue(new Callback<List<HourlyRideModel>>() {
+                    @Override
+                    public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
+                        Toast.makeText(MainActivity.this, "Ride request complete", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<HourlyRideModel>> call, Throwable t) {
+
+                    }
+                });
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle("Ride Created");
+                dialog.setIcon(R.drawable.logo_circle);
+                dialog.setMessage("Your ride has been created. If any driver accept your ride you will be notified!");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        finish();
+                        startActivity(getIntent());
+                    }
+                });
+                AlertDialog alertDialog = dialog.create();
+                if (!isFinishing()){
+                    alertDialog.show();
                 }
-            });
-            sendNotification(hourlyTripId, userId, "Hourly Ride", "Tap to see booking details.", "my_hourly_ride_details");
-        }
-        notify = false;
-        DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerHourRides");
-        userRideRef.child(userId).child(hourlyTripId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+            }
+
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    map.clear();
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
-                }
+            public void onFailure(Call<List<UniqueId>> call, Throwable t) {
+
             }
         });
-
-        Call<List<HourlyRideModel>> call = apiInterface.saveHourlyTripRequest(hourlyTripId, "Pending",
-                type, userId, "", "", hourrideDate.getText().toString(), String.valueOf(pickUpLat),
-                String.valueOf(pickUpLon), pickUpPlace, hourrideTime.getText().toString(), "0", "Pending", paymentType);
-        call.enqueue(new Callback<List<HourlyRideModel>>() {
-            @Override
-            public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
-                Toast.makeText(MainActivity.this, "Ride request complete", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<List<HourlyRideModel>> call, Throwable t) {
-
-            }
-        });
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-        dialog.setTitle("Ride Created");
-        dialog.setIcon(R.drawable.logo_circle);
-        dialog.setMessage("Your ride has been created. If any driver accept your ride you will be notified!");
-        dialog.setCancelable(false);
-        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-                finish();
-                startActivity(getIntent());
-            }
-        });
-        AlertDialog alertDialog = dialog.create();
-        if (!isFinishing()){
-            alertDialog.show();
-        }
 
     }
 
@@ -1812,7 +1830,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
+                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
@@ -1840,7 +1858,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
+                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
@@ -1868,7 +1886,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
+                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
@@ -1896,7 +1914,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
+                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
@@ -1924,7 +1942,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     rate = response.body();
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
+                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;

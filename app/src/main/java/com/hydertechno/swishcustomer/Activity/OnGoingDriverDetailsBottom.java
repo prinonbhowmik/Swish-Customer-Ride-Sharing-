@@ -1,6 +1,10 @@
 package com.hydertechno.swishcustomer.Activity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +24,7 @@ import com.hydertechno.swishcustomer.ServerApi.ApiUtils;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,6 +87,21 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
         pickupTimeTV.setText(pickTime);
         takaTV.setText("৳ " +price);
 
+        animation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:" + "999"));
+                    startActivity(callIntent);
+                } catch (ActivityNotFoundException activityException) {
+                    Toasty.error(getContext(), "" + activityException.getMessage(), Toasty.LENGTH_SHORT).show();
+                    Log.e("Calling a Phone Number", "Call failed", activityException);
+                }
+            }
+        });
+
+
         return view;
     }
 
@@ -92,6 +112,7 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
         destinationTV = view.findViewById(R.id.destinationTV);
         pickupTimeTV = view.findViewById(R.id.pickupTimeTV);
         takaTV = view.findViewById(R.id.takaTV);
+        animation = view.findViewById(R.id.sos);
         api = ApiUtils.getUserService();
 
     }

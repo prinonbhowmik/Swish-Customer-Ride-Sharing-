@@ -39,9 +39,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
+
     private View view;
     private TextView driverNameTV, driverPhoneTV,carTV,plateTV,rideCountTV,rideTxt;
-
     private Button callDriver;
     private DatabaseReference databaseReference;
     private String bookingId;

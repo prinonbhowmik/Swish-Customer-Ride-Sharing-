@@ -254,7 +254,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Fare : "
+                    android:text="Per Hour : "
                     android:textColor="@android:color/black"
                     android:textSize="21sp" />
 
@@ -272,6 +272,34 @@
 
 
             </RelativeLayout>
+        </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+        <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+            android:id="@+id/receiptCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_view5"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="10dp"
+            android:layerType="software"
+            android:visibility="gone"
+            app:neomorph_background_color="@color/neomorph_background_color"
+            app:neomorph_corner_radius="10dp"
+            app:neomorph_elevation="8dp"
+            app:neomorph_highlight_color="@color/neomorph_highlight_color"
+            app:neomorph_shadow_color="@color/neomorph_shadow_color"
+            app:neomorph_shadow_type="outer"
+            app:neomorph_view_type="rectangular">
+
+            <ImageView
+                android:id="@+id/receiptIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_below="@+id/card_view5"
+                android:src="@drawable/ic_receipt_svgrepo_com" />
+
         </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
         <RelativeLayout
             android:id="@+id/relative"
@@ -309,6 +337,7 @@
                     android:visibility="gone"
                     android:textSize="18sp" />
             </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
 
             <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
                 android:id="@+id/detailsNFL"

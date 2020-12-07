@@ -54,7 +54,7 @@ import retrofit2.Response;
 
 public class HourlyRideDetails extends AppCompatActivity {
 
-    private TextView pickupPlaceTV, pickupDateTV, pickupTimeTV, carTypeTV, takaTV,headerTitle,reportTrip;
+    private TextView pickupPlaceTV, pickupDateTV, pickupTimeTV, carTypeTV, takaTV,headerTitle,reportTrip,txt6;
     private String id, car_type, pickupPlace, destinationPlace, pickupDate, pickupTime, carType, taka,type,
             driverId,userId,bookingStatus, d_name, d_phone,pickUpLat,pickUpLon,destinationLat,
             destinationLon,apiKey = "AIzaSyDy8NWL5x_v5AyQkcM9-4wqAWBp27pe9Bk",rideStatus;
@@ -64,9 +64,11 @@ public class HourlyRideDetails extends AppCompatActivity {
     private NeomorphFrameLayout editNFL;
     private Boolean editable=false;
     private int check;
+    private NeomorphFrameLayout receiptCard;
     private SharedPreferences sharedPreferences;
     private ApiInterface apiInterface;
     private APIService apiService;
+    private String finalPrice,realPrice,totalDistance,totalTime,discount,tripId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,21 @@ public class HourlyRideDetails extends AppCompatActivity {
         checkConnection();
 
         getData();
+
+        receiptCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HourlyRideDetails.this,ReceiptActivity.class)
+                        .putExtra("price",realPrice)
+                        .putExtra("carType",carType)
+                        .putExtra("finalPrice",finalPrice)
+                        .putExtra("distance",totalDistance)
+                        .putExtra("time",totalTime)
+                        .putExtra("discount",discount)
+                        .putExtra("bookingId",tripId)
+                        .putExtra("check",2));
+            }
+        });
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -477,15 +494,24 @@ public class HourlyRideDetails extends AppCompatActivity {
             });
         }
         else if (check == 2){
+            receiptCard.setVisibility(View.VISIBLE);
+            txt6.setText("Fare :");
             headerTitle.setText("Hourly Ride History");
             reportTrip.setVisibility(View.VISIBLE);
             Intent intent = getIntent();
             driverId = intent.getStringExtra("custId");
-            pickupPlaceTV.setText( intent.getStringExtra("pickplace"));
-            pickupDateTV.setText( intent.getStringExtra("pickdate"));
-            pickupTimeTV.setText( intent.getStringExtra("picktime"));
-            carTypeTV.setText( intent.getStringExtra("cartype"));
-            takaTV.setText( intent.getStringExtra("price"));
+            tripId = intent.getStringExtra("bookingId");
+            finalPrice = intent.getStringExtra("finalPrice");
+            realPrice = intent.getStringExtra("price");
+            carType = intent.getStringExtra("carType");
+            discount = intent.getStringExtra("discount");
+            totalDistance = intent.getStringExtra("distance");
+            totalTime = intent.getStringExtra("time");
+            pickupPlaceTV.setText(intent.getStringExtra("pickUpPlace"));
+            pickupDateTV.setText(intent.getStringExtra("pickUpDate"));
+            pickupTimeTV.setText(intent.getStringExtra("pickUpTime"));
+            carTypeTV.setText(carType );
+            takaTV.setText(finalPrice);
 
             buttonsShow();
         }
@@ -551,6 +577,7 @@ public class HourlyRideDetails extends AppCompatActivity {
         reportTrip=findViewById(R.id.reportTrip);
         pickupTimeTV=findViewById(R.id.pickupTimeTV);
         carTypeTV=findViewById(R.id.carTypeTV);
+        receiptCard = findViewById(R.id.receiptCard);
         takaTV=findViewById(R.id.takaTV);
         cancelBtn=findViewById(R.id.cancelBtn);
         editBtn=findViewById(R.id.editBtn);
@@ -558,6 +585,7 @@ public class HourlyRideDetails extends AppCompatActivity {
         driverInfoBtn=findViewById(R.id.driverDetailsBtn);
         saveBtn=findViewById(R.id.saveBtn);
         editNFL = findViewById(R.id.editNFL);
+        txt6 = findViewById(R.id.txt6);
         apiInterface = ApiUtils.getUserService();
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
     }

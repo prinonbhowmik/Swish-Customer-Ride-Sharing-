@@ -17,7 +17,6 @@ import com.hydertechno.swishcustomer.R;
 
 public class History extends AppCompatActivity {
 
-
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -79,8 +78,8 @@ public class History extends AppCompatActivity {
     }
 
     public void GoBack(View view) {
-        startActivity(new Intent(History.this,MainActivity.class));
-        overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right);
+        startActivity(new Intent(History.this, MainActivity.class));
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
 }

@@ -110,7 +110,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         Intent intent = getIntent();
         check = intent.getIntExtra("check", 0);
 
-        getData(check);
+        getData();
 
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
@@ -214,27 +214,29 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides").child(userId).child(tripId);
-                userRef.addValueEventListener(new ValueEventListener() {
+                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        RideModel model = snapshot.getValue(RideModel.class);
-                        String driverId = model.getDriverId();
-                        String pickTime = model.getPickUpTime();
-                        String price = model.getPrice();
-                        String pickup = model.getPickUpPlace();
-                        String destination = model.getDestinationPlace();
+                        if (snapshot.exists()){
+                            RideModel model = snapshot.getValue(RideModel.class);
+                            String driverId = model.getDriverId();
+                            String pickTime = model.getPickUpTime();
+                            String price = model.getPrice();
+                            String pickup = model.getPickUpPlace();
+                            String destination = model.getDestinationPlace();
 
 
-                        Bundle args = new Bundle();
-                        args.putString("driverId", driverId);
-                        args.putString("pickTime", pickTime);
-                        args.putString("price", price);
-                        args.putString("pickup", pickup);
-                        args.putString("destination", destination);
+                            Bundle args = new Bundle();
+                            args.putString("driverId", driverId);
+                            args.putString("pickTime", pickTime);
+                            args.putString("price", price);
+                            args.putString("pickup", pickup);
+                            args.putString("destination", destination);
 
-                        OnGoingDriverDetailsBottom bottom_sheet = new OnGoingDriverDetailsBottom();
-                        bottom_sheet.setArguments(args);
-                        bottom_sheet.show(getSupportFragmentManager(), "bottomSheet");
+                            OnGoingDriverDetailsBottom bottom_sheet = new OnGoingDriverDetailsBottom();
+                            bottom_sheet.setArguments(args);
+                            bottom_sheet.show(getSupportFragmentManager(), "bottomSheet");
+                        }
                     }
 
                     @Override
@@ -278,7 +280,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    private void getData(int check) {
+    private void getData() {
         Intent intent = getIntent();
         if (check == 1) {
             //pick up edit

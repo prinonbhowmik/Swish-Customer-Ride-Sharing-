@@ -14,6 +14,7 @@ import com.hydertechno.swishcustomer.Model.ReferralCount;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.Model.RidingRate;
 import com.hydertechno.swishcustomer.Model.TripReportModel;
+import com.hydertechno.swishcustomer.Model.UniqueId;
 
 import java.util.List;
 
@@ -240,5 +241,7 @@ public interface ApiInterface {
                                          @Field("updatedPrice") String updatedPrice,
                                          @Field("totalDistance") String km,
                                          @Field("totalTime") String time);
+    @GET("uniq_id_generator")
+    Call<List<UniqueId>> getTripId();
 
 }
