@@ -190,15 +190,15 @@ public class HourlyRideDetails extends AppCompatActivity {
                         DatabaseReference canRef =  FirebaseDatabase.getInstance().getReference("BookHourly").child(carType).child(id);
                         canRef.removeValue();
 
-                        Call<List<RideModel>> call = apiInterface.cancelTrip(id,"Cancel");
-                        call.enqueue(new Callback<List<RideModel>>() {
+                        Call<List<HourlyRideModel>> call = apiInterface.cancelHourTrip(id,"Cancel");
+                        call.enqueue(new Callback<List<HourlyRideModel>>() {
                             @Override
-                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+                            public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
 
                             }
 
                             @Override
-                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
+                            public void onFailure(Call<List<HourlyRideModel>> call, Throwable t) {
 
                             }
                         });
@@ -494,10 +494,8 @@ public class HourlyRideDetails extends AppCompatActivity {
             });
         }
         else if (check == 2){
-            receiptCard.setVisibility(View.VISIBLE);
             txt6.setText("Fare :");
             headerTitle.setText("Hourly Ride History");
-            reportTrip.setVisibility(View.VISIBLE);
             Intent intent = getIntent();
             driverId = intent.getStringExtra("custId");
             tripId = intent.getStringExtra("bookingId");
@@ -507,9 +505,14 @@ public class HourlyRideDetails extends AppCompatActivity {
             discount = intent.getStringExtra("discount");
             totalDistance = intent.getStringExtra("distance");
             totalTime = intent.getStringExtra("time");
+            rideStatus = intent.getStringExtra("rideStatus");
             pickupPlaceTV.setText(intent.getStringExtra("pickUpPlace"));
             pickupDateTV.setText(intent.getStringExtra("pickUpDate"));
             pickupTimeTV.setText(intent.getStringExtra("pickUpTime"));
+            if (rideStatus.equals("End")) {
+                receiptCard.setVisibility(View.VISIBLE);
+                reportTrip.setVisibility(View.VISIBLE);
+            }
             carTypeTV.setText(carType );
             takaTV.setText(finalPrice);
 

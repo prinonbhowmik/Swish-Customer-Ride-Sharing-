@@ -114,6 +114,7 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
                     intent.putExtra("distance",rideModel.getTotalDistance());
                     intent.putExtra("time",rideModel.getTotalTime());
                     intent.putExtra("discount",rideModel.getDiscount());
+                    intent.putExtra("rideStatus",rideModel.getRideStatus());
                     intent.putExtra("check", 2);
                     context.startActivity(intent);
                     ((Activity)context).finish();

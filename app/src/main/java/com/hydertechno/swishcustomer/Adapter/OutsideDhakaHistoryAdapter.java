@@ -118,6 +118,7 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
                     intent.putExtra("price",rideModel.getPrice());
                     intent.putExtra("finalPrice",rideModel.getFinalPrice());
                     intent.putExtra("custId",rideModel.getDriverId());
+                    intent.putExtra("rideStatus",rideModel.getRideStatus());
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
                     ((Activity)context).finish();

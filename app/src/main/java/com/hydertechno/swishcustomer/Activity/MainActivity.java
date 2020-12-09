@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private int totalCount;
     private APIService apiService;
     private double radius = 2;
-    private String tripId, picklat, pickLon, deslat, deslon, carType;
+    private String tripId, picklat, pickLon, deslat, deslon, carType,destinationDivision;
     boolean singleBack = false;
     private ProgressBar progressBar;
     private FloatingActionButton homeBtn,workBtn;
@@ -940,7 +940,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-
     protected void checkHourlyRatingCall() {
 
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
@@ -951,8 +950,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (DataSnapshot data : snapshot.getChildren()) {
                         String rideStatus = data.child("rideStatus").getValue().toString();
                         String ratingStatus = data.child("ratingStatus").getValue().toString();
-                        String cashReceived = data.child("cashReceived").getValue().toString();
-                        if (rideStatus.equals("End") && ratingStatus.equals("false") && cashReceived.equals("yes")) {
+                        if (rideStatus.equals("End") && ratingStatus.equals("false") ) {
                             RideModel model = data.getValue(RideModel.class);
                             String driver_id = model.getDriverId();
                             String tripId = model.getBookingId();
@@ -1707,16 +1705,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         Locale locale2 = new Locale("bn","BN");
-        Geocoder geocoder1 = new Geocoder(this, locale2);
+        Geocoder geocoder2 = new Geocoder(this, locale2);
 
         try {
-            List<Address> addresses = geocoder1.getFromLocation(pickUpLat, pickUpLon, 1);
+            List<Address> addresses = geocoder2.getFromLocation(pickUpLat, pickUpLon, 1);
             Address location = addresses.get(0);
             pickUpCity = location.getLocality();
+            Log.d("division",location.getAdminArea());
 
-            List<Address> addresses2 = geocoder1.getFromLocation(destinationLat, destinationLon, 1);
+            List<Address> addresses2 = geocoder2.getFromLocation(destinationLat, destinationLon, 1);
             Address location1 = addresses2.get(0);
             destinationCity = location1.getLocality();
+            destinationDivision = location1.getAdminArea();
+            Log.d("division",location1.getAdminArea());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -1757,13 +1758,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             map.addMarker(place1);
             map.addMarker(place2);
 
-            map.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
+            map.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
 
-            calculateDirections(pickUpLat, pickUpLon, destinationLat, destinationLon);
+            calculateDirections(pickUpLat, pickUpLon, destinationLat, destinationLon,destinationDivision);
         }
     }
 
-    private void calculateDirections(double pickUpLat, double pickUpLon, double destinationLat, double destinationLon) {
+    private void calculateDirections(double pickUpLat, double pickUpLon, double destinationLat, double destinationLon,String destinationDivision) {
 
         String origins = pickUpLat + "," + pickUpLon;
         String destination = destinationLat + "," + destinationLon;
@@ -1796,17 +1797,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     kmdistance = distance / 1000;
                     travelduration = trduration / 60;
 
-                    Log.d("kmDist", distance + "," + kmdistance);
+                    Log.d("kmDist", travelduration + "," + kmdistance);
                     Log.d("trduration", String.valueOf(trduration));
 
                     bottomsheet.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
 
-                    sedanPrice(kmdistance, travelduration);
-                    sedanPremierePrice(kmdistance, travelduration);
-                    sedanBusinessPrice(kmdistance, travelduration);
-                    hiace7Price(kmdistance, travelduration);
-                    hiace11Price(kmdistance, travelduration);
+                    sedanPrice(kmdistance, travelduration,destinationDivision);
+                    sedanPremierePrice(kmdistance, travelduration,destinationDivision);
+                    sedanBusinessPrice(kmdistance, travelduration,destinationDivision);
+                    hiace7Price(kmdistance, travelduration,destinationDivision);
+                    hiace11Price(kmdistance, travelduration,destinationDivision);
 
                 }
             }
@@ -1819,7 +1820,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void hiace7Price(int kmdistance, int travelduration) {
+    private void hiace7Price(int kmdistance, int travelduration, String destinationDivision) {
         Call<List<RidingRate>> call = apiInterface.getPrice("Micro7");
         call.enqueue(new Callback<List<RidingRate>>() {
             @Override
@@ -1835,8 +1836,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
 
-                    estprice = kmPrice + minPrice + minimumRate;
-                    micro7price.setText("" + estprice);
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Division").child(destinationDivision);
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                            estprice = kmPrice + minPrice + minimumRate;
+                            int divisionPercent = (estprice*farePercent)/100;
+                            int finalPrice = estprice+divisionPercent;
+                            micro7price.setText("" + finalPrice);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 
@@ -1847,7 +1864,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void hiace11Price(int kmdistance, int travelduration) {
+    private void hiace11Price(int kmdistance, int travelduration, String destinationDivision) {
         Call<List<RidingRate>> call = apiInterface.getPrice("Micro11");
         call.enqueue(new Callback<List<RidingRate>>() {
             @Override
@@ -1863,8 +1880,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
 
-                    estprice = kmPrice + minPrice + minimumRate;
-                    micro11price.setText("" + estprice);
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Division").child(destinationDivision);
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                            estprice = kmPrice + minPrice + minimumRate;
+                            int divisionPercent = (estprice*farePercent)/100;
+                            int finalPrice = estprice+divisionPercent;
+                            micro11price.setText("" + finalPrice);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
             }
 
@@ -1875,7 +1909,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void sedanBusinessPrice(int kmdistance, int travelduration) {
+    private void sedanBusinessPrice(int kmdistance, int travelduration, String destinationDivision) {
         Call<List<RidingRate>> call = apiInterface.getPrice("SedanBusiness");
         call.enqueue(new Callback<List<RidingRate>>() {
             @Override
@@ -1891,8 +1925,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
 
-                    estprice = kmPrice + minPrice + minimumRate;
-                    sedanbusinessprice.setText("" + estprice);
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Division").child(destinationDivision);
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                            estprice = kmPrice + minPrice + minimumRate;
+                            int divisionPercent = (estprice*farePercent)/100;
+                            int finalPrice = estprice+divisionPercent;
+                            sedanbusinessprice.setText("" + finalPrice);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
                 }
             }
 
@@ -1903,7 +1954,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    public void sedanPremierePrice(int kmdistance, int travelduration) {
+    public void sedanPremierePrice(int kmdistance, int travelduration, String destinationDivision) {
         Call<List<RidingRate>> call = apiInterface.getPrice("SedanPremiere");
         call.enqueue(new Callback<List<RidingRate>>() {
             @Override
@@ -1919,8 +1970,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
 
-                    estprice = kmPrice + minPrice + minimumRate;
-                    premiereprice.setText("" + estprice);
+
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Division").child(destinationDivision);
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                            estprice = kmPrice + minPrice + minimumRate;
+                            int divisionPercent = (estprice*farePercent)/100;
+                            int finalPrice = estprice+divisionPercent;
+                            premiereprice.setText("" + finalPrice);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+
                 }
             }
 
@@ -1931,7 +2002,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void sedanPrice(int kmdistance, int travelduration) {
+    private void sedanPrice(int kmdistance, int travelduration, String destinationDivision) {
 
         Call<List<RidingRate>> call = apiInterface.getPrice("Sedan");
         call.enqueue(new Callback<List<RidingRate>>() {
@@ -1947,8 +2018,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
 
-                    estprice = kmPrice + minPrice + minimumRate;
-                    sedanprice.setText("" + estprice);
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Division").child(destinationDivision);
+                    reference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                            estprice = kmPrice + minPrice + minimumRate;
+                            int divisionPercent = (estprice*farePercent)/100;
+                            int finalPrice = estprice+divisionPercent;
+                            sedanprice.setText("" + finalPrice);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             }
 

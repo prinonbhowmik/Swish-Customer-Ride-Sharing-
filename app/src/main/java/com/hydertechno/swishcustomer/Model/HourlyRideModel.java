@@ -23,6 +23,9 @@ public class HourlyRideModel {
     private String totalDistance;
     private float rating;
 
+    public HourlyRideModel() {
+    }
+
     public HourlyRideModel(String bookingId, String pickUpLat, String pickUpLon, String pickUpPlace, String pickUpDate, String pickUpTime, String customerId, String price, String carType, String bookingStatus, String driverId, String rideStatus, String endTime, String payment, String discount, String finalPrice, String cashReceived, String totalTime, String totalDistance, float rating) {
         this.bookingId = bookingId;
         this.pickUpLat = pickUpLat;

@@ -731,8 +731,6 @@ public class MyRidesDetails extends AppCompatActivity {
         }
         else if (check == 2) {
             headerTitle.setText("Ride History");
-            reportTrip.setVisibility(View.VISIBLE);
-            receiptCard.setVisibility(View.VISIBLE);
             Intent intent = getIntent();
             carType = intent.getStringExtra("cartype");
             pickupPlaceTV.setText(intent.getStringExtra("pickplace"));
@@ -742,6 +740,11 @@ public class MyRidesDetails extends AppCompatActivity {
             carTypeTV.setText(carType);
             realPrice = intent.getStringExtra("price");
             finalPrice = intent.getStringExtra("finalPrice");
+            rideStatus = intent.getStringExtra("rideStatus");
+            if (rideStatus.equals("End")){
+                receiptCard.setVisibility(View.VISIBLE);
+                reportTrip.setVisibility(View.VISIBLE);
+            }
             takaTV.setText("৳ "+finalPrice);
             tripId = intent.getStringExtra("tripId");
             driverId = intent.getStringExtra("custId");
