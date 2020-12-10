@@ -51,6 +51,7 @@ public class InsideDhaka extends Fragment {
     private SharedPreferences sharedPreferences;
     private Date d1,d2;
     private ProgressBar progressBar;
+    private String driverId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +81,8 @@ public class InsideDhaka extends Fragment {
                         String carType = data.child("carType").getValue().toString();
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+                        driverId = data.child("driverId").getValue().toString();
+
 
                         try {
                             d1 = dateFormat.parse(date1);
@@ -88,11 +91,13 @@ public class InsideDhaka extends Fragment {
                             e.printStackTrace();
                         }
 
-                        if (d2.compareTo(d1) > 0){
-                            DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
-                            delRef.child(tripId).removeValue();
-                            DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookHourly").child(carType);
-                            del1Ref.child(tripId).removeValue();
+                        if (!rideStatus.equals("Start") || !rideStatus.equals("End")){
+                            if (d2.compareTo(d1) > 0){
+                                DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
+                                delRef.child(tripId).removeValue();
+                                DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookHourly").child(carType);
+                                del1Ref.child(tripId).removeValue();
+                            }
                         }
                         if (!rideStatus.equals("End")) {
                             progressBar.setVisibility(View.GONE);

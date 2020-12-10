@@ -50,6 +50,7 @@ public class OutsideDhaka extends Fragment {
     Date currentDate=null;
     private SharedPreferences sharedPreferences;
     private Date d1,d2;
+    private String driverId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,6 +80,7 @@ public class OutsideDhaka extends Fragment {
                         String time1 = data.child("pickUpTime").getValue().toString();
                         String tripId = data.child("bookingId").getValue().toString();
                         carType = data.child("carType").getValue().toString();
+                        driverId = data.child("driverId").getValue().toString();
 
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
@@ -90,11 +92,13 @@ public class OutsideDhaka extends Fragment {
                             e.printStackTrace();
                         }
 
-                        if (d2.compareTo(d1) > 0){
-                            DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
-                            delRef.child(tripId).removeValue();
-                            DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
-                            del1Ref.child(tripId).removeValue();
+                        if (!rideStatus.equals("Start") || !rideStatus.equals("End")){
+                            if (d2.compareTo(d1) > 0){
+                                DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
+                                delRef.child(tripId).removeValue();
+                                DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
+                                del1Ref.child(tripId).removeValue();
+                            }
                         }
 
                         if (!rideStatus.equals("End")) {

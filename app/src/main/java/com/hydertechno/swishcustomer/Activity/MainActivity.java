@@ -963,19 +963,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
 
-                            Call<List<Profile>> call = apiInterface.getReffarelCommision(userId);
-                            call.enqueue(new Callback<List<Profile>>() {
-                                @Override
-                                public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<Profile>> call, Throwable t) {
-
-                                }
-                            });
-
                             Call<List<DriverInfo>> call2 = apiInterface.getCarNumber(driver_id);
                             call2.enqueue(new Callback<List<DriverInfo>>() {
                                 @Override
@@ -1223,18 +1210,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (!isFinishing()) {
                                 dialog.show();
                             }
-                            Call<List<Profile>> call = apiInterface.getReffarelCommision(userId);
-                            call.enqueue(new Callback<List<Profile>>() {
-                                @Override
-                                public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
-
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<Profile>> call, Throwable t) {
-
-                                }
-                            });
 
                             Call<List<DriverInfo>> call2 = apiInterface.getCarNumber(driver_id);
                             call2.enqueue(new Callback<List<DriverInfo>>() {
