@@ -183,6 +183,20 @@
                 android:textSize="18sp"
                 android:textColor="#CF0E0E" />
 
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ridePrice"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:numStars="5"
+                android:rating="0"
+                android:stepSize=".5"
+                android:theme="@style/RatingBar" />
+
         </RelativeLayout>
     </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 

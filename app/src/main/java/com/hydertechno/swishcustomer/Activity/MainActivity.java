@@ -950,7 +950,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     for (DataSnapshot data : snapshot.getChildren()) {
                         String rideStatus = data.child("rideStatus").getValue().toString();
                         String ratingStatus = data.child("ratingStatus").getValue().toString();
-                        if (rideStatus.equals("End") && ratingStatus.equals("false") ) {
+                        String cashReceived = data.child("cashReceived").getValue().toString();
+                        if (rideStatus.equals("End") && ratingStatus.equals("false") && cashReceived.equals("yes")) {
                             RideModel model = data.getValue(RideModel.class);
                             String driver_id = model.getDriverId();
                             String tripId = model.getBookingId();
@@ -962,6 +963,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             CircleImageView driverImage = dialog.findViewById(R.id.profileIV);
                             RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
                             Button submitBTN = dialog.findViewById(R.id.submitBTN);
+
 
                             Call<List<DriverInfo>> call2 = apiInterface.getCarNumber(driver_id);
                             call2.enqueue(new Callback<List<DriverInfo>>() {
@@ -1194,7 +1196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         String rideStatus = data.child("rideStatus").getValue().toString();
                         String ratingStatus = data.child("ratingStatus").getValue().toString();
                         String cashReceived = data.child("cashReceived").getValue().toString();
-                        if (rideStatus.equals("End") && ratingStatus.equals("false")) {
+                        if (rideStatus.equals("End") && ratingStatus.equals("false") && cashReceived.equals("yes")) {
                             RideModel model = data.getValue(RideModel.class);
                             String driver_id = model.getDriverId();
                             String tripId = model.getBookingId();

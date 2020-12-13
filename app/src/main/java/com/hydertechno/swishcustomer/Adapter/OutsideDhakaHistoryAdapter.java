@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,6 +53,7 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
         holder.endLocation.setText(rideModel.getDestinationPlace());
         holder.ridePrice.setText(rideModel.getPrice());
         holder.bookingStatus.setText(rideModel.getBookingStatus());
+        holder.ratingBar.setRating(rideModel.getRating());
         String status = holder.bookingStatus.getText().toString();
 
         car_type=rideModel.getCarType();
@@ -121,7 +123,6 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
                     intent.putExtra("rideStatus",rideModel.getRideStatus());
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
-                    ((Activity)context).finish();
                 } catch (Exception e) {
 
                 }
@@ -137,10 +138,11 @@ public class OutsideDhakaHistoryAdapter extends RecyclerView.Adapter<OutsideDhak
     public class ViewHolder extends RecyclerView.ViewHolder {
         private RelativeLayout relativeLayout1;
         private TextView startLocation, endLocation, TimeTV, DateTv, carTypeTv, ridePrice, bookingStatus;
+        private RatingBar ratingBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            ratingBar=itemView.findViewById(R.id.ratingBar);
             startLocation = itemView.findViewById(R.id.startLocation);
             endLocation = itemView.findViewById(R.id.endLocation);
             TimeTV = itemView.findViewById(R.id.rideTime);

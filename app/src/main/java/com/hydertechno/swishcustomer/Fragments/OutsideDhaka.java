@@ -36,20 +36,20 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class OutsideDhaka extends Fragment {
-    private TextView title_text,nodatatxt;
+    private TextView title_text, nodatatxt;
     private ImageView backBtn, rideType;
     private List<RideModel> rideModels;
     private MyRideAdapter adapter;
     private RecyclerView rideRecycler;
-    private String userId,carType;
+    private String userId, carType;
     private FirebaseAuth auth;
     private DatabaseReference reference;
     private String rideStatus;
     private ProgressBar progressBar;
     Date eDate = null;
-    Date currentDate=null;
+    Date currentDate = null;
     private SharedPreferences sharedPreferences;
-    private Date d1,d2;
+    private Date d1, d2;
     private String driverId;
 
     @Override
@@ -75,7 +75,7 @@ public class OutsideDhaka extends Fragment {
                 if (snapshot.exists()) {
                     rideModels.clear();
                     for (DataSnapshot data : snapshot.getChildren()) {
-                        rideStatus=data.child("rideStatus").getValue().toString();
+                        rideStatus = data.child("rideStatus").getValue().toString();
                         String date1 = data.child("pickUpDate").getValue().toString();
                         String time1 = data.child("pickUpTime").getValue().toString();
                         String tripId = data.child("bookingId").getValue().toString();
@@ -92,12 +92,14 @@ public class OutsideDhaka extends Fragment {
                             e.printStackTrace();
                         }
 
-                        if (!rideStatus.equals("Start") || !rideStatus.equals("End")){
-                            if (d2.compareTo(d1) > 0){
-                                DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
-                                delRef.child(tripId).removeValue();
-                                DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
-                                del1Ref.child(tripId).removeValue();
+                        if (driverId.equals("")) {
+                            if (!rideStatus.equals("Start") || !rideStatus.equals("End")) {
+                                if (d2.compareTo(d1) > 0) {
+                                    DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
+                                    delRef.child(tripId).removeValue();
+                                    DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("BookForLater").child(carType);
+                                    del1Ref.child(tripId).removeValue();
+                                }
                             }
                         }
 
@@ -105,11 +107,10 @@ public class OutsideDhaka extends Fragment {
                             progressBar.setVisibility(View.GONE);
                             RideModel ride = data.getValue(RideModel.class);
                             rideModels.add(ride);
-                            if(rideModels.size()==0){
+                            if (rideModels.size() == 0) {
                                 nodatatxt.setVisibility(View.VISIBLE);
                                 rideRecycler.setVisibility(View.GONE);
-                            }
-                            else {
+                            } else {
                                 adapter.notifyDataSetChanged();
                             }
                         }
@@ -117,11 +118,11 @@ public class OutsideDhaka extends Fragment {
                     Collections.reverse(rideModels);
                     adapter.notifyDataSetChanged();
                 }
-                if(rideModels.size()<1){
+                if (rideModels.size() < 1) {
                     progressBar.setVisibility(View.GONE);
                     nodatatxt.setVisibility(View.VISIBLE);
                     nodatatxt.setText("No Request Available");
-                }else {
+                } else {
                     nodatatxt.setVisibility(View.GONE);
                 }
             }
@@ -136,15 +137,15 @@ public class OutsideDhaka extends Fragment {
     private void init(View view) {
         backBtn = view.findViewById(R.id.backBtn);
         //rideType = findViewById(R.id.rideType);
-        nodatatxt= view.findViewById(R.id.nodatatxt);
-        progressBar= view.findViewById(R.id.progressBar);
+        nodatatxt = view.findViewById(R.id.nodatatxt);
+        progressBar = view.findViewById(R.id.progressBar);
         rideModels = new ArrayList<>();
-        rideRecycler =  view.findViewById(R.id.rideRecycler);
+        rideRecycler = view.findViewById(R.id.rideRecycler);
         rideRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MyRideAdapter(rideModels, getContext());
         rideRecycler.setAdapter(adapter);
-        sharedPreferences = getContext().getSharedPreferences("MyRef",MODE_PRIVATE);
-        userId = sharedPreferences.getString("id","");
+        sharedPreferences = getContext().getSharedPreferences("MyRef", MODE_PRIVATE);
+        userId = sharedPreferences.getString("id", "");
         reference = FirebaseDatabase.getInstance().getReference();
 
     }

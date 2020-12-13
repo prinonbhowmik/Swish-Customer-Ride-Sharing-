@@ -82,7 +82,7 @@ public class MyRidesDetails extends AppCompatActivity {
     private int kmdistance, travelduration, price, check;
     private SharedPreferences sharedPreferences;
     private ApiInterface apiInterface;
-    private ImageView receiptIv;
+    private TextView receiptIv;
     private APIService apiService;
     private TextView reportTrip,discountTv,paymentTv;
     private LinearLayout discountLayout;
@@ -439,7 +439,7 @@ public class MyRidesDetails extends AppCompatActivity {
                                 rate = response.body();
                                 int kmRate = rate.get(0).getKm_charge();
                                 int minRate = rate.get(0).getMin_charge();
-                                int minimumRate = rate.get(0).getBase_fare_inside_dhaka();
+                                int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
 
                                 int kmPrice = kmRate * kmdistance;
                                 int minPrice = minRate * travelduration;
@@ -660,7 +660,7 @@ public class MyRidesDetails extends AppCompatActivity {
         carTypeTV = findViewById(R.id.carTypeTV);
         receiptIv = findViewById(R.id.receiptIv);
         takaTV = findViewById(R.id.takaTV);
-        receiptCard = findViewById(R.id.receiptCard);
+        receiptCard = findViewById(R.id.card_view6);
         editBtn = findViewById(R.id.editBtn);
         deleteBtn = findViewById(R.id.deleteBtn);
         cancelNFL = findViewById(R.id.cancelNFL);
@@ -821,4 +821,7 @@ public class MyRidesDetails extends AppCompatActivity {
     }
 
 
+    public void rideDetailsBack(View view) {
+        finish();
+    }
 }

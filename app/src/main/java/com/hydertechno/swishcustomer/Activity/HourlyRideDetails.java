@@ -580,7 +580,7 @@ public class HourlyRideDetails extends AppCompatActivity {
         reportTrip=findViewById(R.id.reportTrip);
         pickupTimeTV=findViewById(R.id.pickupTimeTV);
         carTypeTV=findViewById(R.id.carTypeTV);
-        receiptCard = findViewById(R.id.receiptCard);
+        receiptCard = findViewById(R.id.card_view6);
         takaTV=findViewById(R.id.takaTV);
         cancelBtn=findViewById(R.id.cancelBtn);
         editBtn=findViewById(R.id.editBtn);
@@ -645,6 +645,10 @@ public class HourlyRideDetails extends AppCompatActivity {
             startActivity(new Intent(HourlyRideDetails.this, History.class));
         }
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
+    }
+
+    public void hourlyDetailsBack(View view) {
         finish();
     }
 }
