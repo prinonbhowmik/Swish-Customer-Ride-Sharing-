@@ -240,6 +240,7 @@ public class SignUp extends AppCompatActivity {
                         okBtn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                okBtn.setEnabled(false);
                                 Toast.makeText(SignUp.this, "Registration Complete", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(SignUp.this,MainActivity.class);
                                 intent.putExtra("phone",phone);

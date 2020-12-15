@@ -1601,6 +1601,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void uploadHourly() {
         notify = true;
+        hourlyconfirmRideBtn.setEnabled(false);
 
         Call<List<UniqueId>> idcall = apiInterface.getTripId();
         idcall.enqueue(new Callback<List<UniqueId>>() {
