@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -51,7 +52,7 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
         holder.ridePrice.setText(rideModel.getPrice());
         holder.bookingStatus.setText(rideModel.getBookingStatus());
         String status = holder.bookingStatus.getText().toString();
-
+        holder.ratingBar.setRating(rideModel.getRating());
         String date1 = holder.DateTv.getText().toString();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date eDate = null;
@@ -117,7 +118,6 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
                     intent.putExtra("rideStatus",rideModel.getRideStatus());
                     intent.putExtra("check", 2);
                     context.startActivity(intent);
-                    ((Activity)context).finish();
                 } catch (Exception e) {
 
                 }
@@ -135,9 +135,10 @@ public class InsideDhakaHistoryAdapter extends RecyclerView.Adapter<InsideDhakaH
 
         private RelativeLayout relativeLayout1;
         private TextView startLocation,TimeTV, DateTv, carTypeTv, ridePrice, bookingStatus;
+        private RatingBar ratingBar;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            ratingBar=itemView.findViewById(R.id.ratingBar);
             startLocation = itemView.findViewById(R.id.startLocation);
             TimeTV = itemView.findViewById(R.id.rideTime);
             DateTv = itemView.findViewById(R.id.rideDate);

@@ -103,7 +103,6 @@ public class MyRideAdapter extends RecyclerView.Adapter<MyRideAdapter.ViewHolder
                     intent.putExtra("check", 1);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(intent);
-                    ((Activity)context).finish();
                 }catch (Exception e){
 
                 }
