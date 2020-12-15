@@ -94,6 +94,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     private SharedPreferences sharedPreferences;
     private int end=0;
     private ProgressDialog progressDialog;
+    private String driverId;
 
 
     @Override
@@ -318,6 +319,11 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             pickUpPlace = intent.getStringExtra("place");
             edit = intent.getIntExtra("edit", 0);
         }
+        else if (check == 5){
+            tripId = intent.getStringExtra("tripId");
+            carType = intent.getStringExtra("carType");
+            driverId = intent.getStringExtra("driverId");
+        }
 
     }
 
@@ -479,8 +485,41 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                 showPickUpPoint();
             }
         }
+        else if (check == 5){
+            map.clear();
+            DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("OnLineDrivers")
+                    .child(carType).child(driverId).child("l");
+            mapRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    double lat = (double) snapshot.child("0").getValue();
+                    double lon = (double) snapshot.child("1").getValue();
+
+                    showHourlyLocation(lat,lon);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
 
     }
+
+    private void showHourlyLocation(double lat, double lon) {
+        map.clear();
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000); // 10 seconds
+        locationRequest.setFastestInterval(2000); // 5 seconds
+
+        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+        map.addMarker(new MarkerOptions().position(new LatLng(lat, lon)).icon(markerIcon));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 16));
+    }
+
 
     private void showTripRoute() {
         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);

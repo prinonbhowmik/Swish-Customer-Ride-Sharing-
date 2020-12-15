@@ -75,9 +75,11 @@ public class VerificationOTP extends AppCompatActivity {
                            hideKeyboardFrom(getApplicationContext());
                           if (check==1){
                               startActivity(new Intent(VerificationOTP.this, SignUp.class).putExtra("phone", phone));
+                              finish();
                           }
                           else{
                               startActivity(new Intent(VerificationOTP.this, ResetPassword.class).putExtra("id",id));
+                              finish();
                           }
                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                            finish();

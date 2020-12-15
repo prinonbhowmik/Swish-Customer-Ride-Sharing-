@@ -864,9 +864,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkRunningRides();
 
+        checkHourlyRunningRides();
+
         checkRatingCall();
 
         checkHourlyRatingCall();
+    }
+
+    private void checkHourlyRunningRides() {
+        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerHourRides").child(userId);
+        tripRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot data : snapshot.getChildren()) {
+                        rideStatus = data.child("rideStatus").getValue().toString();
+                        if (rideStatus.equals("Start")) {
+                            HourlyRideModel model = data.getValue(HourlyRideModel.class);
+                            driverId = model.getDriverId();
+                            tripId = model.getBookingId();
+                            carType = model.getCarType();
+
+                            Log.d("checkData",driverId+","+tripId+","+carType);
+
+                            Intent intent = new Intent(MainActivity.this, RunningTrip.class);
+                            intent.putExtra("check", 5);
+                            intent.putExtra("tripId", tripId);
+                            intent.putExtra("carType", carType);
+                            intent.putExtra("driverId", driverId);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+
+                        }
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -1352,7 +1394,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void checkRunningRides() {
         DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerRides").child(userId);
-        tripRef.addValueEventListener(new ValueEventListener() {
+        tripRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -2534,8 +2576,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //update in 5 seconds
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(3000); // 10 seconds
-        locationRequest.setFastestInterval(1000); // 5 seconds
+        locationRequest.setInterval(100); // 10 seconds
+        locationRequest.setFastestInterval(10); // 5 seconds
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
