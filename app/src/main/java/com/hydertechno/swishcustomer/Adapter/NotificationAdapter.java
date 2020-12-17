@@ -92,8 +92,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         dialog.dismiss();
                     }
                 });
-                dialog.setCancelable(false);
-
+                dialog.setCancelable(true);
                 dialog.show();
                 Window window = dialog.getWindow();
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

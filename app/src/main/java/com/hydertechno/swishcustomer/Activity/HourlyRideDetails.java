@@ -494,7 +494,7 @@ public class HourlyRideDetails extends AppCompatActivity {
             });
         }
         else if (check == 2){
-            txt6.setText("Fare :");
+            txt6.setText("Fare : BDT ");
             headerTitle.setText("Hourly Ride History");
             Intent intent = getIntent();
             driverId = intent.getStringExtra("custId");
@@ -640,12 +640,6 @@ public class HourlyRideDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (check == 1) {
-            startActivity(new Intent(HourlyRideDetails.this, MyRides.class));
-        }
-        if (check == 2) {
-            startActivity(new Intent(HourlyRideDetails.this, History.class));
-        }
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
