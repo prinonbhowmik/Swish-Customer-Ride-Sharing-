@@ -512,9 +512,11 @@ public class HourlyRideDetails extends AppCompatActivity {
             if (rideStatus.equals("End")) {
                 receiptCard.setVisibility(View.VISIBLE);
                 reportTrip.setVisibility(View.VISIBLE);
+                takaTV.setText(finalPrice);
+            }else {
+                takaTV.setText(realPrice);
             }
             carTypeTV.setText(carType );
-            takaTV.setText(finalPrice);
 
             buttonsShow();
         }

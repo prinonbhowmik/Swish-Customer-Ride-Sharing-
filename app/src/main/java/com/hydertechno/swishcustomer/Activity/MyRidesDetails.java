@@ -744,8 +744,11 @@ public class MyRidesDetails extends AppCompatActivity {
             if (rideStatus.equals("End")){
                 receiptCard.setVisibility(View.VISIBLE);
                 reportTrip.setVisibility(View.VISIBLE);
+                takaTV.setText("৳ "+finalPrice);
+            }else{
+                takaTV.setText("৳ "+realPrice);
             }
-            takaTV.setText("৳ "+finalPrice);
+
             tripId = intent.getStringExtra("tripId");
             driverId = intent.getStringExtra("custId");
             discount = intent.getStringExtra("discount");
