@@ -451,6 +451,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         public void onClick(View view) {
                             if (paymentType != null) {
                                 rideCheck();
+                                dialog.dismiss();
                             } else {
                                 Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
                             }
@@ -1408,6 +1409,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             deslon = model.getDestinationLon();
                             tripId = model.getBookingId();
                             carType = model.getCarType();
+                            driverId = model.getDriverId();
 
                             Intent intent = new Intent(MainActivity.this, RunningTrip.class);
                             intent.putExtra("check", 3);
@@ -1417,6 +1419,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             intent.putExtra("dLon", deslon);
                             intent.putExtra("tripId", tripId);
                             intent.putExtra("carType", carType);
+                            intent.putExtra("driverId", driverId);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();

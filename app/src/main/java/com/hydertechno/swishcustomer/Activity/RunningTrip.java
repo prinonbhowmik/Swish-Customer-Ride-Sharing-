@@ -92,7 +92,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     private String rideStatus;
     private ApiInterface apiInterface;
     private SharedPreferences sharedPreferences;
-    private int end=0;
+    private String type;
     private ProgressDialog progressDialog;
     private String driverId;
 
@@ -112,7 +112,6 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         check = intent.getIntExtra("check", 0);
 
         getData();
-
 
         doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,51 +213,109 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         detailsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides").child(userId).child(tripId);
-                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()){
-                            RideModel model = snapshot.getValue(RideModel.class);
-                            String driverId = model.getDriverId();
-                            String pickTime = model.getPickUpTime();
-                            String price = model.getPrice();
-                            String pickup = model.getPickUpPlace();
-                            String destination = model.getDestinationPlace();
+                if (type.equals("regular")){
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("CustomerRides").child(userId).child(tripId);
+                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()){
+                                RideModel model = snapshot.getValue(RideModel.class);
+                                String driverId = model.getDriverId();
+                                String pickTime = model.getPickUpTime();
+                                String price = model.getPrice();
+                                String pickup = model.getPickUpPlace();
+                                String destination = model.getDestinationPlace();
 
 
-                            Bundle args = new Bundle();
-                            args.putString("driverId", driverId);
-                            args.putString("pickTime", pickTime);
-                            args.putString("price", price);
-                            args.putString("pickup", pickup);
-                            args.putString("destination", destination);
+                                Bundle args = new Bundle();
+                                args.putString("driverId", driverId);
+                                args.putString("pickTime", pickTime);
+                                args.putString("price", price);
+                                args.putString("pickup", pickup);
+                                args.putString("destination", destination);
 
-                            OnGoingDriverDetailsBottom bottom_sheet = new OnGoingDriverDetailsBottom();
-                            bottom_sheet.setArguments(args);
-                            bottom_sheet.show(getSupportFragmentManager(), "bottomSheet");
+                                OnGoingDriverDetailsBottom bottom_sheet = new OnGoingDriverDetailsBottom();
+                                bottom_sheet.setArguments(args);
+                                bottom_sheet.show(getSupportFragmentManager(), "bottomSheet");
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                        }
+                    });
+                }else if (type.equals("hourly")){
+                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("CustomerHourRides").child(userId).child(tripId);
+                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()){
+                                RideModel model = snapshot.getValue(RideModel.class);
+                                String driverId = model.getDriverId();
+                                String pickTime = model.getPickUpTime();
+                                String price = model.getPrice();
+                                String pickup = model.getPickUpPlace();
+                                String destination = model.getDestinationPlace();
+
+
+                                Bundle args = new Bundle();
+                                args.putString("driverId", driverId);
+                                args.putString("pickTime", pickTime);
+                                args.putString("price", price);
+                                args.putString("pickup", pickup);
+                                args.putString("destination", destination);
+
+                                OnGoingDriverDetailsBottom bottom_sheet = new OnGoingDriverDetailsBottom();
+                                bottom_sheet.setArguments(args);
+                                bottom_sheet.show(getSupportFragmentManager(), "bottomSheet");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
             }
         });
+
+        checkTripStatus();
+
+        checkHourlyTripStatus();
 
         showFareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 checkConnection();
-                gotoShowCash();
+                gotoShowCash(type);
             }
         });
 
-        checkTripStatus();
 
+    }
+
+    private void checkHourlyTripStatus() {
+        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference().child("CustomerHourRides").child(userId).child(tripId);
+        tripRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    rideStatus = snapshot.child("rideStatus").getValue().toString();
+                    if (rideStatus.equals("End")) {
+                        detailsBtn.setVisibility(View.GONE);
+                        showFareBtn.setVisibility(View.VISIBLE);
+
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void checkTripStatus() {
@@ -309,6 +366,8 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             destinationLat = Double.parseDouble(intent.getStringExtra("dLat"));
             destinationLon = Double.parseDouble(intent.getStringExtra("dLon"));
             carType = intent.getStringExtra("carType");
+            driverId = intent.getStringExtra("driverId");
+            type = "regular";
         }
         else if (check == 4) {
             //hourly ride pick up edit
@@ -320,14 +379,17 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             edit = intent.getIntExtra("edit", 0);
         }
         else if (check == 5){
+            doneBtn.setVisibility(View.GONE);
+            placeNameTV.setText("Your are on a hourly ride.");
             tripId = intent.getStringExtra("tripId");
             carType = intent.getStringExtra("carType");
             driverId = intent.getStringExtra("driverId");
+            type = "hourly";
         }
 
     }
 
-    private void gotoShowCash() {
+    private void gotoShowCash(String type) {
 
         progressDialog=new ProgressDialog(RunningTrip.this);
         progressDialog.setMessage("Calculating Fare!!");
@@ -338,12 +400,21 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(RunningTrip.this, ShowCash.class);
-                intent.putExtra("tripId", tripId);
-                intent.putExtra("check", 3);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                if (type.equals("regular")){
+                    Intent intent = new Intent(RunningTrip.this, ShowCash.class);
+                    intent.putExtra("tripId", tripId);
+                    intent.putExtra("check", 3);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Intent intent = new Intent(RunningTrip.this, ShowCash.class);
+                    intent.putExtra("tripId", tripId);
+                    intent.putExtra("check", 4);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
             }
         },5000);
 
@@ -426,7 +497,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
 
                         return;
                     }
-                    mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                    mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
                 }
             }
         });
@@ -445,11 +516,11 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(false);
 
-        //update in 5 seconds
+        //update every second
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000); // 10 seconds
-        locationRequest.setFastestInterval(2000); // 5 seconds
+        locationRequest.setInterval(500);
+        locationRequest.setFastestInterval(500);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -464,15 +535,34 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                 doneBtn.setVisibility(View.GONE);
                 showPickUpPoint();
             }
-        } else if (check == 2) {
+        }
+        else if (check == 2) {
             if (edit == 1) {
                 editDestinationPlace();
             } else if (edit == 0) {
                 doneBtn.setVisibility(View.GONE);
                 showDestinationPoint();
             }
-        } else if (check == 3) {
-            showTripRoute();
+        }
+        else if (check == 3) {
+            DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("OnLineDrivers")
+                    .child(carType).child(driverId).child("l");
+            mapRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    pickUpLat = (double) snapshot.child("0").getValue();
+                    pickUpLon = (double) snapshot.child("1").getValue();
+
+                    showTripRoute(pickUpLat,pickUpLon);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
             doneBtn.setVisibility(View.GONE);
             placeNameTV.setVisibility(View.GONE);
             detailsBtn.setVisibility(View.VISIBLE);
@@ -487,6 +577,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         }
         else if (check == 5){
             map.clear();
+            detailsBtn.setVisibility(View.VISIBLE);
             DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("OnLineDrivers")
                     .child(carType).child(driverId).child("l");
             mapRef.addValueEventListener(new ValueEventListener() {
@@ -495,7 +586,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                     double lat = (double) snapshot.child("0").getValue();
                     double lon = (double) snapshot.child("1").getValue();
 
-                    showHourlyLocation(lat,lon);
+                    showHourlyLocation(lat,lon,tripId);
 
                 }
 
@@ -508,7 +599,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-    private void showHourlyLocation(double lat, double lon) {
+    private void showHourlyLocation(double lat, double lon, String tripId) {
         map.clear();
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -520,8 +611,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 16));
     }
 
-
-    private void showTripRoute() {
+    private void showTripRoute(double pickUpLat,double pickUpLon) {
         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
         place1 = new MarkerOptions().icon(markerIcon)
                 .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace);
