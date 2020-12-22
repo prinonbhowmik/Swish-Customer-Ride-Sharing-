@@ -58,6 +58,7 @@ import com.hydertechno.swishcustomer.ForMap.TaskLoadedCallback;
 import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.RideModel;
 import com.hydertechno.swishcustomer.R;
+import com.hydertechno.swishcustomer.Remote.LatLngInterpolator;
 import com.hydertechno.swishcustomer.ServerApi.ApiInterface;
 import com.hydertechno.swishcustomer.ServerApi.ApiUtils;
 import com.hydertechno.swishcustomer.Utils.AppConstants;
@@ -95,6 +96,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     private String type;
     private ProgressDialog progressDialog;
     private String driverId;
+    private float v;
 
 
     @Override
@@ -545,6 +547,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             }
         }
         else if (check == 3) {
+
             DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("OnLineDrivers")
                     .child(carType).child(driverId).child("l");
             mapRef.addValueEventListener(new ValueEventListener() {
@@ -612,8 +615,18 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void showTripRoute(double pickUpLat,double pickUpLon) {
+        map.clear();
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(500);
+        locationRequest.setFastestInterval(500);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-        place1 = new MarkerOptions().icon(markerIcon)
+
+        place1 = new MarkerOptions().icon(markerIcon).flat(true)
                 .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace);
         BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
         place2 = new MarkerOptions().icon(markerIcon2)
@@ -624,8 +637,12 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
 
         map.addMarker(place1).showInfoWindow();
         map.addMarker(place2).showInfoWindow();
+        LatLng latLng = new LatLng(pickUpLat, pickUpLon);
+        MarkerAnimation.animateMarkerToGB(place1, latLng, new LatLngInterpolator.Spherical());
 
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 16));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 18));
+
+
     }
 
     private void showDestinationPoint() {
@@ -754,11 +771,24 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onTaskDone(Object... values) {
 
-
         if (currentPolyline != null)
             currentPolyline.remove();
         currentPolyline = map.addPolyline((PolylineOptions) values[0]);
-
-
+       /* ValueAnimator animator = ValueAnimator.ofInt(0,100);
+        animator.setDuration(1000);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                List<LatLng> points = currentPolyline.getPoints();
+                int percentValue =(int) animation.getAnimatedValue();
+                int size = points.size();
+                int newPoints = (int) (percentValue*size/100.0f);
+                List<LatLng> p = points.subList(0,newPoints);
+                currentPolyline.setPoints(p);
+            }
+        });
+        animator.start();
+*/
     }
 }
