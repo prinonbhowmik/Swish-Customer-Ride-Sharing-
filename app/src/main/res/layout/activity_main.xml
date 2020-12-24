@@ -754,6 +754,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_margin="10dp"
                 android:onClick="homeaddress"
+                android:visibility="gone"
                 android:src="@drawable/ic_baseline_home_24"
                 app:fabSize="mini" />
 
@@ -764,6 +765,7 @@
                 android:layout_below="@id/homeBtn"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="10dp"
+                android:visibility="gone"
                 android:onClick="workAddress"
                 android:src="@drawable/ic_baseline_work_24"
                 app:fabSize="mini" />

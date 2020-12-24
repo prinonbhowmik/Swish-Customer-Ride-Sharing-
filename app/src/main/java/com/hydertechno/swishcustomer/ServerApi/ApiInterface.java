@@ -120,6 +120,7 @@ public interface ApiInterface {
                                           @Field("pickUpPlace") String pickupPlace,
                                           @Field("pickUpTime") String pickupTime,
                                           @Field("price") String price,
+                                          @Field("coupon") String coupon,
                                           @Field("rideStatus") String rideStatus,
                                           @Field("paymentType") String payment);
 
@@ -137,6 +138,7 @@ public interface ApiInterface {
                                                       @Field("pickUpPlace") String pickupPlace,
                                                       @Field("pickUpTime") String pickupTime,
                                                       @Field("price") String price,
+                                                      @Field("coupon") String coupon,
                                                       @Field("rideStatus") String rideStatus,
                                                       @Field("paymentType") String payment
     );
@@ -241,6 +243,7 @@ public interface ApiInterface {
                                          @Field("updatedPrice") String updatedPrice,
                                          @Field("totalDistance") String km,
                                          @Field("totalTime") String time);
+
     @GET("uniq_id_generator")
     Call<List<UniqueId>> getTripId();
 

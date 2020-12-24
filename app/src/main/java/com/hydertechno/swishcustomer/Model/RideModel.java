@@ -20,6 +20,8 @@ public class RideModel {
     private String ratingStatus;
     private String paymentType;
     private String discount;
+    private String coupon;
+    private String e_wallet;
     private String finalPrice;
     private String totalDistance;
     private String totalTime;
@@ -28,7 +30,7 @@ public class RideModel {
     public RideModel() {
     }
 
-    public RideModel(String bookingId, String pickUpLat, String pickUpLon, String destinationLat, String destinationLon, String pickUpPlace, String destinationPlace, String pickUpDate, String pickUpTime, String customerId, String price, String carType, String bookingStatus, String driverId, String rideStatus, String ratingStatus, String paymentType, String discount, String finalPrice, String totalDistance, String totalTime, float rating) {
+    public RideModel(String bookingId, String pickUpLat, String pickUpLon, String destinationLat, String destinationLon, String pickUpPlace, String destinationPlace, String pickUpDate, String pickUpTime, String customerId, String price, String carType, String bookingStatus, String driverId, String rideStatus, String ratingStatus, String paymentType, String discount, String coupon, String e_wallet, String finalPrice, String totalDistance, String totalTime, float rating) {
         this.bookingId = bookingId;
         this.pickUpLat = pickUpLat;
         this.pickUpLon = pickUpLon;
@@ -47,6 +49,8 @@ public class RideModel {
         this.ratingStatus = ratingStatus;
         this.paymentType = paymentType;
         this.discount = discount;
+        this.coupon = coupon;
+        this.e_wallet = e_wallet;
         this.finalPrice = finalPrice;
         this.totalDistance = totalDistance;
         this.totalTime = totalTime;
@@ -123,6 +127,14 @@ public class RideModel {
 
     public String getDiscount() {
         return discount;
+    }
+
+    public String getCoupon() {
+        return coupon;
+    }
+
+    public String getE_wallet() {
+        return e_wallet;
     }
 
     public String getFinalPrice() {

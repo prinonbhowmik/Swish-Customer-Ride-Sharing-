@@ -109,6 +109,7 @@ import com.hydertechno.swishcustomer.ForMap.FetchURL;
 import com.hydertechno.swishcustomer.ForMap.TaskLoadedCallback;
 import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.ApiDeviceToken;
+import com.hydertechno.swishcustomer.Model.CouponShow;
 import com.hydertechno.swishcustomer.Model.DriverInfo;
 import com.hydertechno.swishcustomer.Model.DriverProfile;
 import com.hydertechno.swishcustomer.Model.HourlyRideModel;
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private FirebaseAuth auth;
     private DatabaseReference reference;
-    private String userId;
+    private String userId,rideType;
     private NeomorphFrameLayout backNFL;
     private Animation btnanim;
     private String apiKey = "AIzaSyCCqD0ogQ8adzJp_z2Y2W2ybSFItXYwFfI", pickUpPlace, destinationPlace;
@@ -182,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LinearLayout destinationLayout, timeDateLayout, chooseRideType, hourlyLayout, hourlyrideTypes,
             hourtimeDateLayout, timeselectLayout;
     private RelativeLayout PickUpLayout;
+    private List<CouponShow> showList;
     private Polyline currentPolyline;
     private MarkerOptions place1, place2;
     private ImageView circularImageView;
@@ -221,6 +223,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ProgressBar progressBar;
     private FloatingActionButton homeBtn,workBtn;
     private String language = "en";
+    private int set_coupons;
+    private Date d1,d2;
+    private int couponAmount,e_wallet;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -450,6 +455,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onClick(View view) {
                             if (paymentType != null) {
+                                if (paymentType.equals("cash")){
+                                    Call<List<CouponShow>> couponCall = ApiUtils.getUserService().getValidCoupon(userId);
+                                    couponCall.enqueue(new Callback<List<CouponShow>>() {
+                                        @Override
+                                        public void onResponse(Call<List<CouponShow>> call, Response<List<CouponShow>> response) {
+                                            if (response.isSuccessful()){
+                                                showList = response.body();
+                                                set_coupons = showList.get(0).getSetCoupons();
+                                                if (set_coupons==1){
+                                                    String pickUpDate = rideDate.getText().toString();
+                                                    String validityDate = showList.get(0).getEndDate();
+                                                    Log.d("kahiniKi",pickUpDate);
+                                                    Log.d("kahiniKi",validityDate);
+
+                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                                                    try {
+                                                        d1 = dateFormat.parse(pickUpDate);
+                                                        d2 = dateFormat.parse(validityDate);
+                                                    } catch (ParseException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    if (d2.compareTo(d1) > 0){
+                                                        couponAmount = showList.get(0).getAmount();
+
+                                                        Log.d("kahiniKi", String.valueOf(couponAmount));
+
+                                                    }else{
+                                                        couponAmount = 0;
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<List<CouponShow>> call, Throwable t) {
+                                        }
+                                    });
+                                }
+                                else if (paymentType.equals("wallet")){
+                                    Call<List<Profile>> call = apiInterface.getData(userId);
+                                    call.enqueue(new Callback<List<Profile>>() {
+                                        @Override
+                                        public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+                                            e_wallet = response.body().get(0).getE_wallet();
+                                            Log.d("e-wallet", String.valueOf(e_wallet));
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<Profile>> call, Throwable t) {
+
+                                        }
+                                    });
+                                }
                                 rideCheck();
                                 dialog.dismiss();
                             } else {
@@ -682,8 +742,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
-
-
+                rideType = "hourly";
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setTitle("Alert!!");
                 dialog.setIcon(R.drawable.logo_circle);
@@ -696,6 +755,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         rideHourly.setVisibility(View.GONE);
                         rideLater.setVisibility(View.GONE);
                         hourlypickUpBtn.setVisibility(View.VISIBLE);
+                        homeBtn.setVisibility(View.VISIBLE);
+                        workBtn.setVisibility(View.VISIBLE);
 
                     }
                 });
@@ -717,6 +778,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 map.clear();
                 searchLayout.setVisibility(View.GONE);
                 backNFL.setVisibility(View.VISIBLE);
+
 
                 BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                 pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
@@ -808,10 +870,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 checkConnection();
+                rideType = "regular";
                 PickUpLayout.setVisibility(View.VISIBLE);
                 pickUpBtn.setVisibility(View.VISIBLE);
                 chooseRideType.setVisibility(View.GONE);
-
+                homeBtn.setVisibility(View.VISIBLE);
+                workBtn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -846,6 +910,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onClick(View view) {
                             if (paymentType != null) {
+                                if (paymentType.equals("cash")){
+                                    Call<List<CouponShow>> couponCall = ApiUtils.getUserService().getValidCoupon(userId);
+                                    couponCall.enqueue(new Callback<List<CouponShow>>() {
+                                        @Override
+                                        public void onResponse(Call<List<CouponShow>> call, Response<List<CouponShow>> response) {
+                                            if (response.isSuccessful()){
+                                                showList = response.body();
+                                                set_coupons = showList.get(0).getSetCoupons();
+                                                if (set_coupons==1){
+                                                    String pickUpDate = hourrideDate.getText().toString();
+                                                    String validityDate = showList.get(0).getEndDate();
+                                                    Log.d("kahiniKi",pickUpDate);
+                                                    Log.d("kahiniKi",validityDate);
+
+                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                                                    try {
+                                                        d1 = dateFormat.parse(pickUpDate);
+                                                        d2 = dateFormat.parse(validityDate);
+                                                    } catch (ParseException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    if (d2.compareTo(d1) > 0){
+                                                        couponAmount = showList.get(0).getAmount();
+
+                                                        Log.d("kahiniKi", String.valueOf(couponAmount));
+
+                                                    }else{
+                                                        couponAmount = 0;
+                                                    }
+
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void onFailure(Call<List<CouponShow>> call, Throwable t) {
+                                        }
+                                    });
+                                }
+                                else if (paymentType.equals("wallet")){
+                                    Call<List<Profile>> call = apiInterface.getData(userId);
+                                    call.enqueue(new Callback<List<Profile>>() {
+                                        @Override
+                                        public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+                                            e_wallet = response.body().get(0).getE_wallet();
+                                            Log.d("e-wallet", String.valueOf(e_wallet));
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<Profile>> call, Throwable t) {
+
+                                        }
+                                    });
+                                }
                                 hourlyRideCheck();
                             } else {
                                 Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
@@ -1283,7 +1402,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             });
 
-
                             Call<List<DriverProfile>> call1 = apiInterface.getDriverData(driver_id);
                             call1.enqueue(new Callback<List<DriverProfile>>() {
                                 @Override
@@ -1489,6 +1607,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 rideInfo.put("ratingStatus", "false");
                 rideInfo.put("payment", paymentType);
                 rideInfo.put("discount", "");
+                rideInfo.put("coupon", String.valueOf(couponAmount));
+                rideInfo.put("e_wallet", String.valueOf(e_wallet));
                 rideInfo.put("finalPrice", "");
                 rideInfo.put("cashReceived", "no");
                 rideInfo.put("totalDistance", "");
@@ -1539,9 +1659,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-                Call<List<RideModel>> call1 = apiInterface.saveTripRequest(bookingId, "Pending", type, userId, String.valueOf(destinationLat),
-                        String.valueOf(destinationLon), destinationPlace, "", "", dateTv.getText().toString(), String.valueOf(pickUpLat),
-                        String.valueOf(pickUpLon), pickUpPlace, timeTv.getText().toString(), price, "Pending", paymentType);
+                Call<List<RideModel>> call1 = apiInterface.saveTripRequest(bookingId, "Pending", type, userId,
+                        String.valueOf(destinationLat), String.valueOf(destinationLon), destinationPlace, "", "",
+                        dateTv.getText().toString(), String.valueOf(pickUpLat), String.valueOf(pickUpLon), pickUpPlace,
+                        timeTv.getText().toString(), price, String.valueOf(couponAmount),"Pending", paymentType);
                 call1.enqueue(new Callback<List<RideModel>>() {
                     @Override
                     public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
@@ -1631,6 +1752,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 rideInfo.put("ratingStatus", "false");
                 rideInfo.put("payment", paymentType);
                 rideInfo.put("discount", "");
+                rideInfo.put("coupon", String.valueOf(couponAmount));
+                rideInfo.put("e_wallet", String.valueOf(e_wallet));
                 rideInfo.put("finalPrice", "");
                 rideInfo.put("cashReceived", "no");
                 rideInfo.put("totalTime", "");
@@ -1681,7 +1804,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 Call<List<HourlyRideModel>> call1 = apiInterface.saveHourlyTripRequest(hourlyTripId, "Pending",
                         type, userId, "", "", hourrideDate.getText().toString(), String.valueOf(pickUpLat),
-                        String.valueOf(pickUpLon), pickUpPlace, hourrideTime.getText().toString(), "0", "Pending", paymentType);
+                        String.valueOf(pickUpLon), pickUpPlace, hourrideTime.getText().toString(), "0",
+                        String.valueOf(couponAmount), "Pending", paymentType);
                 call1.enqueue(new Callback<List<HourlyRideModel>>() {
                     @Override
                     public void onResponse(Call<List<HourlyRideModel>> call, Response<List<HourlyRideModel>> response) {
@@ -2829,7 +2953,119 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
-                    if (pickUpMarker==null){
+                    if(rideType.equals("regular")){
+                        if (pickUpMarker==null){
+                            pickUpPlace = snapshot.child("place").getValue().toString();
+                            pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
+                            pickUpLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
+                            autocompleteFragment.setText(pickUpPlace);
+
+                            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                            pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
+                            List<Address> addresses = null;
+                            try {
+                                addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                                if (addresses.size() > 0) {
+                                    Address location = addresses.get(0);
+                                    pickUpPlace = location.getAddressLine(0);
+                                    map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
+                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
+
+                                    map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                        @Override
+                                        public void onMarkerDragStart(Marker marker) {
+
+                                        }
+
+                                        @Override
+                                        public void onMarkerDrag(Marker marker) {
+
+                                        }
+
+                                        @Override
+                                        public void onMarkerDragEnd(Marker marker) {
+                                            pickUpLat = marker.getPosition().latitude;
+                                            pickUpLon = marker.getPosition().longitude;
+
+                                            try {
+                                                List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                                                Address location = addresses.get(0);
+                                                pickUpPlace = location.getAddressLine(0);
+                                                autocompleteFragment.setText(pickUpPlace);
+                                                BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                                                marker.setIcon(markerIcon);
+
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Toasty.error(MainActivity.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            pickUpBtn.setVisibility(View.GONE);
+                            btnanim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fadein);
+                            destinationBtn.setVisibility(View.VISIBLE);
+                            destinationBtn.setAnimation(btnanim);
+                            destinationLayout.setVisibility(View.VISIBLE);
+                            Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+
+                        }
+                        else {
+                            destinationPlace = snapshot.child("place").getValue().toString();
+                            destinationLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
+                            destinationLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
+                            autocompleteDestination.setText(destinationPlace);
+
+                            if (destinationPlace.equals(pickUpPlace)) {
+                                Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+                            } else {
+                                map.clear();
+                                BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                                pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon))
+                                        .icon(markerIcon);
+
+                                BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                                map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for suitable position")).showInfoWindow();
+                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
+
+                                map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                    @Override
+                                    public void onMarkerDragStart(Marker marker) {
+                                    }
+
+                                    @Override
+                                    public void onMarkerDrag(Marker marker) {
+                                    }
+
+                                    @Override
+                                    public void onMarkerDragEnd(Marker marker) {
+
+                                        destinationLat = marker.getPosition().latitude;
+                                        destinationLon = marker.getPosition().longitude;
+
+                                        try {
+                                            List<Address> addresses = geocoder.getFromLocation(destinationLat, destinationLon, 1);
+                                            Address location = addresses.get(0);
+                                            destinationPlace = location.getAddressLine(0);
+                                            destinationCity = location.getLocality();
+
+                                            autocompleteDestination.setText(destinationPlace);
+                                            BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                                            marker.setIcon(markerIcon2);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }else{
                         pickUpPlace = snapshot.child("place").getValue().toString();
                         pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
                         pickUpLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
@@ -2885,60 +3121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         pickUpBtn.setVisibility(View.GONE);
                         btnanim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fadein);
-                        destinationBtn.setVisibility(View.VISIBLE);
-                        destinationBtn.setAnimation(btnanim);
-                        destinationLayout.setVisibility(View.VISIBLE);
-                        Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
 
-                    }
-                    else {
-                        destinationPlace = snapshot.child("place").getValue().toString();
-                        destinationLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
-                        destinationLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
-                        autocompleteDestination.setText(destinationPlace);
-
-                        if (destinationPlace.equals(pickUpPlace)) {
-                            Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
-                        } else {
-                            map.clear();
-                            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-                            pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon))
-                                    .icon(markerIcon);
-
-                            BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
-                            map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for suitable position")).showInfoWindow();
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
-
-                            map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                                @Override
-                                public void onMarkerDragStart(Marker marker) {
-                                }
-
-                                @Override
-                                public void onMarkerDrag(Marker marker) {
-                                }
-
-                                @Override
-                                public void onMarkerDragEnd(Marker marker) {
-
-                                    destinationLat = marker.getPosition().latitude;
-                                    destinationLon = marker.getPosition().longitude;
-
-                                    try {
-                                        List<Address> addresses = geocoder.getFromLocation(destinationLat, destinationLon, 1);
-                                        Address location = addresses.get(0);
-                                        destinationPlace = location.getAddressLine(0);
-                                        destinationCity = location.getLocality();
-
-                                        autocompleteDestination.setText(destinationPlace);
-                                        BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
-                                        marker.setIcon(markerIcon2);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
                     }
                 }
                 else{
@@ -2966,7 +3149,118 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
 
-                    if (pickUpMarker==null){
+                    if (rideType.equals("regular")){
+                        if (pickUpMarker==null){
+                            pickUpPlace = snapshot.child("place").getValue().toString();
+                            pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
+                            pickUpLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
+                            autocompleteFragment.setText(pickUpPlace);
+
+                            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                            pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
+                            List<Address> addresses = null;
+                            try {
+                                addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                                if (addresses.size() > 0) {
+                                    Address location = addresses.get(0);
+                                    pickUpPlace = location.getAddressLine(0);
+                                    map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
+                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
+
+                                    map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                        @Override
+                                        public void onMarkerDragStart(Marker marker) {
+
+                                        }
+
+                                        @Override
+                                        public void onMarkerDrag(Marker marker) {
+
+                                        }
+
+                                        @Override
+                                        public void onMarkerDragEnd(Marker marker) {
+                                            pickUpLat = marker.getPosition().latitude;
+                                            pickUpLon = marker.getPosition().longitude;
+
+                                            try {
+                                                List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                                                Address location = addresses.get(0);
+                                                pickUpPlace = location.getAddressLine(0);
+                                                autocompleteFragment.setText(pickUpPlace);
+                                                BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                                                marker.setIcon(markerIcon);
+
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Toasty.error(MainActivity.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
+                                }
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            pickUpBtn.setVisibility(View.GONE);
+                            btnanim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fadein);
+                            destinationBtn.setVisibility(View.VISIBLE);
+                            destinationBtn.setAnimation(btnanim);
+                            destinationLayout.setVisibility(View.VISIBLE);
+
+                        }
+                        else {
+                            destinationPlace = snapshot.child("place").getValue().toString();
+                            destinationLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
+                            destinationLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
+                            autocompleteDestination.setText(destinationPlace);
+
+                            if (destinationPlace.equals(pickUpPlace)) {
+                                Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+                            } else {
+                                map.clear();
+                                BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                                pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon))
+                                        .icon(markerIcon);
+
+                                BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                                map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for suitable position")).showInfoWindow();
+                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
+
+                                map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                    @Override
+                                    public void onMarkerDragStart(Marker marker) {
+                                    }
+
+                                    @Override
+                                    public void onMarkerDrag(Marker marker) {
+                                    }
+
+                                    @Override
+                                    public void onMarkerDragEnd(Marker marker) {
+
+                                        destinationLat = marker.getPosition().latitude;
+                                        destinationLon = marker.getPosition().longitude;
+
+                                        try {
+                                            List<Address> addresses = geocoder.getFromLocation(destinationLat, destinationLon, 1);
+                                            Address location = addresses.get(0);
+                                            destinationPlace = location.getAddressLine(0);
+                                            destinationCity = location.getLocality();
+
+                                            autocompleteDestination.setText(destinationPlace);
+                                            BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                                            marker.setIcon(markerIcon2);
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }else{
                         pickUpPlace = snapshot.child("place").getValue().toString();
                         pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
                         pickUpLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
@@ -3022,60 +3316,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         pickUpBtn.setVisibility(View.GONE);
                         btnanim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fadein);
-                        destinationBtn.setVisibility(View.VISIBLE);
-                        destinationBtn.setAnimation(btnanim);
-                        destinationLayout.setVisibility(View.VISIBLE);
-                        Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
-
-                    }
-                    else {
-                        destinationPlace = snapshot.child("place").getValue().toString();
-                        destinationLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
-                        destinationLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
-                        autocompleteDestination.setText(destinationPlace);
-
-                        if (destinationPlace.equals(pickUpPlace)) {
-                            Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
-                        } else {
-                            map.clear();
-                            BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-                            pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon))
-                                    .icon(markerIcon);
-
-                            BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
-                            map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for suitable position")).showInfoWindow();
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
-
-                            map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                                @Override
-                                public void onMarkerDragStart(Marker marker) {
-                                }
-
-                                @Override
-                                public void onMarkerDrag(Marker marker) {
-                                }
-
-                                @Override
-                                public void onMarkerDragEnd(Marker marker) {
-
-                                    destinationLat = marker.getPosition().latitude;
-                                    destinationLon = marker.getPosition().longitude;
-
-                                    try {
-                                        List<Address> addresses = geocoder.getFromLocation(destinationLat, destinationLon, 1);
-                                        Address location = addresses.get(0);
-                                        destinationPlace = location.getAddressLine(0);
-                                        destinationCity = location.getLocality();
-
-                                        autocompleteDestination.setText(destinationPlace);
-                                        BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
-                                        marker.setIcon(markerIcon2);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
                     }
                 }else{
                     Intent intent = new Intent(MainActivity.this,Home_Work_Address.class);
