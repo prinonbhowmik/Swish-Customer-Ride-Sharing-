@@ -2551,7 +2551,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         int imageResource = getResources().getIdentifier(uri, null, getPackageName());
 
-
                         Drawable res = getResources().getDrawable(imageResource);
                         circularImageView.setImageDrawable(res);
                     }else{
@@ -2570,7 +2569,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                     UserName.setText(list.get(0).getName());
                     userPhone.setText("+88" + list.get(0).getPhone());
-                    wallet_fromNavigation.setText("৳ " + String.valueOf(list.get(0).getWallet()));
+                    int totalWallet = list.get(0).getWallet()+list.get(0).getE_wallet();
+                    wallet_fromNavigation.setText("৳ " + totalWallet);
                 }
             }
 
