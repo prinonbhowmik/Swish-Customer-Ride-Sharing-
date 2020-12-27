@@ -744,7 +744,7 @@ public class MyRidesDetails extends AppCompatActivity {
             if (rideStatus.equals("End")){
                 receiptCard.setVisibility(View.VISIBLE);
                 reportTrip.setVisibility(View.VISIBLE);
-                takaTV.setText(finalPrice);
+                takaTV.setText(realPrice);
             }else{
                 takaTV.setText(realPrice);
             }

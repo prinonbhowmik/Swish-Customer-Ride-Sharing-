@@ -494,7 +494,7 @@ public class HourlyRideDetails extends AppCompatActivity {
             });
         }
         else if (check == 2){
-            txt6.setText("Fare : BDT ");
+            txt6.setText("Fare : BDT");
             headerTitle.setText("Hourly Ride History");
             Intent intent = getIntent();
             driverId = intent.getStringExtra("custId");
@@ -512,7 +512,7 @@ public class HourlyRideDetails extends AppCompatActivity {
             if (rideStatus.equals("End")) {
                 receiptCard.setVisibility(View.VISIBLE);
                 reportTrip.setVisibility(View.VISIBLE);
-                takaTV.setText(finalPrice);
+                takaTV.setText(realPrice);
             }else {
                 takaTV.setText(realPrice);
             }
@@ -640,6 +640,12 @@ public class HourlyRideDetails extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        if (check == 1) {
+            startActivity(new Intent(HourlyRideDetails.this, MyRides.class));
+        }
+        if (check == 2) {
+            startActivity(new Intent(HourlyRideDetails.this, History.class));
+        }
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }

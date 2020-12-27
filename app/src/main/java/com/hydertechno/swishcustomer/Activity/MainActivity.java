@@ -966,6 +966,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     });
                                 }
                                 hourlyRideCheck();
+                                doneBtn.setEnabled(false);
                             } else {
                                 Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
                             }
