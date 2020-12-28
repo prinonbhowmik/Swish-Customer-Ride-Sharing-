@@ -755,8 +755,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         rideHourly.setVisibility(View.GONE);
                         rideLater.setVisibility(View.GONE);
                         hourlypickUpBtn.setVisibility(View.VISIBLE);
-                        homeBtn.setVisibility(View.VISIBLE);
-                        workBtn.setVisibility(View.VISIBLE);
+                        homeBtn.show();
+                        workBtn.show();
 
                     }
                 });
@@ -874,8 +874,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 PickUpLayout.setVisibility(View.VISIBLE);
                 pickUpBtn.setVisibility(View.VISIBLE);
                 chooseRideType.setVisibility(View.GONE);
-                homeBtn.setVisibility(View.VISIBLE);
-                workBtn.setVisibility(View.VISIBLE);
+                homeBtn.show();
+                workBtn.show();
             }
         });
 
