@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.chinodev.androidneomorphframelayout.NeomorphFrameLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.hydertechno.swishcustomer.Internet.ConnectivityReceiver;
 import com.hydertechno.swishcustomer.Model.DriverInfo;
@@ -32,9 +33,11 @@ import retrofit2.Response;
 public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
     private View view;
     private LottieAnimationView animation;
-    private TextView driverNameTV,plateTV,pickupPlaceTV, destinationTV, pickupTimeTV, takaTV;
+    private TextView driverNameTV,plateTV,pickupPlaceTV, destinationTV, pickupTimeTV, takaTV,txt2;
     private String drivername,driverId,pickTime,price,pickup,destination;
     private ApiInterface api;
+    private int check;
+    private NeomorphFrameLayout NFL5;
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.on_going_driver_details, container, false);
@@ -49,6 +52,10 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
         price = mArgs.getString("price");
         pickup = mArgs.getString("pickup");
         destination = mArgs.getString("destination");
+        check = mArgs.getInt("check");
+
+        Log.d("check", String.valueOf(check));
+
 
         Call<List<DriverProfile>> call = api.getDriverData(driverId);
         call.enqueue(new Callback<List<DriverProfile>>() {
@@ -80,6 +87,11 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
 
             }
         });
+
+        if (check==5){
+            txt2.setVisibility(View.GONE);
+            NFL5.setVisibility(View.GONE);
+        }
 
         // plateTV.setText(pickTime);
         pickupPlaceTV.setText(pickup);
@@ -114,7 +126,8 @@ public class OnGoingDriverDetailsBottom extends BottomSheetDialogFragment {
         takaTV = view.findViewById(R.id.takaTV);
         animation = view.findViewById(R.id.sos);
         api = ApiUtils.getUserService();
-
+        txt2 = view.findViewById(R.id.txt2);
+        NFL5 = view.findViewById(R.id.NFL5);
     }
 
     private void checkConnection() {

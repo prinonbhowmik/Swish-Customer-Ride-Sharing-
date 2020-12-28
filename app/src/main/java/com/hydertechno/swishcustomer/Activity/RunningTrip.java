@@ -235,6 +235,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                                 args.putString("price", price);
                                 args.putString("pickup", pickup);
                                 args.putString("destination", destination);
+                                args.putInt("check", check);
 
                                 OnGoingDriverDetailsBottom bottom_sheet = new OnGoingDriverDetailsBottom();
                                 bottom_sheet.setArguments(args);
@@ -267,6 +268,7 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                                 args.putString("price", price);
                                 args.putString("pickup", pickup);
                                 args.putString("destination", destination);
+                                args.putInt("check", check);
 
                                 OnGoingDriverDetailsBottom bottom_sheet = new OnGoingDriverDetailsBottom();
                                 bottom_sheet.setArguments(args);
