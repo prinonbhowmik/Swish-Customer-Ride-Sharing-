@@ -53,4 +53,13 @@ public class Emergency extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Emergency.this,MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 }
