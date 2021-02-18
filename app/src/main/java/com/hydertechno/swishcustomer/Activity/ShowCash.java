@@ -140,7 +140,7 @@ public class ShowCash extends AppCompatActivity {
                         hourLayout.setVisibility(View.VISIBLE);
                         hourTv.setText(snapshot.child("totalTime").getValue().toString()+" Hour");
 
-                    }else {
+                    } else {
                         startActivity(new Intent(ShowCash.this,History.class));
                     }
 
@@ -152,6 +152,43 @@ public class ShowCash extends AppCompatActivity {
                 }
             });
 
+        }else if (check==5){
+            DatabaseReference cashRef = FirebaseDatabase.getInstance().getReference("CustomerInstantRides")
+                    .child(userId).child(tripId);
+            cashRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()) {
+                        RideModel model = snapshot.getValue(RideModel.class);
+                        price = model.getPrice();
+                        pickUpPlace = model.getPickUpPlace();
+                        destinationPlace = model.getDestinationPlace();
+                        driverId = model.getDriverId();
+                        finalPrice = model.getFinalPrice();
+                        discountPrice = model.getDiscount();
+                        distance = model.getTotalDistance();
+                        duration = model.getTotalTime();
+                        carType = model.getCarType();
+
+                        cashTxt.setText("৳ " + price);
+                        pickupPlaceTV.setText(pickUpPlace);
+                        destinationPlaceTV.setText(destinationPlace);
+                        discountTv.setText(discountPrice);
+                        final_Txt.setText(finalPrice);
+                        kmLayout.setVisibility(View.VISIBLE);
+                        distanceTv.setText("Distance : " + distance + " km");
+                        durationTv.setText("Duration : " + duration + " min");
+                    }else {
+                        startActivity(new Intent(ShowCash.this,History.class));
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
         payCasshBtn.setOnClickListener(new View.OnClickListener() {

@@ -72,6 +72,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
     private GoogleMap map;
@@ -297,7 +301,6 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
                 gotoShowCash(type);
             }
         });
-
 
     }
 
@@ -626,13 +629,15 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
             return;
         }
         mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.ic_car_top_view);
+
+        float bearing = CalculateBearingAngle(pickUpLat, pickUpLon,destinationLat, destinationLon);
 
         place1 = new MarkerOptions().icon(markerIcon).flat(true)
-                .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace);
+                .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace).anchor(0.5F, 0.5F);
         BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
         place2 = new MarkerOptions().icon(markerIcon2)
-                .position(new LatLng(destinationLat, destinationLon)).title(destinationPlace);
+                .position(new LatLng(destinationLat, destinationLon)).rotation(bearing).title(destinationPlace).flat(true);
 
         new FetchURL(RunningTrip.this).execute(getUrl(place1.getPosition(), place2.getPosition(),
                 "driving"), "driving");
@@ -644,7 +649,6 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 18));
 
-
     }
 
     private void showDestinationPoint() {
@@ -652,6 +656,15 @@ public class RunningTrip extends AppCompatActivity implements OnMapReadyCallback
         BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.ic_destination);
         map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon));
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
+    }
+
+    public float CalculateBearingAngle(double startLatitude,double startLongitude, double endLatitude, double endLongitude){
+        double Phi1 = Math.toRadians(startLatitude);
+        double Phi2 = Math.toRadians(endLatitude);
+        double DeltaLambda = Math.toRadians(endLongitude - startLongitude);
+
+        double Theta = atan2((sin(DeltaLambda)*cos(Phi2)) , (cos(Phi1)*sin(Phi2) - sin(Phi1)*cos(Phi2)*cos(DeltaLambda)));
+        return (float)Math.toDegrees(Theta);
     }
 
     private void editDestinationPlace() {

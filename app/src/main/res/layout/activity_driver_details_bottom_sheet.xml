@@ -255,28 +255,4 @@
             android:textSize="18sp" />
     </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
 
-    <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
-        android:id="@+id/detailsNFL"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:neomorph_background_color="@color/neomorph_background_color"
-        app:neomorph_corner_radius="10dp"
-        app:neomorph_elevation="8dp"
-        app:neomorph_highlight_color="@color/neomorph_highlight_color"
-        app:neomorph_shadow_color="@color/neomorph_shadow_color"
-        app:neomorph_shadow_type="outer"
-        app:neomorph_view_type="rectangular"
-        android:layout_below="@id/card_view4">
-        <Button
-            android:id="@+id/callDriverBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/details_btn_design"
-            android:text="Call"
-            android:textColor="@color/green1"
-            android:textAllCaps="false"
-            android:textSize="18sp"/>
-    </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
-
-
 </RelativeLayout>

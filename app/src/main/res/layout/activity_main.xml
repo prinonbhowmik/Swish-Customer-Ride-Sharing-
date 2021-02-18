@@ -21,7 +21,6 @@
             android:layout_height="match_parent"
             tools:context=".MapsActivity" />
 
-
         <ProgressBar
             android:id="@+id/progressbar"
             android:layout_width="50dp"
@@ -44,6 +43,358 @@
             android:textAllCaps="false"
             android:textColor="#fff"
             android:visibility="gone" />
+
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/driverDetailsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            tools:context=".MainActivity"
+            app:umanoPanelHeight="100dp"
+            android:visibility="gone"
+            app:umanoShadowHeight="5dp">
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp">
+            </RelativeLayout>
+
+            <RelativeLayout
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_alignParentBottom="true"
+                android:background="#fff">
+
+                <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                    android:id="@+id/profileNFL"
+                    app:neomorph_background_color="@color/neomorph_background_color"
+                    app:neomorph_corner_radius="10dp"
+                    app:neomorph_elevation="5dp"
+                    app:neomorph_highlight_color="@color/neomorph_highlight_color"
+                    app:neomorph_shadow_color="@color/neomorph_shadow_color"
+                    app:neomorph_shadow_type="outer"
+                    app:neomorph_view_type="circular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:layerType="software">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileIV"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:padding="2dp"
+                        android:src="@drawable/logo_circle" />
+                </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+                <TextView
+                    android:id="@+id/driverRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_toEndOf="@+id/profileNFL"
+                    android:drawableLeft="@drawable/ic_baseline_star_24"
+                    android:fontFamily="@font/comfortaa"
+                    android:text="0.0"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/rideTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/driverRatingBar"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_toEndOf="@+id/profileNFL"
+                    android:fontFamily="@font/comfortaa"
+                    android:text="Rides :"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/rideCountTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/driverRatingBar"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_toEndOf="@id/rideTxt"
+                    android:fontFamily="@font/comfortaa"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/driver_CarTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profileNFL"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/stroke"
+                    android:fontFamily="@font/comfortaa"
+                    android:padding="10dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                    android:id="@+id/card_view1"
+                    app:neomorph_background_color="@color/neomorph_background_color"
+                    app:neomorph_corner_radius="10dp"
+                    app:neomorph_elevation="8dp"
+                    app:neomorph_highlight_color="@color/neomorph_highlight_color"
+                    app:neomorph_shadow_color="@color/neomorph_shadow_color"
+                    app:neomorph_shadow_type="outer"
+                    app:neomorph_view_type="rectangular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/driver_CarTV"
+                    android:layout_marginTop="5dp"
+                    android:layerType="software">
+
+                    <TextView
+                        android:id="@+id/driverNameTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/stroke"
+                        android:fontFamily="@font/comfortaa"
+                        android:padding="10dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+                </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+                <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                    android:id="@+id/card_view2"
+                    app:neomorph_background_color="@color/neomorph_background_color"
+                    app:neomorph_corner_radius="10dp"
+                    app:neomorph_elevation="8dp"
+                    app:neomorph_highlight_color="@color/neomorph_highlight_color"
+                    app:neomorph_shadow_color="@color/neomorph_shadow_color"
+                    app:neomorph_shadow_type="outer"
+                    app:neomorph_view_type="rectangular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/card_view1"
+                    android:layout_marginTop="-5dp"
+                    android:layerType="software">
+
+                    <TextView
+                        android:id="@+id/driver_PhoneTV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/stroke"
+                        android:fontFamily="@font/comfortaa"
+                        android:padding="10dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp" />
+                </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+            </RelativeLayout>
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/slidingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            tools:context=".MainActivity"
+            app:umanoPanelHeight="100dp"
+            android:visibility="gone"
+            app:umanoOverlay = "false"
+            app:umanoShadowHeight="5dp">
+
+            <RelativeLayout
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:visibility="gone">
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff">
+
+                <TextView
+                    android:id="@+id/onGoingPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="18sp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:fontFamily="@font/comfortaa"
+                    android:textColor="@color/green1"
+                    android:drawableLeft="@drawable/ic_taka"/>
+
+
+                <com.chinodev.androidneomorphframelayout.NeomorphFrameLayout
+                    android:id="@+id/profileNFL2"
+                    app:neomorph_background_color="@color/neomorph_background_color"
+                    app:neomorph_corner_radius="10dp"
+                    app:neomorph_elevation="5dp"
+                    app:neomorph_highlight_color="@color/neomorph_highlight_color"
+                    app:neomorph_shadow_color="@color/neomorph_shadow_color"
+                    app:neomorph_shadow_type="outer"
+                    app:neomorph_view_type="circular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:layerType="software">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profileIV2"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:padding="2dp"
+                        android:src="@drawable/logo_circle" />
+                </com.chinodev.androidneomorphframelayout.NeomorphFrameLayout>
+
+                <TextView
+                    android:id="@+id/driverRatingBar2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_toEndOf="@+id/profileNFL2"
+                    android:drawableLeft="@drawable/ic_baseline_star_24"
+                    android:fontFamily="@font/comfortaa"
+                    android:text="0.0"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/rideTxt2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/driverRatingBar2"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_toEndOf="@+id/profileNFL2"
+                    android:fontFamily="@font/comfortaa"
+                    android:text="Rides :"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/rideCountTxt2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/driverRatingBar2"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_toEndOf="@id/rideTxt2"
+                    android:fontFamily="@font/comfortaa"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/profileNFL2"
+                    android:background="#BFBDBD" />
+
+                <TextView
+                    android:id="@+id/driverNameTV2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/stroke"
+                    android:fontFamily="@font/comfortaa"
+                    android:padding="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_below="@+id/view"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/driver_CarTV2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/driverNameTV2"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/stroke"
+                    android:fontFamily="@font/comfortaa"
+                    android:padding="10dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/driver_CarTV2"
+                    android:background="#BFBDBD" />
+
+                <LinearLayout
+                    android:id="@+id/layoutplace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/view2"
+                    android:orientation="horizontal"
+                    android:weightSum="8">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="7dp"
+                            android:src="@drawable/ic_map" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="7dp"
+                            android:src="@drawable/ic_flags"
+                            android:layout_marginBottom="7dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/onGoingPickUp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:fontFamily="@font/comfortaa"
+                            android:maxLines="1"
+                            android:textColor="#000" />
+
+                        <TextView
+                            android:id="@+id/onGoingDestination"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="@font/comfortaa"
+                            android:maxLines="1"
+                            android:textColor="#000" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </RelativeLayout>
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
     </RelativeLayout>
 
@@ -98,34 +449,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            android:weightSum="2">
-
-            <Button
-                android:id="@+id/bookNowBtn"
-                android:layout_width="0dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/rideHourly"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_background"
+                    android:text="Hourly"
+                    android:textAllCaps="false"
+                    android:textColor="#fff" />
+
+                <Button
+                    android:id="@+id/intercityBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_background"
+                    android:text="Inter City"
+                    android:textAllCaps="false"
+                    android:textColor="#fff" />
+
+
+            </LinearLayout>
+            <Button
+                android:id="@+id/instantRideBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/btn_background"
-                android:text="Hourly"
+                android:text="Instant Ride"
                 android:textAllCaps="false"
                 android:textColor="#fff" />
-
-            <Button
-                android:id="@+id/bookLaterBtn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_background"
-                android:text="Inter City"
-                android:textAllCaps="false"
-                android:textColor="#fff" />
-
         </LinearLayout>
+
+
 
         <RelativeLayout
             android:layout_width="match_parent"

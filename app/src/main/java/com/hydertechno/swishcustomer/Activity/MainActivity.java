@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -92,6 +93,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -152,8 +154,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static java.lang.System.exit;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        OnMapReadyCallback, TaskLoadedCallback {
+        OnMapReadyCallback, TaskLoadedCallback, ConnectivityReceiver.ConnectivityReceiverListener {
 
     private FirebaseAuth auth;
     private DatabaseReference reference;
@@ -169,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private GoogleMap map;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Button pickUpBtn, destinationBtn, confirmRideBtn, hourlypickUpBtn;
+    private Button pickUpBtn, destinationBtn, confirmRideBtn, hourlypickUpBtn,instantRideBtn;
     private Geocoder geocoder;
     private StringBuilder stringBuilder;
     private boolean isGPS = false;
@@ -186,8 +190,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<CouponShow> showList;
     private Polyline currentPolyline;
     private MarkerOptions place1, place2;
-    private ImageView circularImageView;
-    private TextView UserName, userPhone, wallet_fromNavigation;
+    private ImageView circularImageView,profileIV,profileIV2,sizeIv;
+    private TextView UserName, userPhone, wallet_fromNavigation,driverRatingBar,driverRatingBar2,rideCountTxt,rideCountTxt2,rideTxt2
+            ,driverNameTV,driverNameTV2,driver_PhoneTV,carTv,carTv2,rideTxt,onGoingPickUp,onGoingDestination,onGoingPrice;
     private int kmdistance, travelduration;
     private String bookingId, driverId, hourlyTripId, paymentType;
     private RelativeLayout bottomsheet, searchLayout;
@@ -198,11 +203,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView dateTv, timeTv, rideTypeTv, hourrideTime, hourrideDate, hourlyrideTypeTv;
     private String kilometer, km, min, minfare, duration, premierekm, premieremin, premiereminfare, businesskm,
             businessmin, businessminfare, pickUpCity, destinationCity;
-    private Button rideHourly, rideLater, hourlyconfirmRideBtn, wantnowBtn, wantLaterBtn;
+    private Button rideHourly, rideInterCity, hourlyconfirmRideBtn, wantnowBtn, wantLaterBtn;
     private SharedPreferences sharedPreferences;
-    private Boolean notify = false, firstTime = true;
+    private Boolean notify = false, firstTime = true,isConnected;
     private List<String> driverList;
-    private int bottomSheetCount = 0, driverRatingCount = 0;
+    private int bottomSheetCount = 0, driverRatingCount = 0,height;
     private float driverRating = 0;
     private String price, type;
     private int estprice;
@@ -215,24 +220,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Dialog dialog;
     private float rating1;
     private float totalRating;
-    private int totalCount;
+    private int totalCount,set_coupons,couponAmount,e_wallet;;
     private APIService apiService;
-    private double radius = 2;
+    private double radius = 1;
     private String tripId, picklat, pickLon, deslat, deslon, carType,destinationDivision;
     boolean singleBack = false;
     private ProgressBar progressBar;
     private FloatingActionButton homeBtn,workBtn;
     private String language = "en";
-    private int set_coupons;
     private Date d1,d2;
-    private int couponAmount,e_wallet;
+    private ProgressDialog loadingDialog;
+    private Snackbar snackbar;
+    private RelativeLayout rl1;
+    private SlidingUpPanelLayout onGoingTripLayout,driverDetailsLayout;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         init();
 
         //change language
@@ -244,9 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getBaseContext().getResources().getDisplayMetrics());
 
         checkVersion();
-
         checkConnection();
-
         checkPermission();
 
         sharedPreferences = getSharedPreferences("MyRef", Context.MODE_PRIVATE);
@@ -313,10 +317,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         circularImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, UserProfile.class).putExtra("id", userId));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                drawerLayout.closeDrawers();
-                finish();
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                    drawerLayout.closeDrawers();
+                } else {
+                    startActivity(new Intent(MainActivity.this, UserProfile.class).putExtra("id", userId));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.closeDrawers();
+                    finish();
+                }
             }
         });
         navigationView.setNavigationItemSelectedListener(this);
@@ -329,62 +339,66 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
-                BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-                pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
-                List<Address> addresses = null;
+                if (!isConnected) {
+                    snackBar(isConnected);
+                } else {
+                    BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                    pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
+                    List<Address> addresses = null;
 
-                try {
-                    addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
-                    if (addresses.size() > 0) {
-                        Address location = addresses.get(0);
-                        pickUpPlace = location.getAddressLine(0);
-                        map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
+                    try {
+                        addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                        if (addresses.size() > 0) {
+                            Address location = addresses.get(0);
+                            pickUpPlace = location.getAddressLine(0);
+                            map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
 
-                        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                            @Override
-                            public void onMarkerDragStart(Marker marker) {
+                            map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                @Override
+                                public void onMarkerDragStart(Marker marker) {
 
-                            }
-
-                            @Override
-                            public void onMarkerDrag(Marker marker) {
-
-                            }
-
-                            @Override
-                            public void onMarkerDragEnd(Marker marker) {
-                                pickUpLat = marker.getPosition().latitude;
-                                pickUpLon = marker.getPosition().longitude;
-
-                                try {
-                                    List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
-                                    Address location = addresses.get(0);
-                                    pickUpPlace = location.getAddressLine(0);
-
-                                    autocompleteFragment.setText(pickUpPlace);
-                                    BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-                                    marker.setIcon(markerIcon);
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
                                 }
-                            }
-                        });
-                    } else {
-                        Toasty.error(MainActivity.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
+
+                                @Override
+                                public void onMarkerDrag(Marker marker) {
+
+                                }
+
+                                @Override
+                                public void onMarkerDragEnd(Marker marker) {
+                                    pickUpLat = marker.getPosition().latitude;
+                                    pickUpLon = marker.getPosition().longitude;
+
+                                    try {
+                                        List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                                        Address location = addresses.get(0);
+                                        pickUpPlace = location.getAddressLine(0);
+
+                                        autocompleteFragment.setText(pickUpPlace);
+                                        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                                        marker.setIcon(markerIcon);
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toasty.error(MainActivity.this, "Place Not Found!", Toasty.LENGTH_SHORT).show();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    pickUpBtn.setVisibility(View.GONE);
+                    btnanim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fadein);
+                    destinationBtn.setVisibility(View.VISIBLE);
+                    destinationBtn.setAnimation(btnanim);
+                    destinationLayout.setVisibility(View.VISIBLE);
+                    Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
                 }
-
-                pickUpBtn.setVisibility(View.GONE);
-                btnanim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fadein);
-                destinationBtn.setVisibility(View.VISIBLE);
-                destinationBtn.setAnimation(btnanim);
-                destinationLayout.setVisibility(View.VISIBLE);
-                Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
             }
         });
 
@@ -392,16 +406,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
-
-                getDestinationPlace();
-
-                progressBar.setVisibility(View.VISIBLE);
-
-                if (destinationLat == 0.0 && destinationLon == 0.0 || destinationLat == pickUpLat && destinationLon == pickUpLon) {
-                    Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+                if (!isConnected) {
+                    snackBar(isConnected);
                 } else {
-                    destinationBtn.setVisibility(View.GONE);
-                    showDirections();
+                    getDestinationPlace();
+                    progressBar.setVisibility(View.VISIBLE);
+                    if (destinationLat == 0.0 && destinationLon == 0.0 || destinationLat == pickUpLat && destinationLon == pickUpLon) {
+                        Toasty.info(MainActivity.this, "Please select your destination", Toasty.LENGTH_LONG).show();
+                    } else {
+                        destinationBtn.setVisibility(View.GONE);
+                        showDirections();
+                    }
                 }
             }
         });
@@ -423,115 +438,133 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         confirmRideBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 checkConnection();
-
-                notify = true;
-
-                if (dateTv.getText().equals("Select Ride Date")) {
-                    Toast.makeText(MainActivity.this, "Please Enter Ride Date!", Toast.LENGTH_SHORT).show();
-                } else if (timeTv.getText().equals("Select Ride Time")) {
-                    Toast.makeText(MainActivity.this, "Please Select Ride Time!", Toast.LENGTH_SHORT).show();
+                if (!isConnected) {
+                    snackBar(isConnected);
                 } else {
-                    dialog = new Dialog(MainActivity.this);
-                    dialog.setContentView(R.layout.payment_type_select);
-                    Button doneBtn = dialog.findViewById(R.id.doneBtn);
-                    RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
 
-                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                            switch (i) {
-                                case R.id.cash:
-                                    paymentType = "cash";
-                                    break;
-                                case R.id.wallet:
-                                    paymentType = "wallet";
-                                    break;
+                    notify = true;
+
+                    if (dateTv.getText().equals("Select Ride Date")) {
+                        Toast.makeText(MainActivity.this, "Please Enter Ride Date!", Toast.LENGTH_SHORT).show();
+                    } else if (timeTv.getText().equals("Select Ride Time")) {
+                        Toast.makeText(MainActivity.this, "Please Select Ride Time!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        dialog = new Dialog(MainActivity.this);
+                        dialog.setContentView(R.layout.payment_type_select);
+                        Button doneBtn = dialog.findViewById(R.id.doneBtn);
+                        RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
+
+                        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                                switch (i) {
+                                    case R.id.cash:
+                                        paymentType = "cash";
+                                        break;
+                                    case R.id.wallet:
+                                        paymentType = "wallet";
+                                        break;
+                                }
                             }
-                        }
-                    });
-                    doneBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (paymentType != null) {
-                                if (paymentType.equals("cash")){
-                                    Call<List<CouponShow>> couponCall = ApiUtils.getUserService().getValidCoupon(userId);
-                                    couponCall.enqueue(new Callback<List<CouponShow>>() {
-                                        @Override
-                                        public void onResponse(Call<List<CouponShow>> call, Response<List<CouponShow>> response) {
-                                            if (response.isSuccessful()){
-                                                showList = response.body();
-                                                set_coupons = showList.get(0).getSetCoupons();
-                                                if (set_coupons==1){
-                                                    String pickUpDate = rideDate.getText().toString();
-                                                    String validityDate = showList.get(0).getEndDate();
-                                                    Log.d("kahiniKi",pickUpDate);
-                                                    Log.d("kahiniKi",validityDate);
+                        });
+                        doneBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (paymentType != null) {
+                                    if (paymentType.equals("cash")) {
+                                        Call<List<CouponShow>> couponCall = ApiUtils.getUserService().getValidCoupon(userId);
+                                        couponCall.enqueue(new Callback<List<CouponShow>>() {
+                                            @Override
+                                            public void onResponse(Call<List<CouponShow>> call, Response<List<CouponShow>> response) {
+                                                if (response.isSuccessful()) {
+                                                    showList = response.body();
+                                                    set_coupons = showList.get(0).getSetCoupons();
+                                                    if (set_coupons == 1) {
+                                                        String pickUpDate = rideDate.getText().toString();
+                                                        String validityDate = showList.get(0).getEndDate();
+                                                        Log.d("kahiniKi", pickUpDate);
+                                                        Log.d("kahiniKi", validityDate);
 
-                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                                                    try {
-                                                        d1 = dateFormat.parse(pickUpDate);
-                                                        d2 = dateFormat.parse(validityDate);
-                                                    } catch (ParseException e) {
-                                                        e.printStackTrace();
+                                                        try {
+                                                            d1 = dateFormat.parse(pickUpDate);
+                                                            d2 = dateFormat.parse(validityDate);
+                                                        } catch (ParseException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        if (d2.compareTo(d1) > 0) {
+                                                            couponAmount = showList.get(0).getAmount();
+
+                                                            Log.d("kahiniKi", String.valueOf(couponAmount));
+
+                                                        } else {
+                                                            couponAmount = 0;
+                                                        }
+
                                                     }
-                                                    if (d2.compareTo(d1) > 0){
-                                                        couponAmount = showList.get(0).getAmount();
-
-                                                        Log.d("kahiniKi", String.valueOf(couponAmount));
-
-                                                    }else{
-                                                        couponAmount = 0;
-                                                    }
-
                                                 }
                                             }
-                                        }
-                                        @Override
-                                        public void onFailure(Call<List<CouponShow>> call, Throwable t) {
-                                        }
-                                    });
+
+                                            @Override
+                                            public void onFailure(Call<List<CouponShow>> call, Throwable t) {
+                                            }
+                                        });
+                                    } else if (paymentType.equals("wallet")) {
+                                        Call<List<Profile>> call = apiInterface.getData(userId);
+                                        call.enqueue(new Callback<List<Profile>>() {
+                                            @Override
+                                            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+                                                e_wallet = response.body().get(0).getE_wallet();
+                                                Log.d("e-wallet", String.valueOf(e_wallet));
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<Profile>> call, Throwable t) {
+
+                                            }
+                                        });
+                                    }
+                                    rideCheck();
+                                    dialog.dismiss();
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
                                 }
-                                else if (paymentType.equals("wallet")){
-                                    Call<List<Profile>> call = apiInterface.getData(userId);
-                                    call.enqueue(new Callback<List<Profile>>() {
-                                        @Override
-                                        public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
-                                            e_wallet = response.body().get(0).getE_wallet();
-                                            Log.d("e-wallet", String.valueOf(e_wallet));
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<List<Profile>> call, Throwable t) {
-
-                                        }
-                                    });
-                                }
-                                rideCheck();
-                                dialog.dismiss();
-                            } else {
-                                Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
                             }
-                        }
-                    });
-                    dialog.setCancelable(false);
+                        });
+                        dialog.setCancelable(false);
 
-                    dialog.show();
+                        dialog.show();
 
+                        map.clear();
 
-                    map.clear();
+                        timeDateLayout.setVisibility(View.GONE);
+                        destinationBtn.setVisibility(View.GONE);
+                        pickUpBtn.setVisibility(View.GONE);
+                        PickUpLayout.setVisibility(View.GONE);
+                        chooseRideType.setVisibility(View.VISIBLE);
 
-                    timeDateLayout.setVisibility(View.GONE);
-                    destinationBtn.setVisibility(View.GONE);
-                    pickUpBtn.setVisibility(View.GONE);
-                    PickUpLayout.setVisibility(View.GONE);
-                    chooseRideType.setVisibility(View.VISIBLE);
-
+                    }
                 }
+            }
+        });
 
+        instantRideBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                } else {
+                    rideType = "instant";
+                    PickUpLayout.setVisibility(View.VISIBLE);
+                    pickUpBtn.setVisibility(View.VISIBLE);
+                    chooseRideType.setVisibility(View.GONE);
+                    homeBtn.show();
+                    workBtn.show();
+                }
             }
         });
 
@@ -660,6 +693,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         });
+
         hourly11Micro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -681,46 +715,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
-                timeselectLayout.setVisibility(View.GONE);
-                hourtimeDateLayout.setVisibility(View.VISIBLE);
-                hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
+                if (!isConnected) {
+                    snackBar(isConnected);
+                } else {
+                    timeselectLayout.setVisibility(View.GONE);
+                    hourtimeDateLayout.setVisibility(View.VISIBLE);
+                    hourlyconfirmRideBtn.setVisibility(View.VISIBLE);
+                }
             }
         });
 
         wantnowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 checkConnection();
-                ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "Searching",
-                        "Searching Nearby Drivers....", true);
+                if (!isConnected) {
+                    snackBar(isConnected);
+                } else {
+                    ProgressDialog dialog = ProgressDialog.show(MainActivity.this, "Searching",
+                            "Searching Nearby Drivers....", true);
 
-                new Handler().postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
-                        dialog.setTitle("Sorry!");
-                        dialog.setIcon(R.drawable.logo_circle);
-                        dialog.setMessage("No driver available! \nNo car found for your trip");
-                        dialog.setCancelable(false);
-                        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                                finish();
-                                startActivity(getIntent());
-                            }
-                        });
-                        androidx.appcompat.app.AlertDialog alertDialog = dialog.create();
-                        alertDialog.show();
-                    }
-
-                }, 3000);
-
-
-
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                            androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
+                            dialog.setTitle("Sorry!");
+                            dialog.setIcon(R.drawable.logo_circle);
+                            dialog.setMessage("No driver available! \nNo car found for your trip");
+                            dialog.setCancelable(false);
+                            dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                    finish();
+                                    startActivity(getIntent());
+                                }
+                            });
+                            androidx.appcompat.app.AlertDialog alertDialog = dialog.create();
+                            alertDialog.show();
+                        }
+                    }, 3000);
+                }
             }
         });
 
@@ -742,32 +778,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
-                rideType = "hourly";
-                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle("Alert!!");
-                dialog.setIcon(R.drawable.logo_circle);
-                dialog.setMessage("Hourly service is available within Dhaka city only. Minimum booking required for 2 hours.");
-                dialog.setCancelable(false);
-                dialog.setPositiveButton("Agree", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                if (!isConnected) {
+                    snackBar(isConnected);
+                } else {
+                    rideType = "hourly";
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                    dialog.setTitle("Alert!!");
+                    dialog.setIcon(R.drawable.logo_circle);
+                    dialog.setMessage("Hourly service is available within Dhaka city only. Minimum booking required for 2 hours.");
+                    dialog.setCancelable(false);
+                    dialog.setPositiveButton("Agree", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                        rideHourly.setVisibility(View.GONE);
-                        rideLater.setVisibility(View.GONE);
-                        hourlypickUpBtn.setVisibility(View.VISIBLE);
-                        homeBtn.show();
-                        workBtn.show();
+                            rideHourly.setVisibility(View.GONE);
+                            rideInterCity.setVisibility(View.GONE);
+                            hourlypickUpBtn.setVisibility(View.VISIBLE);
+                            chooseRideType.setVisibility(View.GONE);
+                            homeBtn.show();
+                            workBtn.show();
 
-                    }
-                });
-                dialog.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
+                        }
+                    });
+                    dialog.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    AlertDialog alertDialog = dialog.create();
+                    alertDialog.show();
+                }
             }
         });
 
@@ -775,107 +816,114 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
-                map.clear();
-                searchLayout.setVisibility(View.GONE);
-                backNFL.setVisibility(View.VISIBLE);
+                if (!isConnected) {
+                    snackBar(isConnected);
+                } else {
+                    map.clear();
+                    searchLayout.setVisibility(View.GONE);
+                    backNFL.setVisibility(View.VISIBLE);
 
+                    BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                    pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
+                    List<Address> addresses = null;
 
-                BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-                pickUpMarker = new MarkerOptions().position(new LatLng(pickUpLat, pickUpLon)).icon(markerIcon).draggable(true);
-                List<Address> addresses = null;
+                    try {
+                        addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                        if (addresses.size() > 0) {
+                            Address location = addresses.get(0);
+                            pickUpPlace = location.getAddressLine(0);
+                            pickUpCity = location.getLocality();
+                            map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
 
-                try {
-                    addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
-                    if (addresses.size() > 0) {
-                        Address location = addresses.get(0);
-                        pickUpPlace = location.getAddressLine(0);
-                        pickUpCity = location.getLocality();
-                        map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
+                            map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                @Override
+                                public void onMarkerDragStart(Marker marker) {
 
-                        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                            @Override
-                            public void onMarkerDragStart(Marker marker) {
-
-                            }
-
-                            @Override
-                            public void onMarkerDrag(Marker marker) {
-
-                            }
-
-                            @Override
-                            public void onMarkerDragEnd(Marker marker) {
-                                pickUpLat = marker.getPosition().latitude;
-                                pickUpLon = marker.getPosition().longitude;
-
-
-                                try {
-                                    List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
-                                    Address location = addresses.get(0);
-                                    pickUpPlace = location.getAddressLine(0);
-                                    pickUpCity = location.getLocality();
-                                    autocompleteFragment.setText(pickUpPlace);
-                                    BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
-                                    marker.setIcon(markerIcon);
-
-                                } catch (IOException e) {
-                                    e.printStackTrace();
                                 }
-                            }
-                        });
-                    } else {
-                        Toasty.error(MainActivity.this, "Place Not Found!").show();
+
+                                @Override
+                                public void onMarkerDrag(Marker marker) {
+
+                                }
+
+                                @Override
+                                public void onMarkerDragEnd(Marker marker) {
+                                    pickUpLat = marker.getPosition().latitude;
+                                    pickUpLon = marker.getPosition().longitude;
+
+
+                                    try {
+                                        List<Address> addresses = geocoder.getFromLocation(pickUpLat, pickUpLon, 1);
+                                        Address location = addresses.get(0);
+                                        pickUpPlace = location.getAddressLine(0);
+                                        pickUpCity = location.getLocality();
+                                        autocompleteFragment.setText(pickUpPlace);
+                                        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                                        marker.setIcon(markerIcon);
+
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toasty.error(MainActivity.this, "Place Not Found!").show();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    Log.d("hourlyCity", pickUpCity);
 
-                Log.d("hourlyCity",pickUpCity);
+                    if (pickUpCity.equals("ঢাকা") || pickUpCity.equals("Dhaka")) {
+                        hourlyLayout.setVisibility(View.VISIBLE);
+                        hourlysedanPriceShow();
+                        hourlysedanPriceShow();
+                        hourlysedanPremierePriceShow();
+                        hourlysedanBusinessPriceShow();
+                        hourlyMicroPriceShow();
+                        hourlyMicro11PriceShow();
+                    } else {
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                        dialog.setTitle("Alert!!");
+                        dialog.setIcon(R.drawable.logo_circle);
+                        dialog.setMessage("Hourly service is available within Dhaka city only.");
+                        dialog.setCancelable(false);
+                        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                finish();
+                                startActivity(getIntent());
+                            }
+                        });
 
-                if (pickUpCity.equals("ঢাকা") || pickUpCity.equals("Dhaka")) {
-                    hourlyLayout.setVisibility(View.VISIBLE);
-                    hourlysedanPriceShow();
-                    hourlysedanPriceShow();
-                    hourlysedanPremierePriceShow();
-                    hourlysedanBusinessPriceShow();
-                    hourlyMicroPriceShow();
-                    hourlyMicro11PriceShow();
-                }else{
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                    dialog.setTitle("Alert!!");
-                    dialog.setIcon(R.drawable.logo_circle);
-                    dialog.setMessage("Hourly service is available within Dhaka city only.");
-                    dialog.setCancelable(false);
-                    dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            finish();
-                            startActivity(getIntent());
+                        AlertDialog alertDialog = dialog.create();
+
+                        if (!isFinishing()) {
+                            alertDialog.show();
                         }
-                    });
-
-                    AlertDialog alertDialog = dialog.create();
-
-                    if (!isFinishing()) {
-                        alertDialog.show();
                     }
                 }
             }
         });
 
-        rideLater.setOnClickListener(new View.OnClickListener() {
+        rideInterCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkConnection();
-                rideType = "regular";
-                PickUpLayout.setVisibility(View.VISIBLE);
-                pickUpBtn.setVisibility(View.VISIBLE);
-                chooseRideType.setVisibility(View.GONE);
-                homeBtn.show();
-                workBtn.show();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                } else {
+                    rideType = "interCity";
+                    PickUpLayout.setVisibility(View.VISIBLE);
+                    pickUpBtn.setVisibility(View.VISIBLE);
+                    chooseRideType.setVisibility(View.GONE);
+                    homeBtn.show();
+                    workBtn.show();
+                }
             }
         });
 
@@ -883,102 +931,106 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 checkConnection();
-                if (hourrideDate.getText().equals("Select Ride Date")) {
-                    Toast.makeText(MainActivity.this, "Please Enter Ride Date!", Toast.LENGTH_SHORT).show();
-                } else if (hourrideTime.getText().equals("Select Ride Time")) {
-                    Toast.makeText(MainActivity.this, "Please Enter Ride Time!", Toast.LENGTH_SHORT).show();
+                if (!isConnected) {
+                    snackBar(isConnected);
                 } else {
-                    dialog = new Dialog(MainActivity.this);
-                    dialog.setContentView(R.layout.payment_type_select);
-                    Button doneBtn = dialog.findViewById(R.id.doneBtn);
-                    RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
+                    if (hourrideDate.getText().equals("Select Ride Date")) {
+                        Toast.makeText(MainActivity.this, "Please Enter Ride Date!", Toast.LENGTH_SHORT).show();
+                    } else if (hourrideTime.getText().equals("Select Ride Time")) {
+                        Toast.makeText(MainActivity.this, "Please Enter Ride Time!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        dialog = new Dialog(MainActivity.this);
+                        dialog.setContentView(R.layout.payment_type_select);
+                        Button doneBtn = dialog.findViewById(R.id.doneBtn);
+                        RadioGroup radioGroup = dialog.findViewById(R.id.radioGroup);
 
-                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                            switch (i) {
-                                case R.id.cash:
-                                    paymentType = "cash";
-                                    break;
-                                case R.id.wallet:
-                                    paymentType = "wallet";
-                                    break;
+                        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                                switch (i) {
+                                    case R.id.cash:
+                                        paymentType = "cash";
+                                        break;
+                                    case R.id.wallet:
+                                        paymentType = "wallet";
+                                        break;
+                                }
                             }
-                        }
-                    });
-                    doneBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (paymentType != null) {
-                                if (paymentType.equals("cash")){
-                                    Call<List<CouponShow>> couponCall = ApiUtils.getUserService().getValidCoupon(userId);
-                                    couponCall.enqueue(new Callback<List<CouponShow>>() {
-                                        @Override
-                                        public void onResponse(Call<List<CouponShow>> call, Response<List<CouponShow>> response) {
-                                            if (response.isSuccessful()){
-                                                showList = response.body();
-                                                set_coupons = showList.get(0).getSetCoupons();
-                                                if (set_coupons==1){
-                                                    String pickUpDate = hourrideDate.getText().toString();
-                                                    String validityDate = showList.get(0).getEndDate();
-                                                    Log.d("kahiniKi",pickUpDate);
-                                                    Log.d("kahiniKi",validityDate);
+                        });
+                        doneBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (paymentType != null) {
+                                    if (paymentType.equals("cash")) {
+                                        Call<List<CouponShow>> couponCall = ApiUtils.getUserService().getValidCoupon(userId);
+                                        couponCall.enqueue(new Callback<List<CouponShow>>() {
+                                            @Override
+                                            public void onResponse(Call<List<CouponShow>> call, Response<List<CouponShow>> response) {
+                                                if (response.isSuccessful()) {
+                                                    showList = response.body();
+                                                    set_coupons = showList.get(0).getSetCoupons();
+                                                    if (set_coupons == 1) {
+                                                        String pickUpDate = hourrideDate.getText().toString();
+                                                        String validityDate = showList.get(0).getEndDate();
+                                                        Log.d("kahiniKi", pickUpDate);
+                                                        Log.d("kahiniKi", validityDate);
 
-                                                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                                                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-                                                    try {
-                                                        d1 = dateFormat.parse(pickUpDate);
-                                                        d2 = dateFormat.parse(validityDate);
-                                                    } catch (ParseException e) {
-                                                        e.printStackTrace();
+                                                        try {
+                                                            d1 = dateFormat.parse(pickUpDate);
+                                                            d2 = dateFormat.parse(validityDate);
+                                                        } catch (ParseException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        if (d2.compareTo(d1) > 0) {
+                                                            couponAmount = showList.get(0).getAmount();
+
+                                                            Log.d("kahiniKi", String.valueOf(couponAmount));
+
+                                                        } else {
+                                                            couponAmount = 0;
+                                                        }
+
                                                     }
-                                                    if (d2.compareTo(d1) > 0){
-                                                        couponAmount = showList.get(0).getAmount();
-
-                                                        Log.d("kahiniKi", String.valueOf(couponAmount));
-
-                                                    }else{
-                                                        couponAmount = 0;
-                                                    }
-
                                                 }
                                             }
-                                        }
-                                        @Override
-                                        public void onFailure(Call<List<CouponShow>> call, Throwable t) {
-                                        }
-                                    });
+
+                                            @Override
+                                            public void onFailure(Call<List<CouponShow>> call, Throwable t) {
+                                            }
+                                        });
+                                    } else if (paymentType.equals("wallet")) {
+                                        Call<List<Profile>> call = apiInterface.getData(userId);
+                                        call.enqueue(new Callback<List<Profile>>() {
+                                            @Override
+                                            public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
+                                                e_wallet = response.body().get(0).getE_wallet();
+                                                Log.d("e-wallet", String.valueOf(e_wallet));
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<Profile>> call, Throwable t) {
+
+                                            }
+                                        });
+                                    }
+                                    hourlyRideCheck();
+                                    doneBtn.setEnabled(false);
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
                                 }
-                                else if (paymentType.equals("wallet")){
-                                    Call<List<Profile>> call = apiInterface.getData(userId);
-                                    call.enqueue(new Callback<List<Profile>>() {
-                                        @Override
-                                        public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
-                                            e_wallet = response.body().get(0).getE_wallet();
-                                            Log.d("e-wallet", String.valueOf(e_wallet));
-
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<List<Profile>> call, Throwable t) {
-
-                                        }
-                                    });
-                                }
-                                hourlyRideCheck();
-                                doneBtn.setEnabled(false);
-                            } else {
-                                Toast.makeText(MainActivity.this, "Select Payment Type!", Toast.LENGTH_SHORT).show();
                             }
+                        });
+                        dialog.setCancelable(false);
+
+                        if (!isFinishing()) {
+                            dialog.show();
                         }
-                    });
-                    dialog.setCancelable(false);
 
-                    if (!isFinishing()) {
-                        dialog.show();
+
                     }
-
-
                 }
             }
         });
@@ -989,7 +1041,408 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkRatingCall();
 
+        checkInstantRatingCall();
+
         checkHourlyRatingCall();
+
+        showAcceptedDriverData();
+
+        showOnGoingInstantTripData();
+
+        checkTripStatus();
+    }
+
+    private void checkTripStatus() {
+        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId);
+        tripRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot data : snapshot.getChildren()){
+                        String TAG = data.child("TAG").getValue().toString();
+                        String cashReceived = data.child("cashReceived").getValue().toString();
+                        if (TAG.equals("Ride Finished") && cashReceived.equals("no")){
+                            tripId = data.child("bookingId").getValue().toString();
+                            dialog = new Dialog(MainActivity.this);
+                            dialog.setContentView(R.layout.end_trip_fare);
+                            Button showCashBtn = dialog.findViewById(R.id.endTripDialogBtn);
+
+                            showCashBtn.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(MainActivity.this,ShowCash.class);
+                                    intent.putExtra("tripId",tripId);
+                                    intent.putExtra("check",5);
+                                    startActivity(intent);
+                                }
+                            });
+                            dialog.setCancelable(false);
+                            dialog.show();
+
+                        }else if (TAG.equals("No Driver Found")){
+                            tripId = data.child("bookingId").getValue().toString();
+                            driverId = data.child("driverId").getValue().toString();
+                            carType = data.child("carType").getValue().toString();
+                            androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
+                            dialog.setTitle("Sorry!");
+                            dialog.setIcon(R.drawable.logo_circle);
+                            dialog.setMessage("No driver available! \nNo car found for your trip");
+                            dialog.setCancelable(false);
+                            dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                    DatabaseReference keyRef = FirebaseDatabase.getInstance().getReference("InstantRides").child(carType).child(tripId);
+                                    keyRef.removeValue();
+                                    DatabaseReference keyRef2 = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId).child(tripId);
+                                    keyRef2.removeValue();
+                                    finish();
+                                    startActivity(getIntent());
+                                    exit(0);
+
+                                }
+                            });
+                            androidx.appcompat.app.AlertDialog alertDialog = dialog.create();
+                            alertDialog.show();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+      /*  DatabaseReference tripRef2 = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId);
+        tripRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String TAG = data.child("TAG").getValue().toString();
+                    String cashReceived = data.child("cashReceived").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
+
+    }
+
+    private void checkInstantRatingCall() {
+
+        DatabaseReference tripRef = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId);
+        tripRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot data : snapshot.getChildren()) {
+                        String rideStatus = data.child("rideStatus").getValue().toString();
+                        String ratingStatus = data.child("ratingStatus").getValue().toString();
+                        String cashReceived = data.child("cashReceived").getValue().toString();
+                        if (rideStatus.equals("End") && ratingStatus.equals("false") && cashReceived.equals("yes")) {
+                            RideModel model = data.getValue(RideModel.class);
+                            String driver_id = model.getDriverId();
+                            String tripId = model.getBookingId();
+                            String carType = model.getCarType();
+                            dialog = new Dialog(MainActivity.this);
+                            dialog.setContentView(R.layout.driver_rating_popup);
+                            TextView driveName = dialog.findViewById(R.id.driverNaamTv);
+                            TextView skipTv = dialog.findViewById(R.id.skipTv);
+                            CircleImageView driverImage = dialog.findViewById(R.id.profileIV);
+                            RatingBar ratingBar = dialog.findViewById(R.id.ratingBar);
+                            Button submitBTN = dialog.findViewById(R.id.submitBTN);
+                            dialog.setCancelable(false);
+                            if (!isFinishing()) {
+                                dialog.show();
+                            }
+
+                            Call<List<DriverInfo>> call2 = apiInterface.getCarNumber(driver_id);
+                            call2.enqueue(new Callback<List<DriverInfo>>() {
+                                @Override
+                                public void onResponse(Call<List<DriverInfo>> call, Response<List<DriverInfo>> response) {
+
+                                    if (response.body().get(0).getSelfie() != null) {
+                                        driverImage.setVisibility(View.VISIBLE);
+                                        Picasso.get().load(Config.REG_LINE + response.body().get(0).getSelfie()).into(driverImage, new com.squareup.picasso.Callback() {
+                                            @Override
+                                            public void onSuccess() {
+
+                                            }
+
+                                            @Override
+                                            public void onError(Exception e) {
+                                                Log.d("kiKahini", e.getMessage());
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<DriverInfo>> call, Throwable t) {
+
+                                }
+                            });
+
+                            Call<List<DriverProfile>> call1 = apiInterface.getDriverData(driver_id);
+                            call1.enqueue(new Callback<List<DriverProfile>>() {
+                                @Override
+                                public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
+                                    List<DriverProfile> list = response.body();
+
+                                    driveName.setText(list.get(0).getFull_name());
+                                    driverRating = list.get(0).getRating();
+                                    driverRatingCount = list.get(0).getRatingCount();
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<DriverProfile>> call, Throwable t) {
+
+                                }
+                            });
+
+                            ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                                @Override
+                                public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                                    rating1 = ratingBar.getRating();
+
+                                    totalRating = rating1 + driverRating;
+                                    totalCount = driverRatingCount + 1;
+                                    ratingGiven = true;
+
+                                }
+                            });
+
+                            submitBTN.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (ratingGiven==false){
+                                        Toast.makeText(MainActivity.this, "Please give a rating!", Toast.LENGTH_SHORT).show();
+                                    }else{
+                                        Call<List<DriverProfile>> call1 = apiInterface.updateRating(driver_id, totalRating, totalCount);
+                                        call1.enqueue(new Callback<List<DriverProfile>>() {
+                                            @Override
+                                            public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<DriverProfile>> call, Throwable t) {
+
+                                            }
+                                        });
+
+                                        Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, rating1);
+                                        ratingCall.enqueue(new Callback<List<RideModel>>() {
+                                            @Override
+                                            public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                                            }
+                                        });
+
+                                        DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId);
+                                        delRef.child(tripId).removeValue();
+
+                                        DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("InstantRides").child(carType);
+                                        del1Ref.child(tripId).removeValue();
+                                        dialog.dismiss();
+                                    }
+
+                                }
+                            });
+
+                            skipTv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Call<List<RideModel>> ratingCall = apiInterface.addRating(tripId, 0);
+                                    ratingCall.enqueue(new Callback<List<RideModel>>() {
+                                        @Override
+                                        public void onResponse(Call<List<RideModel>> call, Response<List<RideModel>> response) {
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<List<RideModel>> call, Throwable t) {
+
+                                        }
+                                    });
+                                    DatabaseReference delRef = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId);
+                                    delRef.child(tripId).removeValue();
+
+                                    DatabaseReference del1Ref = FirebaseDatabase.getInstance().getReference("InstantRides").child(carType);
+                                    del1Ref.child(tripId).removeValue();
+                                    dialog.dismiss();
+                                }
+                            });
+
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void showOnGoingInstantTripData() {
+        DatabaseReference onGoingTrip = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId);
+        onGoingTrip.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()){
+                    String acptCustId = data.child("customerId").getValue().toString();
+                    String rideStatus = data.child("rideStatus").getValue().toString();
+                    if (acptCustId.equals(userId) && rideStatus.equals("Start")){
+                        driverDetailsLayout.setVisibility(View.GONE);
+                        onGoingTripLayout.setVisibility(View.VISIBLE);
+                        chooseRideType.setVisibility(View.GONE);
+                        searchLayout.setVisibility(View.GONE);
+
+                        driverId = data.child("driverId").getValue().toString();
+                        String tripId = data.child("bookingId").getValue().toString();
+                        carType = data.child("carType").getValue().toString();
+                        pickUpPlace = data.child("pickUpPlace").getValue().toString();
+                        destinationPlace = data.child("destinationPlace").getValue().toString();
+                        String getDesLat = data.child("destinationLat").getValue().toString();
+                        String getDesLon = data.child("destinationLon").getValue().toString();
+                        String price = data.child("price").getValue().toString();
+
+                        onGoingPickUp.setText(pickUpPlace);
+                        onGoingDestination.setText(destinationPlace);
+                        onGoingPrice.setText(" "+price);
+
+                        Call<List<DriverProfile>> call = apiInterface.getDriverData(driverId);
+                        call.enqueue(new Callback<List<DriverProfile>>() {
+                            @Override
+                            public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
+                                if (response.isSuccessful()) {
+                                    List<DriverProfile> list = response.body();
+
+                                    driverNameTV2.setText(list.get(0).getFull_name());
+
+                                    int sRideCount=list.get(0).getRideCount();
+                                    float sRating=list.get(0).getRating();
+                                    int sRatingCount=list.get(0).getRatingCount();
+                                    float rat=sRating/sRatingCount;
+                                    if(sRideCount<6){
+                                        driverRatingBar2.setVisibility(View.GONE);
+                                        rideCountTxt2.setVisibility(View.GONE);
+                                        rideTxt2.setVisibility(View.GONE);
+                                    }
+                                    driverRatingBar2.setText(" "+String.format("%.2f",rat));
+                                    rideCountTxt2.setText(String.valueOf(list.get(0).getRideCount()));
+
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<List<DriverProfile>> call, Throwable t) {
+                                Log.d("kahiniKi", t.getMessage());
+                            }
+                        });
+
+                        Call<List<DriverInfo>> call1 = apiInterface.getCarNumber(driverId);
+                        call1.enqueue(new Callback<List<DriverInfo>>() {
+                            @Override
+                            public void onResponse(Call<List<DriverInfo>> call, Response<List<DriverInfo>> response) {
+                                String carname = response.body().get(0).getCar_name();
+                                String carmodel = response.body().get(0).getCar_model();
+                                String platenum = response.body().get(0).getPlate_number();
+
+                                if (response.body().get(0).getSelfie()!=null){
+                                    Picasso.get().load(Config.REG_LINE + response.body().get(0).getSelfie()).into(profileIV2, new com.squareup.picasso.Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Exception e) {
+                                            Log.d("kiKahini", e.getMessage());
+                                        }
+                                    });
+                                }
+
+                                carTv2.setText(carname+" "+carmodel+" "+platenum);
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<DriverInfo>> call, Throwable t) {
+
+                            }
+                        });
+
+                        DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("OnLineDrivers")
+                                .child(carType).child(driverId).child("l");
+                        mapRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                double driverLat = (double) snapshot.child("0").getValue();
+                                double driverLon = (double) snapshot.child("1").getValue();
+                                showDestinationRoute(driverLat,driverLon,destinationPlace,getDesLat,getDesLon);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void showDestinationRoute(double driverLat, double driverLon, String destinationPlace, String getDesLat, String getDesLon) {
+        map.clear();
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(500);
+        locationRequest.setFastestInterval(500);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+
+        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.ic_car_top_view);
+
+        float bearing = CalculateBearingAngle(driverLat,driverLon,Double.parseDouble(getDesLat),Double.parseDouble(getDesLon));
+
+        place1 = new MarkerOptions().icon(markerIcon).flat(true)
+                .position(new LatLng(driverLat, driverLon)).rotation(bearing).anchor(0.5f,0.5f).flat(true);
+        BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+        place2 = new MarkerOptions().icon(markerIcon2)
+                .position(new LatLng(Double.parseDouble(getDesLat), Double.parseDouble(getDesLon))).title(destinationPlace);
+
+        new FetchURL(MainActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(),
+                "driving"), "driving");
+
+        map.addMarker(place1).showInfoWindow();
+        map.addMarker(place2).showInfoWindow();
+        LatLng latLng = new LatLng(driverLat, driverLon);
+        MarkerAnimation.animateMarkerToGB(place1, latLng, new LatLngInterpolator.Spherical());
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(driverLat, driverLon), 18));
     }
 
     private void checkHourlyRunningRides() {
@@ -1044,14 +1497,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void checkConnection() {
-        boolean isConnected = ConnectivityReceiver.isConnected();
-
-        if (!isConnected){
-            Toast.makeText(this, "No Internet Connection!", Toast.LENGTH_LONG).show();
-        }
-
-    }
 
     private void checkVersion() {
         PackageInfo pinfo = null;
@@ -1080,13 +1525,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 startActivity(new Intent(Intent.ACTION_VIEW,
                                         Uri.parse("https://play.google.com/store/apps/details?id=com.hydertechno.swishcustomer")));
                                 dialogInterface.dismiss();
-                                System.exit(0);
+                                exit(0);
                             }
                         });
                         dialog.setNegativeButton("Later", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                System.exit(0);
+                                exit(0);
                             }
                         });
                         AlertDialog alertDialog = dialog.create();
@@ -1574,7 +2019,361 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             type = "Micro11";
             price = sedanbusinessprice.getText().toString();
         }
-        upload();
+
+        if (rideType.equals("interCity")) {
+            upload();
+        }else{
+            uploadInstant();
+        }
+    }
+
+    private void uploadInstant() {
+        confirmRideBtn.setEnabled(false);
+
+        Call<List<UniqueId>> idcall = apiInterface.getTripId();
+        idcall.enqueue(new Callback<List<UniqueId>>() {
+            @Override
+            public void onResponse(Call<List<UniqueId>> call, Response<List<UniqueId>> response) {
+                bookingId = String.valueOf(response.body().get(0).getUniq_id());
+                DatabaseReference rideLaterRef = FirebaseDatabase.getInstance().getReference()
+                        .child("InstantRides").child(type);
+
+                HashMap<String, Object> rideInfo = new HashMap<>();
+                rideInfo.put("bookingId", bookingId);
+                rideInfo.put("bookingStatus", "Pending");
+                rideInfo.put("carType", type);
+                rideInfo.put("customerId", userId);
+                rideInfo.put("rideStatus", "Pending");
+                rideInfo.put("driverId", "");
+                rideInfo.put("destinationLat", String.valueOf(destinationLat));
+                rideInfo.put("destinationLon", String.valueOf(destinationLon));
+                rideInfo.put("destinationPlace", destinationPlace);
+                rideInfo.put("pickUpDate", dateTv.getText().toString());
+                rideInfo.put("pickUpLat", String.valueOf(pickUpLat));
+                rideInfo.put("pickUpLon", String.valueOf(pickUpLon));
+                rideInfo.put("pickUpPlace", pickUpPlace);
+                rideInfo.put("pickUpTime", timeTv.getText().toString());
+                rideInfo.put("endTime", "");
+                rideInfo.put("price", price);
+                rideInfo.put("ratingStatus", "false");
+                rideInfo.put("payment", paymentType);
+                rideInfo.put("discount", "");
+                rideInfo.put("coupon", String.valueOf(couponAmount));
+                rideInfo.put("e_wallet", String.valueOf(e_wallet));
+                rideInfo.put("finalPrice", "");
+                rideInfo.put("cashReceived", "no");
+                rideInfo.put("totalDistance", "");
+                rideInfo.put("totalTime", "");
+                rideInfo.put("TAG", "");
+
+                rideLaterRef.child(bookingId).setValue(rideInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                @Override
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    if (task.isSuccessful()){
+                                        DatabaseReference userRideRef = FirebaseDatabase.getInstance().getReference().child("CustomerInstantRides");
+                                        userRideRef.child(userId).child(bookingId).setValue(rideInfo);
+                                        map.clear();
+                                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(wayLatitude, wayLongitude), 19));
+
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                });
+
+                /*if (notify) {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(type);
+                    ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                sendNotificationDriver(bookingId, postSnapshot.getKey(), type, "New Request!","Tap to see full details." , "booking_details");
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    sendNotification(bookingId, userId, "Booking Create!", "Tap to see booking details.", "my_ride_details");
+                }
+                notify = false;*/
+
+                findDriver();
+            }
+
+            @Override
+            public void onFailure(Call<List<UniqueId>> call, Throwable t) {
+
+            }
+        });
+
+        bottomsheet.setVisibility(View.GONE);
+        chooseRideType.setVisibility(View.GONE);
+        loadingDialog = ProgressDialog.show(MainActivity.this, "Searching...",
+                "Searching Nearby Drivers....", true);
+
+    }
+
+    private void findDriver() {
+        DatabaseReference drivers = FirebaseDatabase.getInstance().getReference("AvailableDrivers").child(type);
+        GeoFire gfDrivers = new GeoFire(drivers);
+
+        GeoQuery geoQuery = gfDrivers.queryAtLocation(new GeoLocation(pickUpLat,pickUpLon),radius);
+        geoQuery.removeAllListeners();
+
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                if (!driverFound){
+                    if(radius>=5){
+                        driverFound = true;
+                        driverId = key;
+                        DatabaseReference rideLaterRef = FirebaseDatabase.getInstance().getReference()
+                                .child("InstantRides").child(type).child(bookingId);
+                        rideLaterRef.child("driverId").setValue(driverId);
+                        DatabaseReference rideLaterRef2 = FirebaseDatabase.getInstance().getReference()
+                                .child("CustomerInstantRides").child(userId).child(bookingId);
+                        rideLaterRef2.child("driverId").setValue(driverId);
+                        sendNotificationDriver(bookingId,driverId,type,"New Request","New Trip Available","main_activity");
+                        showAcceptedDriverData();
+                        loadingDialog.dismiss();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+                if (!driverFound){
+                    if (radius<=5){
+                        radius++;
+                        findDriver();
+                    }else{
+                        androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
+                        dialog.setTitle("Sorry!");
+                        dialog.setIcon(R.drawable.logo_circle);
+                        dialog.setMessage("No driver available! \nNo car found for your trip");
+                        dialog.setCancelable(false);
+                        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                loadingDialog.dismiss();
+                                DatabaseReference keyRef = FirebaseDatabase.getInstance().getReference("InstantRides").child(type).child(bookingId);
+                                keyRef.removeValue();
+                                DatabaseReference keyRef2 = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId).child(bookingId);
+                                keyRef2.removeValue();
+                                finish();
+                                startActivity(getIntent());
+                                exit(0);
+
+                            }
+                        });
+                        androidx.appcompat.app.AlertDialog alertDialog = dialog.create();
+                        alertDialog.show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void showAcceptedDriverData() {
+//        loadingDialog.dismiss();
+        DatabaseReference instantRideRef = FirebaseDatabase.getInstance().getReference("CustomerInstantRides").child(userId);
+        instantRideRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot data : snapshot.getChildren()){
+                        String bookStatus = data.child("bookingStatus").getValue().toString();
+                        if ( bookStatus.equals("Booked")){
+                            String rideStatus = data.child("rideStatus").getValue().toString();
+                            if(rideStatus.equals("Pending")){
+                                driverDetailsLayout.setVisibility(View.VISIBLE);
+                                RideModel model = data.getValue(RideModel.class);
+                                String accptDriverId = model.getDriverId();
+                                String reqPickLat = model.getPickUpLat();
+                                String reqPickLon = model.getPickUpLon();
+                                String tripCarType = model.getCarType();
+
+                                DatabaseReference mapRef = FirebaseDatabase.getInstance().getReference("OnLineDrivers")
+                                        .child(tripCarType).child(accptDriverId).child("l");
+                                mapRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        double driverLat = (double) snapshot.child("0").getValue();
+                                        double driverLon = (double) snapshot.child("1").getValue();
+
+                                        showPickupRoute(reqPickLat,reqPickLon,driverLat,driverLon);
+                                        ShowDriverDetails(accptDriverId);
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                                if(rideStatus.equals("Start")){
+                                    showOnGoingInstantTripData();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void ShowDriverDetails(String driverId) {
+        Call<List<DriverProfile>> call = apiInterface.getDriverData(driverId);
+        call.enqueue(new Callback<List<DriverProfile>>() {
+            @Override
+            public void onResponse(Call<List<DriverProfile>> call, Response<List<DriverProfile>> response) {
+                if (response.isSuccessful()) {
+                    List<DriverProfile> list = response.body();
+
+                    driverNameTV.setText(list.get(0).getFull_name());
+                    driver_PhoneTV.setText(list.get(0).getPhone());
+
+                    Log.d("kahini",list.get(0).getFull_name()+","+list.get(0).getPhone());
+
+                    int sRideCount=list.get(0).getRideCount();
+                    float sRating=list.get(0).getRating();
+                    int sRatingCount=list.get(0).getRatingCount();
+                    float rat=sRating/sRatingCount;
+                    if(sRideCount<6){
+                        driverRatingBar.setVisibility(View.GONE);
+                        rideCountTxt.setVisibility(View.GONE);
+                        rideTxt.setVisibility(View.GONE);
+                    }
+                    driverRatingBar.setText(" "+String.format("%.2f",rat));
+                    rideCountTxt.setText(String.valueOf(list.get(0).getRideCount()));
+
+                }
+            }
+            @Override
+            public void onFailure(Call<List<DriverProfile>> call, Throwable t) {
+                Log.d("kahiniKi", t.getMessage());
+            }
+        });
+
+        driver_PhoneTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:" + "+88" + driver_PhoneTV.getText().toString()));
+                    startActivity(callIntent);
+                } catch (ActivityNotFoundException activityException) {
+                    Toasty.error(MainActivity.this, "" + activityException.getMessage(), Toasty.LENGTH_SHORT).show();
+                    Log.e("Calling a Phone Number", "Call failed", activityException);
+                }
+            }
+        });
+
+
+        Call<List<DriverInfo>> call1 = apiInterface.getCarNumber(driverId);
+        call1.enqueue(new Callback<List<DriverInfo>>() {
+            @Override
+            public void onResponse(Call<List<DriverInfo>> call, Response<List<DriverInfo>> response) {
+                String carname = response.body().get(0).getCar_name();
+                String carmodel = response.body().get(0).getCar_model();
+                String platenum = response.body().get(0).getPlate_number();
+
+                if (response.body().get(0).getSelfie()!=null){
+                    profileIV.setVisibility(View.VISIBLE);
+                    Picasso.get().load(Config.REG_LINE + response.body().get(0).getSelfie()).into(profileIV, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.d("kiKahini", e.getMessage());
+                        }
+                    });
+                }
+
+                carTv.setText(carname+" "+carmodel+" "+platenum);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<DriverInfo>> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+    private void showPickupRoute(String reqPickLat, String reqPickLon, double driverLat, double driverLon) {
+        searchLayout.setVisibility(View.GONE);
+        chooseRideType.setVisibility(View.GONE);
+        map.clear();
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(500);
+        locationRequest.setFastestInterval(500);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+        BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.ic_car_top_view);
+
+
+
+        float bearing = CalculateBearingAngle(driverLat,driverLon,Double.parseDouble(reqPickLat),Double.parseDouble(reqPickLon));
+
+        place1 = new MarkerOptions().icon(markerIcon).flat(true)
+                .position(new LatLng(driverLat, driverLon)).title("Driver").rotation(bearing).flat(true).anchor(0.5f, 0.5f)
+                .alpha((float) 0.91);
+        BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.userpickup);
+        place2 = new MarkerOptions().icon(markerIcon2)
+                .position(new LatLng(Double.parseDouble(reqPickLat), Double.parseDouble(reqPickLon))).title("PickUp Place");
+
+        new FetchURL(MainActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(),
+                "driving"), "driving");
+
+        map.addMarker(place1).showInfoWindow();
+        map.addMarker(place2).showInfoWindow();
+        LatLng latLng = new LatLng(driverLat, driverLon);
+        MarkerAnimation.animateMarkerToGB(place1, latLng, new LatLngInterpolator.Spherical());
+
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(driverLat,driverLon), 18));
     }
 
     private void upload() {
@@ -1873,26 +2672,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Log.d("checkCity",pickUpCity+","+destinationCity);
 
-        if (pickUpCity.equals(destinationCity)){
-            AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-            dialog.setTitle("Alert!!");
-            dialog.setIcon(R.drawable.logo_circle);
-            dialog.setMessage("Intercity service is available in outside of Dhaka city only!");
-            dialog.setCancelable(false);
-            dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    finish();
-                    startActivity(getIntent());
-                }
-            });
+        if (rideType.equals("interCity")){
+            if (pickUpCity.equals(destinationCity)){
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle("Alert!!");
+                dialog.setIcon(R.drawable.logo_circle);
+                dialog.setMessage("Intercity service is available in outside of Dhaka city only!");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        finish();
+                        startActivity(getIntent());
+                    }
+                });
 
-            AlertDialog alertDialog = dialog.create();
-            if (!isFinishing()) {
-                alertDialog.show();
+                AlertDialog alertDialog = dialog.create();
+                if (!isFinishing()) {
+                    alertDialog.show();
+                }
             }
-        }else {
+            else {
+                BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
+                place1 = new MarkerOptions().icon(markerIcon)
+                        .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace);
+                BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
+                place2 = new MarkerOptions().icon(markerIcon2)
+                        .position(new LatLng(destinationLat, destinationLon)).title(destinationPlace);
+
+                new FetchURL(MainActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(),
+                        "driving"), "driving");
+
+                map.addMarker(place1);
+                map.addMarker(place2);
+
+                map.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
+
+                calculateDirections(pickUpLat, pickUpLon, destinationLat, destinationLon,destinationDivision,pickUpCity,destinationCity);
+            }
+        }
+        else if(rideType.equals("instant")){
+
             BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
             place1 = new MarkerOptions().icon(markerIcon)
                     .position(new LatLng(pickUpLat, pickUpLon)).title(pickUpPlace);
@@ -1906,13 +2727,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             map.addMarker(place1);
             map.addMarker(place2);
 
-            map.animateCamera(CameraUpdateFactory.zoomTo(10.0f));
+            map.animateCamera(CameraUpdateFactory.zoomTo(12.0f));
 
-            calculateDirections(pickUpLat, pickUpLon, destinationLat, destinationLon,destinationDivision);
+            calculateDirections(pickUpLat, pickUpLon, destinationLat, destinationLon,destinationDivision,pickUpCity,destinationCity);
         }
     }
 
-    private void calculateDirections(double pickUpLat, double pickUpLon, double destinationLat, double destinationLon,String destinationDivision) {
+    private void calculateDirections(double pickUpLat, double pickUpLon, double destinationLat, double destinationLon,
+                                     String destinationDivision,String pickUpCity,String destinationCity) {
 
         String origins = pickUpLat + "," + pickUpLon;
         String destination = destinationLat + "," + destinationLon;
@@ -1949,13 +2771,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("trduration", String.valueOf(trduration));
 
                     bottomsheet.setVisibility(View.VISIBLE);
+                    if(rideType.equals("instant")){
+                        dateTv.setVisibility(View.GONE);
+                        timeTv.setVisibility(View.GONE);
+                        String startTime = new SimpleDateFormat("hh:mm:ss aa").format(Calendar.getInstance().getTime());
+                        String startDate = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+                        dateTv.setText(startDate);
+                        timeTv.setText(startTime);
+                    }
                     progressBar.setVisibility(View.GONE);
 
-                    sedanPrice(kmdistance, travelduration,destinationDivision);
-                    sedanPremierePrice(kmdistance, travelduration,destinationDivision);
-                    sedanBusinessPrice(kmdistance, travelduration,destinationDivision);
-                    hiace7Price(kmdistance, travelduration,destinationDivision);
-                    hiace11Price(kmdistance, travelduration,destinationDivision);
+                    sedanPrice(kmdistance, travelduration,destinationDivision,pickUpCity,destinationCity);
+                    sedanPremierePrice(kmdistance, travelduration,destinationDivision,pickUpCity,destinationCity);
+                    sedanBusinessPrice(kmdistance, travelduration,destinationDivision,pickUpCity,destinationCity);
+                    hiace7Price(kmdistance, travelduration,destinationDivision,pickUpCity,destinationCity);
+                    hiace11Price(kmdistance, travelduration,destinationDivision,pickUpCity,destinationCity);
 
                 }
             }
@@ -1968,7 +2798,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void hiace7Price(int kmdistance, int travelduration, String destinationDivision) {
+    private void hiace7Price(int kmdistance, int travelduration, String destinationDivision,String pickUpCity,String destinationCity) {
         Call<List<RidingRate>> call = apiInterface.getPrice("Micro7");
         call.enqueue(new Callback<List<RidingRate>>() {
             @Override
@@ -1976,10 +2806,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful()) {
                     List<RidingRate> rate = new ArrayList<>();
                     rate = response.body();
-
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateOutside = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateInside = rate.get(0).getBase_fare_inside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
@@ -1989,11 +2819,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
-                            estprice = kmPrice + minPrice + minimumRate;
-                            int divisionPercent = (estprice*farePercent)/100;
-                            int finalPrice = estprice+divisionPercent;
-                            micro7price.setText("" + finalPrice);
+                            if (!pickUpCity.equals(destinationCity)){
+                                int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                                estprice = kmPrice + minPrice + minimumRateOutside;
+                                int divisionPercent = (estprice*farePercent)/100;
+                                int finalPrice = estprice+divisionPercent;
+                                micro7price.setText("" + finalPrice);
+                            }else{
+                                int finalPrice = kmPrice + minPrice + minimumRateInside;
+                                micro7price.setText("" + finalPrice);
+                            }
 
                         }
 
@@ -2012,7 +2847,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void hiace11Price(int kmdistance, int travelduration, String destinationDivision) {
+    private void hiace11Price(int kmdistance, int travelduration, String destinationDivision,String pickUpCity,String destinationCity) {
         Call<List<RidingRate>> call = apiInterface.getPrice("Micro11");
         call.enqueue(new Callback<List<RidingRate>>() {
             @Override
@@ -2020,10 +2855,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful()) {
                     List<RidingRate> rate = new ArrayList<>();
                     rate = response.body();
-
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateOutside = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateInside = rate.get(0).getBase_fare_inside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
@@ -2033,11 +2868,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
-                            estprice = kmPrice + minPrice + minimumRate;
-                            int divisionPercent = (estprice*farePercent)/100;
-                            int finalPrice = estprice+divisionPercent;
-                            micro11price.setText("" + finalPrice);
+                            if (!pickUpCity.equals(destinationCity)){
+                                int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                                estprice = kmPrice + minPrice + minimumRateOutside;
+                                int divisionPercent = (estprice*farePercent)/100;
+                                int finalPrice = estprice+divisionPercent;
+                                micro11price.setText("" + finalPrice);
+                            }else{
+                                int finalPrice = kmPrice + minPrice + minimumRateInside;
+                                micro11price.setText("" + finalPrice);
+                            }
 
                         }
 
@@ -2057,7 +2897,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void sedanBusinessPrice(int kmdistance, int travelduration, String destinationDivision) {
+    private void sedanBusinessPrice(int kmdistance, int travelduration, String destinationDivision,String pickUpCity,String destinationCity) {
         Call<List<RidingRate>> call = apiInterface.getPrice("SedanBusiness");
         call.enqueue(new Callback<List<RidingRate>>() {
             @Override
@@ -2065,10 +2905,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful()) {
                     List<RidingRate> rate = new ArrayList<>();
                     rate = response.body();
-
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateOutside = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateInside = rate.get(0).getBase_fare_inside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
@@ -2078,11 +2918,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
-                            estprice = kmPrice + minPrice + minimumRate;
-                            int divisionPercent = (estprice*farePercent)/100;
-                            int finalPrice = estprice+divisionPercent;
-                            sedanbusinessprice.setText("" + finalPrice);
+                            if (!pickUpCity.equals(destinationCity)){
+                                int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                                estprice = kmPrice + minPrice + minimumRateOutside;
+                                int divisionPercent = (estprice*farePercent)/100;
+                                int finalPrice = estprice+divisionPercent;
+                                sedanbusinessprice.setText("" + finalPrice);
+                            }else{
+                                int finalPrice = kmPrice + minPrice + minimumRateInside;
+                                sedanbusinessprice.setText("" + finalPrice);
+                            }
 
                         }
 
@@ -2102,7 +2947,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    public void sedanPremierePrice(int kmdistance, int travelduration, String destinationDivision) {
+    public void sedanPremierePrice(int kmdistance, int travelduration, String destinationDivision,String pickUpCity,String destinationCity) {
         Call<List<RidingRate>> call = apiInterface.getPrice("SedanPremiere");
         call.enqueue(new Callback<List<RidingRate>>() {
             @Override
@@ -2110,25 +2955,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.isSuccessful()) {
                     List<RidingRate> rate = new ArrayList<>();
                     rate = response.body();
-
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateOutside = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateInside = rate.get(0).getBase_fare_inside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
-
 
                     DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Division").child(destinationDivision);
                     reference.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
-                            estprice = kmPrice + minPrice + minimumRate;
-                            int divisionPercent = (estprice*farePercent)/100;
-                            int finalPrice = estprice+divisionPercent;
-                            premiereprice.setText("" + finalPrice);
+                            if (!pickUpCity.equals(destinationCity)){
+                                int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                                estprice = kmPrice + minPrice + minimumRateOutside;
+                                int divisionPercent = (estprice*farePercent)/100;
+                                int finalPrice = estprice+divisionPercent;
+                                premiereprice.setText("" + finalPrice);
+                            }else{
+                                int finalPrice = kmPrice + minPrice + minimumRateInside;
+                                premiereprice.setText("" + finalPrice);
+                            }
 
                         }
 
@@ -2150,7 +2999,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void sedanPrice(int kmdistance, int travelduration, String destinationDivision) {
+    private void sedanPrice(int kmdistance, int travelduration, String destinationDivision,String pickUpCity,String destinationCity) {
 
         Call<List<RidingRate>> call = apiInterface.getPrice("Sedan");
         call.enqueue(new Callback<List<RidingRate>>() {
@@ -2161,7 +3010,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     rate = response.body();
                     int kmRate = rate.get(0).getKm_charge();
                     int minRate = rate.get(0).getMin_charge();
-                    int minimumRate = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateOutside = rate.get(0).getBase_fare_outside_dhaka();
+                    int minimumRateInside = rate.get(0).getBase_fare_inside_dhaka();
 
                     int kmPrice = kmRate * kmdistance;
                     int minPrice = minRate * travelduration;
@@ -2171,11 +3021,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
-                            estprice = kmPrice + minPrice + minimumRate;
-                            int divisionPercent = (estprice*farePercent)/100;
-                            int finalPrice = estprice+divisionPercent;
-                            sedanprice.setText("" + finalPrice);
+                            if (!pickUpCity.equals(destinationCity)){
+                                int farePercent = Integer.parseInt(snapshot.child("Fare").getValue().toString());
+                                estprice = kmPrice + minPrice + minimumRateOutside;
+                                int divisionPercent = (estprice*farePercent)/100;
+                                int finalPrice = estprice+divisionPercent;
+                                sedanprice.setText("" + finalPrice);
+                            }else{
+                                int finalPrice = kmPrice + minPrice + minimumRateInside;
+                                sedanprice.setText("" + finalPrice);
+                            }
 
                         }
 
@@ -2443,7 +3298,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         reference = FirebaseDatabase.getInstance().getReference("profile");
         nav_icon = findViewById(R.id.nav_icon);
         backNFL = findViewById(R.id.backNFL);
+        instantRideBtn = findViewById(R.id.instantRideBtn);
         drawerLayout = findViewById(R.id.drawer_layout);
+        driverDetailsLayout = findViewById(R.id.driverDetailsLayout);
+        driverRatingBar = findViewById(R.id.driverRatingBar);
+        driverRatingBar2 = findViewById(R.id.driverRatingBar2);
+        rideCountTxt = findViewById(R.id.rideCountTxt);
+        rideCountTxt2 = findViewById(R.id.rideCountTxt2);
+        rideTxt2 = findViewById(R.id.rideTxt2);
+        driverNameTV = findViewById(R.id.driverNameTV);
+        driverNameTV2 = findViewById(R.id.driverNameTV2);
+        driver_PhoneTV = findViewById(R.id.driver_PhoneTV);
+        rideTxt = findViewById(R.id.rideTxt);
+        onGoingPickUp = findViewById(R.id.onGoingPickUp);
+        onGoingDestination = findViewById(R.id.onGoingDestination);
+        onGoingPrice = findViewById(R.id.onGoingPrice);
+        carTv = findViewById(R.id.driver_CarTV);
+        carTv2 = findViewById(R.id.driver_CarTV2);
+        onGoingTripLayout = findViewById(R.id.slidingPanel);
+        rl1=findViewById(R.id.rl1);
         searchLayout = findViewById(R.id.searchLayout);
         navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(this);
@@ -2482,6 +3355,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         destinationBtn = findViewById(R.id.button_destination);
         destinationLayout = findViewById(R.id.destinationLayout);
         circularImageView = navigationView.getHeaderView(0).findViewById(R.id.navImageView);
+        profileIV = findViewById(R.id.profileIV);
+        profileIV2 = findViewById(R.id.profileIV2);
         UserName = navigationView.getHeaderView(0).findViewById(R.id.namefromNavigation);
         userPhone = navigationView.getHeaderView(0).findViewById(R.id.phone_fromNavigation);
         wallet_fromNavigation = navigationView.getHeaderView(0).findViewById(R.id.wallet_fromNavigation);
@@ -2499,8 +3374,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         premiereType = findViewById(R.id.premiereType);
         hiaceType = findViewById(R.id.hiaceType);
         microbusType = findViewById(R.id.microbusType);
-        rideHourly = findViewById(R.id.bookNowBtn);
-        rideLater = findViewById(R.id.bookLaterBtn);
+        rideHourly = findViewById(R.id.rideHourly);
+        rideInterCity = findViewById(R.id.intercityBtn);
         rideDate = findViewById(R.id.rideDate);
         bottomsheet = findViewById(R.id.bottomsheet);
         chooseRideType = findViewById(R.id.chooseRideType);
@@ -2617,22 +3492,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 break;
             case R.id.profile:
-                startActivity(new Intent(MainActivity.this, UserProfile.class).putExtra("id", userId));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                drawerLayout.closeDrawers();
-                finish();
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                    drawerLayout.closeDrawers();
+                } else {
+                    startActivity(new Intent(MainActivity.this, UserProfile.class).putExtra("id", userId));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.closeDrawers();
+                    finish();
+                }
                 break;
             case R.id.rides:
-                startActivity(new Intent(MainActivity.this, MyRides.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                drawerLayout.closeDrawers();
-                finish();
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                    drawerLayout.closeDrawers();
+                } else {
+                    startActivity(new Intent(MainActivity.this, MyRides.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.closeDrawers();
+                    finish();
+                }
                 break;
             case R.id.settings:
-                startActivity(new Intent(MainActivity.this, settingsActivity.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                drawerLayout.closeDrawers();
-                finish();
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                    drawerLayout.closeDrawers();
+                } else {
+                    startActivity(new Intent(MainActivity.this, settingsActivity.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.closeDrawers();
+                    finish();
+                }
                 break;
             case R.id.emergency:
                 startActivity(new Intent(MainActivity.this, Emergency.class));
@@ -2641,28 +3534,52 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
                 break;
             case R.id.referral:
-                startActivity(new Intent(MainActivity.this, Referral.class).putExtra("id", userId));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                drawerLayout.closeDrawers();
-                finish();
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                    drawerLayout.closeDrawers();
+                } else {
+                    startActivity(new Intent(MainActivity.this, Referral.class).putExtra("id", userId));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.closeDrawers();
+                    finish();
+                }
                 break;
             case R.id.coupon:
-                startActivity(new Intent(MainActivity.this, CouponActivity.class).putExtra("id", userId));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                drawerLayout.closeDrawers();
-                finish();
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                    drawerLayout.closeDrawers();
+                } else {
+                    startActivity(new Intent(MainActivity.this, CouponActivity.class).putExtra("id", userId));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.closeDrawers();
+                    finish();
+                }
                 break;
             case R.id.notification:
-                startActivity(new Intent(MainActivity.this, NotificationsActivity.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                drawerLayout.closeDrawers();
-                finish();
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                    drawerLayout.closeDrawers();
+                } else {
+                    startActivity(new Intent(MainActivity.this, NotificationsActivity.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.closeDrawers();
+                    finish();
+                }
                 break;
             case R.id.history:
-                startActivity(new Intent(MainActivity.this, History.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                drawerLayout.closeDrawers();
-                finish();
+                checkConnection();
+                if (!isConnected) {
+                    snackBar(isConnected);
+                    drawerLayout.closeDrawers();
+                } else {
+                    startActivity(new Intent(MainActivity.this, History.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.closeDrawers();
+                    finish();
+                }
                 break;
             case R.id.support:
                 try{
@@ -2821,7 +3738,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void sendNotificationDriver(final String bookingId, final String receiverId, final String car, final String title, final String message, final String toActivity) {
+    private void sendNotificationDriver(final String bookingId, final String receiverId, final String car, final String title,
+                                        final String message, final String toActivity) {
+
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference().child("DriversToken").child(car);
         Query query = tokens.orderByKey().equalTo(receiverId);
         final String receiverId1 = receiverId;
@@ -2954,7 +3873,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
-                    if(rideType.equals("regular")){
+                    if(rideType.equals("interCity") || rideType.equals("instant")){
                         if (pickUpMarker==null){
                             pickUpPlace = snapshot.child("place").getValue().toString();
                             pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
@@ -2971,6 +3890,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     pickUpPlace = location.getAddressLine(0);
                                     map.addMarker(pickUpMarker.title("Drag for suitable position")).showInfoWindow();
                                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(pickUpLat, pickUpLon), 19));
+
+                                    showDirections();
 
                                     map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                                         @Override
@@ -2995,6 +3916,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                 autocompleteFragment.setText(pickUpPlace);
                                                 BitmapDescriptor markerIcon = vectorToBitmap(R.drawable.userpickup);
                                                 marker.setIcon(markerIcon);
+
+                                                showDirections();
 
                                             } catch (IOException e) {
                                                 e.printStackTrace();
@@ -3150,7 +4073,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
 
-                    if (rideType.equals("regular")){
+                    if (rideType.equals("interCity") ||rideType.equals("instant") ){
                         if (pickUpMarker==null){
                             pickUpPlace = snapshot.child("place").getValue().toString();
                             pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
@@ -3230,6 +4153,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 map.addMarker(new MarkerOptions().position(new LatLng(destinationLat, destinationLon)).icon(markerIcon2).draggable(true).title("Drag for suitable position")).showInfoWindow();
                                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(destinationLat, destinationLon), 16));
 
+                                showDirections();
+
                                 map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                                     @Override
                                     public void onMarkerDragStart(Marker marker) {
@@ -3254,6 +4179,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             autocompleteDestination.setText(destinationPlace);
                                             BitmapDescriptor markerIcon2 = vectorToBitmap(R.drawable.ic_destination);
                                             marker.setIcon(markerIcon2);
+
+                                            showDirections();
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
@@ -3261,7 +4188,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 });
                             }
                         }
-                    }else{
+                    }
+                    else{
                         pickUpPlace = snapshot.child("place").getValue().toString();
                         pickUpLat = Double.parseDouble(snapshot.child("lat").getValue().toString());
                         pickUpLon = Double.parseDouble(snapshot.child("lon").getValue().toString());
@@ -3357,6 +4285,96 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         startActivity(new Intent(MainActivity.this, FareDetails.class)
                 .putExtra("check",3)
+                .putExtra("rideType",rideType)
                 .putExtra("carType", carType));
     }
+
+    @Override
+    public void onNetworkConnectionChanged(boolean isConnected) {
+        snackBar(isConnected);
+    }
+    private void checkConnection() {
+        isConnected = ConnectivityReceiver.isConnected();
+    }
+    private void snackBar(boolean isConnected) {
+        if(!isConnected) {
+            snackbar = Snackbar.make(drawerLayout, "No Internet Connection!", Snackbar.LENGTH_INDEFINITE).setAction("ReTry", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    recreate();
+                }
+            });
+            snackbar.setDuration(5000);
+            snackbar.setActionTextColor(Color.WHITE);
+            View sbView = snackbar.getView();
+            sbView.setBackgroundColor(Color.RED);
+        /*TextView textView = (TextView) sbView.findViewById(R.id.snackbar_text);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        } else {
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+        }*/
+            snackbar.show();
+            /*final Snackbar.SnackbarLayout snackBarLayout = (Snackbar.SnackbarLayout) snackbar.getView();
+            for (int i = 0; i < snackBarLayout.getChildCount(); i++) {
+                View parent = snackBarLayout.getChildAt(i);
+                if (parent instanceof LinearLayout) {
+                    ((LinearLayout) parent).setRotation(180);
+                    break;
+                }
+            }*/
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(connectivityReceiver, intentFilter);
+    }
+    @Override
+    protected void onResume() {
+        // register connection status listener
+        Connection.getInstance().setConnectivityListener(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try{
+            if(connectivityReceiver!=null)
+                unregisterReceiver(connectivityReceiver);
+
+        }catch(Exception e){}
+
+    }
+
+    @Override
+    protected void onStop() {
+        try{
+            if(connectivityReceiver!=null)
+                unregisterReceiver(connectivityReceiver);
+
+        }catch(Exception e){}
+
+        super.onStop();
+    }
+
+    public float CalculateBearingAngle(double startLatitude,double startLongitude, double endLatitude, double endLongitude){
+        LatLng begin = new LatLng(startLatitude,startLongitude);
+        LatLng end = new LatLng(endLatitude,endLongitude);
+        double lat = Math.abs(begin.latitude - end.latitude);
+        double lng = Math.abs(begin.longitude - end.longitude);
+
+        if (begin.latitude < end.latitude && begin.longitude < end.longitude)
+            return (float) (Math.toDegrees(Math.atan(lng / lat)));
+        else if (begin.latitude >= end.latitude && begin.longitude < end.longitude)
+            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 90);
+        else if (begin.latitude >= end.latitude && begin.longitude >= end.longitude)
+            return (float) (Math.toDegrees(Math.atan(lng / lat)) + 180);
+        else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
+            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
+        return -1;
+    }
+
 }

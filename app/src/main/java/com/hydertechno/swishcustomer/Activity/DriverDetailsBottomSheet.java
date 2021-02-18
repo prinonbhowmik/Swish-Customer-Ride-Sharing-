@@ -39,10 +39,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
-
     private View view;
-    private TextView driverNameTV, driverPhoneTV,carTV,plateTV,rideCountTV,rideTxt;
-    private Button callDriver;
+    private TextView driverNameTV, driverPhoneTV,
+            carTV,plateTV,rideCountTV,rideTxt;
     private DatabaseReference databaseReference;
     private String bookingId;
     private String carType;
@@ -69,7 +68,6 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
         check=mArgs.getInt("check");
 
         if(check==2){
-            callDriver.setVisibility(View.GONE);
             phoneTxt.setVisibility(View.GONE);
             phoneIV.setVisibility(View.GONE);
             driverPhoneTV.setVisibility(View.GONE);
@@ -79,11 +77,9 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
 
         getData();
 
-
-
-        callDriver.setOnClickListener(new View.OnClickListener() {
+        card_view2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 try {
                     Intent callIntent = new Intent(Intent.ACTION_DIAL);
                     callIntent.setData(Uri.parse("tel:" + "+88" + driverPhoneTV.getText().toString()));
@@ -94,6 +90,9 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
                 }
             }
         });
+
+
+
 
         return view;
     }
@@ -177,7 +176,6 @@ public class DriverDetailsBottomSheet extends BottomSheetDialogFragment {
         driverPhoneTV = view.findViewById(R.id.driver_PhoneTV);
         carTV = view.findViewById(R.id.driver_CarTV);
         plateTV = view.findViewById(R.id.driver_PlateTV);
-        callDriver = view.findViewById(R.id.callDriverBtn);
         userImage = view.findViewById(R.id.profileIV);
 
         phoneIV=view.findViewById(R.id.phoneIV);
